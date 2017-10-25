@@ -1,0 +1,146 @@
+<?php
+/**
+ * This Software is the property of best it GmbH & Co. KG and is protected
+ * by copyright law - it is NOT Freeware.
+ *
+ * Any unauthorized use of this software without a valid license is
+ * a violation of the license agreement and will be prosecuted by
+ * civil and criminal law.
+ *
+ * bestitamazonpay4oxid_oxdeliverysetlist.php
+ *
+ * The bestitAmazonPay4Oxid_oxDeliverysetList class file.
+ *
+ * PHP versions 5
+ *
+ * @category  bestitAmazonPay4Oxid
+ * @package   bestitAmazonPay4Oxid
+ * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
+ * @copyright 2017 best it GmbH & Co. KG
+ * @version   GIT: $Id$
+ * @link      http://www.bestit-online.de
+ */
+
+/**
+ * Class bestitAmazonPay4Oxid_oxDeliverysetList
+ */
+class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeliverySetList_parent
+{
+    /**
+     * @var null|bestitAmazonPay4OxidContainer
+     */
+    protected $_oContainer = null;
+
+    /**
+     * Returns the active user object.
+     *
+     * @return bestitAmazonPay4OxidContainer
+     */
+    protected function _getContainer()
+    {
+        if ($this->_oContainer === null) {
+            $this->_oContainer = oxNew('bestitAmazonPay4OxidContainer');
+        }
+
+        return $this->_oContainer;
+    }
+
+    /**
+     * Returns if Amazon pay is assigned available shipping ways
+     *
+     * @param string $sShipSet the string to quote
+     *
+     * @return boolean
+     */
+    protected function _getShippingAvailableForPayment($sShipSet)
+    {
+        $oDatabase = $this->_getContainer()->getDatabase();
+
+        $sSql = "SELECT OXOBJECTID
+            FROM oxobject2payment
+            WHERE OXOBJECTID = {$oDatabase->quote($sShipSet)}
+                AND OXPAYMENTID = {$oDatabase->quote('bestitamazon')}
+                AND OXTYPE = 'oxdelset'
+                AND OXTYPE = 'oxdelset' LIMIT 1";
+
+        $sShippingId = $oDatabase->getOne($sSql);
+        return ($sShippingId) ? true : false;
+    }
+
+    /**
+     * If Amazon pay was selected remove other payment options and leave only Amazon pay
+     * If Amazon pay was selected remove shipping options where amazon pay is not assigned
+     *
+     * Loads deliveryset data, checks if it has payments assigned. If active delivery set id
+     * is passed - checks if it can be used, if not - takes first ship set id from list which
+     * fits. For active ship set collects payment list info. Retuns array containing:
+     *   1. all ship sets that has payment (array)
+     *   2. active ship set id (string)
+     *   3. payment list for active ship set (array)
+     *
+     * @param array    $aResult
+     * @param oxUser   $oUser
+     * @param oxBasket $oBasket
+     *
+     * @return mixed
+     */
+    protected function _processResult($aResult, $oUser, $oBasket)
+    {
+        $oConfig = $this->_getContainer()->getConfig();
+        $sClass = $oConfig->getRequestParameter('cl');
+        $sAmazonOrderReferenceId = $this->_getContainer()->getSession()->getVariable('amazonOrderReferenceId');
+
+        //If Amazon Pay cannot be selected remove it from payments list
+        if ($sClass === 'payment') {
+            if ($this->_getContainer()->getModule()->isActive() !== true) {
+                unset($aResult[2]['bestitamazon']);
+                return $aResult;
+            }
+
+            //If Amazon pay was selected with the button before leave only bestitamazon as payment selection
+            if ($oUser !== false
+                && isset($aResult[2]['bestitamazon'])
+                && $sAmazonOrderReferenceId !== null
+            ) {
+                //If Amazon pay was selected remove other payment options and leave only Amazon pay
+                $aResult[2] = array('bestitamazon' => $aResult[2]['bestitamazon']);
+
+                //If Amazon pay was selected remove shipping options where Amazon pay is not assigned
+                foreach ($aResult[0] as $sKey => $sValue) {
+                    if ($this->_getShippingAvailableForPayment($sKey) !== true) {
+                        unset($aResult[0][$sKey]);
+                    }
+                }
+            }
+        }
+
+        //If Amazon pay was not selected within the button click in 1st, 2nd step of checkout
+        //check if selected currency is available for selected Amazon locale, if not remove amazon pay option from payments
+        if ($sAmazonOrderReferenceId === null
+            && ($this->_getContainer()->getModule()->getIsSelectedCurrencyAvailable() === false
+                || $oBasket->getPrice()->getBruttoPrice() === 0
+                || ((bool)$oConfig->getConfigParam('blAmazonLoginActive') === true
+                    && $this->_getContainer()->getLoginClient()->showAmazonPayButton() === false)
+            )
+        ) {
+            unset($aResult[2]['bestitamazon']);
+        }
+
+        return $aResult;
+    }
+    
+    /**
+     *
+     * @param string $sShipSet current ship set id (can be null if not set yet)
+     * @param oxuser $oUser    active user
+     * @param double $oBasket  basket object
+     *
+     * @return array
+     */
+    public function getDeliverySetData($sShipSet, $oUser, $oBasket)
+    {
+        //Get $aActSets, $sActShipSet, $aActPaymentList in array from parent method
+        $aResult = parent::getDeliverySetData($sShipSet, $oUser, $oBasket);
+        return $this->_processResult($aResult, $oUser, $oBasket);
+    }
+}

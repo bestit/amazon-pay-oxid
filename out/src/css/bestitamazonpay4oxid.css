@@ -1,0 +1,193 @@
+#payWithAmazonDiv img{
+    cursor:pointer;
+}
+
+#optionNoRegistration {
+    position:relative;
+}
+
+#optionNoRegistration #payWithAmazonDiv{
+    float:none;
+    margin:0;
+    position:absolute;
+    bottom:5px;
+}
+
+#payment #payWithAmazonDiv{
+    display:none;
+}
+
+/*OLD OXID does not have .hidden class in CSS*/
+#payment .hidden{
+    //display:none;
+}
+
+#payment #payWithAmazonDiv{
+    display:none;
+    float:right;
+    margin-top: -59px;
+    margin-right: 10px;
+}
+
+#amazonMobile #payWithAmazonDiv{
+    margin:0 auto;
+    width:200px;
+    float:none;
+}
+
+#addressBookWidgetDiv{
+    width:600px;
+    margin: 20px auto auto;
+}
+
+#amazonPayClean{
+    width:600px;
+    margin: 20px auto auto;
+    padding-left:26px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+#amazonPayClean a{
+    font-size: 11px;
+    color: #1d7e96;
+}
+
+#amazonPayClean.PaymentStep{
+    margin: 20px 0 0;
+    padding-left:15px;
+}
+
+#amazonLoginButton{
+    display:none;
+}
+
+#amazonMobile #amazonLoginButton {
+    width: 200px;
+    margin: 0 auto;
+}
+
+#amazonNextStep{
+    display:none;
+}
+
+/*Login box in header*/
+.amazonLoginButtonInsideHeaderBox .loginForm{
+    width:155px;
+}
+
+/*Login page in my account*/
+.amazonLoginButtonInsideLoginPage #amazonLoginButton{
+    position:relative;
+    top:15px;
+}
+
+/*Register page*/
+.amazonLoginButtonInsideRegisterPage #amazonLoginButton{
+    position:absolute;
+    right:10px;
+}
+
+/*Checkout step - 3 column*/
+.amazonLoginButtonInsideCheckout1{
+    position:relative;
+}
+
+.amazonLoginButtonInsideCheckout1 #amazonLoginButton{
+    position:absolute;
+    right:10px;
+    bottom:5px;
+}
+
+/*Checkout step - register page*/
+.amazonLoginButtonInsideCheckout2 #amazonLoginButton{
+    position:absolute;
+    right:10px;
+}
+
+.amazonLoadingImage{
+    display:block;
+    width:32px;
+    height:32px;
+    float:right;
+    background:url('../bg/loader.gif') no-repeat;
+}
+
+#amazonPayButtonLine{
+    background-color: #f2f4f5;
+    margin-top:0;
+}
+
+#amazonPayButtonLine.lineBox{
+   border: 1px solid #999999;
+   margin: 20px 0;
+   padding: 9px 10px 10px;
+}
+
+#amazonPayButtonLine #payWithAmazonDiv{
+    float:left;
+    display: inline-flex;
+}
+
+#amazonPayButtonLine h3{
+    margin: 0 0 0 20px;
+    float:left;
+    line-height: 30px;
+}
+
+#amazonMobile #amazonPayButtonLine #payWithAmazonDiv {
+    float: none;
+    display: block;
+}
+
+#amazonMobile #amazonPayButtonLine h3 {
+    margin: 10px 0 0;
+    text-align: center;
+    display: block;
+    float: none;
+}
+
+#amazonMobile #amazonNextStep .btn{
+    margin-top:10px;
+}
+
+#amazonMobile .dropdown-menu{
+    position:relative;
+}
+
+/* Widget sizes for desktop version*/
+#addressBookWidgetDiv {width: 600px; height: 300px;}
+#walletWidgetDiv {width:400px;height:266px;}
+#readOnlyAddressBookWidgetDiv{width:400px;height:185px;}
+#readOnlyWalletWidgetDiv{width:400px;height:235px;}
+
+/* Widget sizes for mobile version*/
+#amazonMobile #addressBookWidgetDiv {width: 100%; height: 300px;}
+#amazonMobile #walletWidgetDiv {width: 100%; height: 300px;}
+#amazonMobile #readOnlyAddressBookWidgetDiv {width: 100%; height: 185px;}
+#amazonMobile #readOnlyWalletWidgetDiv {width: 100%; height: 235px;}
+
+@media screen and (max-width: 768px) {
+    /* Widget sizes for mobile version*/
+    #addressBookWidgetDiv {width: 100%; height: 300px;}
+    #walletWidgetDiv {width: 100%; height: 300px;}
+    #readOnlyAddressBookWidgetDiv {width: 100%; height: 185px;}
+    #readOnlyWalletWidgetDiv {width: 100%; height: 235px;}
+}
+
+/* Flow */
+
+@media (min-width: 450px) {
+    .cl-register #amazonLoginButton {
+        float: right;
+    }
+}
+
+.service-menu-box #loginBox #amazonLoginButton {
+    margin-top: 10px;
+}
+
+.cl-basket.is-checkout #payWithAmazonDiv {
+    float: right;
+    margin-right: 10px;
+}
+

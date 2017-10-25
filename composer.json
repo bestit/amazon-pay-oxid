@@ -1,0 +1,34 @@
+{
+  "name": "bestit/amazonpay4oxid",
+  "description": "This is the Amazon Pay module for the OXID eShop.",
+  "type": "oxideshop-module",
+  "keywords": ["oxid", "modules", "eShop"],
+  "homepage": "https://www.bestit-online.de",
+  "license": [
+    "GPL-3.0",
+    "proprietary"
+  ],
+  "extra": {
+    "oxideshop": {
+      "blacklist-filter": [
+        "documentation/**/*.*"
+      ],
+      "target-directory": "bestit/amazonpay4oxid"
+    }
+  },
+  "require": {
+    "php": ">=5.6",
+    "lib-curl": ">=7.26.0",
+    "lib-openssl": ">=1.0.1",
+    "ext-curl": "*",
+    "ext-openssl": "*",
+    "amzn/amazon-pay-sdk-php": "~3.1.0",
+    "monolog/monolog": "^1.23"
+  },
+  "require-dev": {
+    "etsy/phpunit-extensions": "~0.7"
+  },
+  "autoload": {
+    "exclude-from-classmap": ["/vendor/phpunit/", "/vendor/sebastian/"]
+  }
+}

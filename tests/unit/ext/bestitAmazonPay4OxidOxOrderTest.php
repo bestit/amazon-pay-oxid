@@ -1,0 +1,827 @@
+<?php
+
+require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
+
+use PHPUnit_Extensions_Constraint_StringMatchIgnoreWhitespace as MatchIgnoreWhitespace;
+
+/**
+ * Class bestitAmazonPay4OxidOxOrderTest
+ * @coversDefaultClass bestitAmazonPay4Oxid_oxOrder
+ */
+class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
+{
+    /**
+     * @param bestitAmazonPay4OxidContainer $oContainer
+     *
+     * @return bestitAmazonPay4Oxid_oxOrder
+     */
+    private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
+    {
+        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
+        self::setValue($oBestitAmazonPay4OxidOxOrder, '_oContainer', $oContainer);
+
+        return $oBestitAmazonPay4OxidOxOrder;
+    }
+
+    /**
+     * @group unit
+     */
+    public function testCreateInstance()
+    {
+        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
+        self::assertInstanceOf('bestitAmazonPay4Oxid_oxOrder', $oBestitAmazonPay4OxidOxOrder);
+    }
+
+    /**
+     * @group unit
+     * @covers ::_getContainer()
+     */
+    public function testGetContainer()
+    {
+        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
+        self::assertInstanceOf(
+            'bestitAmazonPay4OxidContainer',
+            self::callMethod($oBestitAmazonPay4OxidOxOrder, '_getContainer')
+        );
+    }
+
+    /**
+     * @group unit
+     * @covers ::_preFinalizeOrder()
+     * @covers ::_callSyncAmazonAuthorize()
+     * @covers ::_manageFullUserData()
+     * @covers ::_performAmazonActions()
+     */
+    public function testPreFinalizeOrder()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        // Config
+        $oConfig = $this->_getConfigMock();
+
+        $oConfig->expects($this->exactly(10))
+            ->method('getRequestParameter')
+            ->with('cl')
+            ->will($this->returnValue('order'));
+
+        $oConfig->expects($this->exactly(7))
+            ->method('getShopSecureHomeUrl')
+            ->will($this->returnValue('shopSecureHomeUrl?'));
+
+        $oConfig->expects($this->exactly(2))
+            ->method('getShopId')
+            ->will($this->returnValue(456));
+
+        $oConfig->expects($this->exactly(12))
+            ->method('getConfigParam')
+            ->withConsecutive(
+                array('sAmazonMode'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('sAmazonMode'),
+                array('sAmazonMode')
+            )
+            ->will($this->onConsecutiveCalls(
+                'Sync',
+                0,
+                'Sync',
+                0,
+                'Sync',
+                0,
+                'Sync',
+                0,
+                'Sync',
+                0,
+                'Async',
+                'Async',
+                'Async'
+            ));
+
+        $oContainer->expects($this->exactly(19))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        // Session
+        $oSession = $this->_getSessionMock();
+
+        $oSession->expects($this->exactly(14))
+            ->method('getVariable')
+            ->withConsecutive(
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('deladrid'),
+                array('amazonOrderReferenceId'),
+                array('deladrid'),
+                array('amazonOrderReferenceId'),
+                array('deladrid')
+            )
+            ->will($this->onConsecutiveCalls(
+                null,
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'orderReferenceId',
+                'deliveryId',
+                'orderReferenceId',
+                null,
+                'orderReferenceId',
+                null
+            ));
+
+        $oSession->expects($this->exactly(5))
+            ->method('setVariable')
+            ->withConsecutive(
+                array('blAmazonSyncChangePayment', 1),
+                array('sAmazonSyncResponseState', 'Open'),
+                array('sAmazonSyncResponseAuthorizationId', 'authorizationId'),
+                array('blshowshipaddress', 1),
+                array('deladrid', 'newAddressId')
+            );
+
+        $oContainer->expects($this->exactly(19))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        // Client
+        $oClient = $this->_getClientMock();
+
+        $oClient->expects($this->exactly(9))
+            ->method('confirmOrderReference')
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(array('Error' => 'someError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError')),
+                $this->_getResponseObject(array('someData' => 'withNoError'))
+            ));
+
+        $aOrderReferenceOpen = array(
+            'GetOrderReferenceDetailsResult' => array(
+                'OrderReferenceDetails' => array(
+                    'OrderReferenceStatus' => array('State' => 'Open'),
+                    'Destination' => array('PhysicalDestination' => 'PhysicalDestinationValue'),
+                    'Buyer' => array('Email' => 'BuyerEmail')
+                )
+            )
+        );
+
+        $oClient->expects($this->exactly(8))
+            ->method('getOrderReferenceDetails')
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(array(
+                    'GetOrderReferenceDetailsResult' => array(
+                        'OrderReferenceDetails' => array(
+                            'OrderReferenceStatus' => array(
+                                'State' => 'NotOpen'
+                            )
+                        )
+                    )
+                )),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen),
+                $this->_getResponseObject($aOrderReferenceOpen)
+            ));
+
+        $oClient->expects($this->exactly(5))
+            ->method('authorize')
+            ->with(
+                null,
+                array(
+                    'amazon_order_reference_id' => 'orderReferenceId',
+                    'authorization_amount' => 11.1,
+                    'currency_code' => 'EUR',
+                    'authorization_reference_id' => 'orderReferenceId_123456789'
+                )
+            )
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AuthorizationStatus' => array(
+                                'State' => 'Closed',
+                                'ReasonCode' => 'InvalidPaymentMethod'
+                            )
+                        )
+                    )
+                )),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AuthorizationStatus' => array(
+                                'State' => 'Declined',
+                                'ReasonCode' => 'Some'
+                            )
+                        )
+                    )
+                )),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AuthorizationStatus' => array(
+                                'State' => 'Some'
+                            )
+                        )
+                    )
+                )),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AmazonAuthorizationId' => 'authorizationId',
+                            'AuthorizationStatus' => array(
+                                'State' => 'Open'
+                            )
+                        )
+                    )
+                ))
+            ));
+
+        $oContainer->expects($this->exactly(23))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+
+        // Utils
+        $oUtils = $this->_getUtilsMock();
+
+        $oUtils->expects($this->exactly(7))
+            ->method('redirect')
+            ->withConsecutive(
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false),
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false),
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false),
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false),
+                array('shopSecureHomeUrl?cl=order&action=changePayment', false),
+                array(
+                    'shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay&error=BESTITAMAZONPAY_PAYMENT_DECLINED_OR_REJECTED',
+                    false
+                ),
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false)
+            );
+
+        $oContainer->expects($this->exactly(16))
+            ->method('getUtils')
+            ->will($this->returnValue($oUtils));
+
+        // UtilsDate
+        $oUtilsDate = $this->_getUtilsDateMock();
+
+        $oUtilsDate->expects($this->exactly(5))
+            ->method('getTime')
+            ->will($this->returnValue('123456789'));
+
+        $oContainer->expects($this->exactly(5))
+            ->method('getUtilsDate')
+            ->will($this->returnValue($oUtilsDate));
+
+        // AddressUtil
+        $oAddressUtil = $this->_getAddressUtilMock();
+
+        $oAddressUtil->expects($this->exactly(3))
+            ->method('parseAmazonAddress')
+            ->with('PhysicalDestinationValue')
+            ->will($this->returnValue(array(
+                'CompanyName' => 'CompanyNameValue',
+                'FirstName' => 'FirstNameValue',
+                'LastName' => 'LastNameValue',
+                'City' => 'CityValue',
+                'StateOrRegion' => 'StateOrRegionValue',
+                'CountryId' => 'CountryIdValue',
+                'PostalCode' => 'PostalCodeValue',
+                'Phone' => 'PhoneValue',
+                'Street' => 'StreetValue',
+                'StreetNr' => 'StreetNrValue',
+                'AddInfo' => 'AddInfoValue'
+            )));
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getAddressUtil')
+            ->will($this->returnValue($oAddressUtil));
+
+        // ObjectFactory
+        $oObjectFactory = $this->_getObjectFactoryMock();
+        
+        $oAddress = $this->getMock('oxAddress', array(), array(), '', false);
+        $oAddress->expects($this->exactly(2))
+            ->method('load')
+            ->withConsecutive(
+                array('deliveryId'),
+                array('firstAddressId')
+            );
+        
+        $oAddress->expects($this->exactly(2))
+            ->method('assign')
+            ->withConsecutive(
+                array(
+                    array(
+                        'oxcompany' => 'CompanyNameValue',
+                        'oxfname' => 'FirstNameValue',
+                        'oxlname' => 'LastNameValue',
+                        'oxcity' => 'CityValue',
+                        'oxstateid' => 'StateOrRegionValue',
+                        'oxcountryid' => 'CountryIdValue',
+                        'oxzip' => 'PostalCodeValue',
+                        'oxfon' => 'PhoneValue',
+                        'oxstreet' => 'StreetValue',
+                        'oxstreetnr' => 'StreetNrValue',
+                        'oxaddinfo' => 'AddInfoValue'
+                    )
+                ),
+                array(
+                    array(
+                        'oxcompany' => 'CompanyNameValue',
+                        'oxfname' => 'FirstNameValue',
+                        'oxlname' => 'LastNameValue',
+                        'oxcity' => 'CityValue',
+                        'oxstateid' => 'StateOrRegionValue',
+                        'oxcountryid' => 'CountryIdValue',
+                        'oxzip' => 'PostalCodeValue',
+                        'oxfon' => 'PhoneValue',
+                        'oxstreet' => 'StreetValue',
+                        'oxstreetnr' => 'StreetNrValue',
+                        'oxuserid' => 'emailId'
+                    )
+                )
+            );
+
+        $oAddress->expects($this->exactly(2))
+            ->method('save')
+            ->will($this->returnValue('newAddressId'));
+
+        $oObjectFactory->expects($this->exactly(2))
+            ->method('createOxidObject')
+            ->with('oxAddress')
+            ->will($this->returnValue($oAddress));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getObjectFactory')
+            ->will($this->returnValue($oObjectFactory));
+
+        // Database
+        $oDatabase = $this->_getDatabaseMock();
+
+        $oDatabase->expects($this->exactly(2))
+            ->method('getOne')
+            ->with(new MatchIgnoreWhitespace(
+                "SELECT OXID
+                FROM oxuser
+                WHERE OXUSERNAME = 'BuyerEmail'
+                AND OXSHOPID = '456'"
+            ))
+            ->will($this->onConsecutiveCalls('emailId', ''));
+
+        $oDatabase->expects($this->exactly(4))
+            ->method('quote')
+            ->withConsecutive(
+                array('BuyerEmail'),
+                array(456),
+                array('BuyerEmail'),
+                array(456)
+            )
+            ->will($this->returnCallback(function ($sValue) {
+                return "'{$sValue}'";
+            }));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getDatabase')
+            ->will($this->returnValue($oDatabase));
+
+        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
+
+        $oBasket = $this->_getBasketMock();
+
+        $oBasket->expects($this->exactly(11))
+            ->method('getPaymentId')
+            ->will($this->onConsecutiveCalls(
+                'some',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon'
+            ));
+
+        $oBasket->expects($this->any())
+            ->method('getContents')
+            ->will($this->returnValue(array()));
+
+        $oPrice = $this->_getPriceMock();
+        $oPrice->expects($this->exactly(5))
+            ->method('getBruttoPrice')
+            ->will($this->returnValue(11.1));
+        
+        $oBasket->expects($this->exactly(5))
+            ->method('getPrice')
+            ->will($this->returnValue($oPrice));
+
+        $oCurrency = new stdClass();
+        $oCurrency->name = 'EUR';
+
+        $oBasket->expects($this->exactly(5))
+            ->method('getBasketCurrency')
+            ->will($this->returnValue($oCurrency));
+
+        $oUser = $this->_getUserMock();
+
+        $oFirstAddress = $this->getMock('oxAddress', array(), array(), '', false);
+        $oFirstAddress->expects($this->exactly(4))
+            ->method('getFieldData')
+            ->withConsecutive(
+                array('oxfname'),
+                array('oxlname'),
+                array('oxstreet'),
+                array('oxstreetnr')
+            )
+            ->will($this->onConsecutiveCalls(
+                'FirstNameValue',
+                'LastNameValue',
+                'StreetValue',
+                'StreetValue'
+            ));
+
+        $oFirstAddress->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue('firstAddressId'));
+
+        $oUser->expects($this->once())
+            ->method('getUserAddresses')
+            ->will($this->returnValue(array($oFirstAddress)));
+
+        $blIsAmazonOrder = null;
+
+        // No amazon order
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertTrue($blReturn);
+        self::assertFalse($blIsAmazonOrder);
+
+        // Empty amazonOrderReferenceId
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Empty confirmOrderReference
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Status not open
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Error authorize
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Error InvalidPaymentMethod
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Cancel ORO
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Unexpected behaviour
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertFalse($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Logged in user already and Amazon address set as shipping
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertTrue($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // Logged in user but we have found user account in OXID with same email
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertTrue($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+
+        // All right
+        $blReturn = self::callMethod(
+            $oBestitAmazonPay4OxidOxOrder,
+            '_preFinalizeOrder',
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+        );
+        self::assertTrue($blReturn);
+        self::assertTrue($blIsAmazonOrder);
+    }
+
+    /**
+     * @group unit
+     * @covers ::_performAmazonActions()
+     */
+    public function testPerformAmazonActions()
+    {
+        $oContainer = $this->_getContainerMock();
+        
+        // Session
+        $oSession = $this->_getSessionMock();
+
+        $oSession->expects($this->exactly(6))
+            ->method('getVariable')
+            ->withConsecutive(
+                array('amazonOrderReferenceId'),
+                array('amazonOrderReferenceId'),
+                array('sAmazonSyncResponseState'),
+                array('sAmazonSyncResponseAuthorizationId'),
+                array('sAmazonSyncResponseState'),
+                array('amazonOrderReferenceId')
+            )
+            ->will($this->onConsecutiveCalls(
+                'orderReferenceId',
+                'orderReferenceId',
+                'amazonSyncResponseState',
+                'amazonSyncResponseAuthorizationId',
+                'Open',
+                'orderReferenceId'
+            ));
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        // Config
+        $oConfig = $this->_getConfigMock();
+
+        $oConfig->expects($this->exactly(7))
+            ->method('getConfigParam')
+            ->withConsecutive(
+                array('blAmazonERP'),
+                array('sAmazonERPModeStatus'),
+                array('blAmazonERP'),
+                array('sAmazonMode'),
+                array('sAmazonCapture'),
+                array('blAmazonERP'),
+                array('sAmazonMode')
+            )
+            ->will($this->onConsecutiveCalls(
+                1,
+                'ERPModeStatus',
+                0,
+                'Sync',
+                'DIRECT',
+                0,
+                'Async'
+            ));
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        // Client
+        $oClient = $this->_getClientMock();
+
+        $oClient->expects($this->once())
+            ->method('capture');
+
+        $oClient->expects($this->once())
+            ->method('authorize');
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+        
+        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
+
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
+    }
+
+    /**
+     * @group unit
+     * @covers ::finalizeOrder()
+     * @covers ::_parentFinalizeOrder()
+     */
+    public function testFinalizeOrder()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        // Client
+        $oClient = $this->_getClientMock();
+        $oClient->expects($this->once())
+            ->method('cancelOrderReference');
+        
+        $oContainer->expects($this->once())
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_oxOrder $oBestitAmazonPay4OxidOxOrder */
+        $oBestitAmazonPay4OxidOxOrder = $this->getMock(
+            'bestitAmazonPay4Oxid_oxOrder',
+            array('_preFinalizeOrder', '_performAmazonActions', '_parentFinalizeOrder')
+        );
+        self::setValue($oBestitAmazonPay4OxidOxOrder, '_oContainer', $oContainer);
+
+        $preReturn = false;
+
+        $oBestitAmazonPay4OxidOxOrder->expects($this->exactly(3))
+            ->method('_preFinalizeOrder')
+            ->will($this->returnCallback(function ($oBasket, $oUser, &$blIsAmazonOrder) use (&$preReturn) {
+                $blIsAmazonOrder = true;
+
+                if ($preReturn === false) {
+                    $preReturn = true;
+                    return false;
+                }
+
+                return $preReturn;
+            }));
+
+        $oBestitAmazonPay4OxidOxOrder->expects($this->exactly(2))
+            ->method('_parentFinalizeOrder')
+            ->will($this->onConsecutiveCalls(
+                oxOrder::ORDER_STATE_INVALIDDELIVERY,
+                oxOrder::ORDER_STATE_OK
+            ));
+
+        $oBestitAmazonPay4OxidOxOrder->expects($this->once())
+            ->method('_performAmazonActions');
+
+
+        $oBasket = $this->_getBasketMock();
+        $oBasket->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue(array()));
+
+        $oBasket->expects($this->any())
+            ->method('getPaymentId')
+            ->will($this->onConsecutiveCalls(
+                'some'
+            ));
+
+        $oUser = $this->_getUserMock();
+        self::assertEquals(
+            oxOrder::ORDER_STATE_PAYMENTERROR,
+            $oBestitAmazonPay4OxidOxOrder->finalizeOrder($oBasket, $oUser)
+        );
+        self::assertEquals(
+            oxOrder::ORDER_STATE_INVALIDDELIVERY,
+            $oBestitAmazonPay4OxidOxOrder->finalizeOrder($oBasket, $oUser)
+        );
+        self::assertEquals(
+            oxOrder::ORDER_STATE_OK,
+            $oBestitAmazonPay4OxidOxOrder->finalizeOrder($oBasket, $oUser)
+        );
+
+        self::assertEquals(
+            oxOrder::ORDER_STATE_INVALIDDELIVERY,
+            self::callMethod(
+                $this->_getObject($this->_getContainerMock()),
+                '_parentFinalizeOrder',
+                array($oBasket, $oUser, false)
+            )
+        );
+    }
+
+    /**
+     * @group unit
+     * @covers ::validateDeliveryAddress()
+     */
+    public function testValidateDeliveryAddress()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oBasket = $this->_getBasketMock();
+
+        $oBasket->expects($this->exactly(2))
+            ->method('getPaymentId')
+            ->will($this->onConsecutiveCalls(
+                'bestitamazon',
+                'some'
+            ));
+
+        // Session
+        $oSession = $this->_getSessionMock();
+
+        $oSession->expects($this->exactly(2))
+            ->method('getBasket')
+            ->will($this->returnValue($oBasket));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
+
+        $oUser = $this->_getUserMock();
+        self::assertEquals(0, $oBestitAmazonPay4OxidOxOrder->validateDeliveryAddress($oUser));
+        self::assertEquals(
+            oxOrder::ORDER_STATE_INVALIDDElADDRESSCHANGED,
+            $oBestitAmazonPay4OxidOxOrder->validateDeliveryAddress($oUser)
+        );
+    }
+
+    /**
+     * @group unit
+     * @covers ::getAmazonChangePaymentLink()
+     */
+    public function testGetAmazonChangePaymentLink()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        // Client
+        $oClient = $this->_getClientMock();
+
+        $oClient->expects($this->exactly(2))
+            ->method('getAmazonProperty')
+            ->with('sAmazonPaymentChangeLink', true)
+            ->will($this->returnValue('paymentChangeLink'));
+
+        $oClient->expects($this->exactly(2))
+            ->method('getOrderReferenceDetails')
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(),
+                $this->_getResponseObject(array(
+                    'GetOrderReferenceDetailsResult' => array(
+                        'OrderReferenceDetails' => array(
+                            'OrderLanguage' => 'de-DE'
+                        )
+                    )
+                ))
+            ));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+
+        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
+
+        self::assertEquals('paymentChangeLink', $oBestitAmazonPay4OxidOxOrder->getAmazonChangePaymentLink());
+        self::assertEquals('paymentChangeLinkde_DE', $oBestitAmazonPay4OxidOxOrder->getAmazonChangePaymentLink());
+    }
+}
