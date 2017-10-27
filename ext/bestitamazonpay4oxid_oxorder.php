@@ -21,6 +21,8 @@
  * @link      http://www.bestit-online.de
  */
 
+use \OxidEsales\Eshop\Application\Model\Basket;
+
 /**
  * Class bestitAmazonPay4Oxid_oxOrder
  */
@@ -339,13 +341,13 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
      * Confirm Order details to Amazon if payment id is bestitamazon and amazonreferenceid exists
      * Update user details with the full details received from amazon
      *
-     * @param \OxidEsales\Eshop\Application\Model\Basket $oBasket
-     * @param oxUser                                     $oUser
-     * @param bool|false                                 $blRecalculatingOrder
+     * @param Basket     $oBasket
+     * @param oxUser     $oUser
+     * @param bool|false $blRecalculatingOrder
      *
      * @return int
      */
-    public function finalizeOrder(\OxidEsales\Eshop\Application\Model\Basket $oBasket, $oUser, $blRecalculatingOrder = false)
+    public function finalizeOrder(Basket $oBasket, $oUser, $blRecalculatingOrder = false)
     {
         if ($this->_preFinalizeOrder($oBasket, $oUser, $blIsAmazonOrder) === false) {
             return oxOrder::ORDER_STATE_PAYMENTERROR;
