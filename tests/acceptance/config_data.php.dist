@@ -1,0 +1,86 @@
+<?php
+
+/**
+ * Additional configuration parameters for Amazon Pay & Login acceptance tests
+ */
+
+// NOTE: Make sure, this file is renamed from "config_data.php.dist" to "config_data.php".
+//       Configure all values, which contain places holders "<AmazonPay ...>"
+
+return array(
+    'sAmazonSellerId' => array(
+        'type'  => 'str',
+        'value' => '<AmazonPay SellerId>',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonAWSAccessKeyId' => array(
+        'type'  => 'str',
+        'value' => '<AmazonPay AWSAccessKeyId>',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonSignature' => array(
+        'type'  => 'str',
+        'value' => '<AmazonPay Signature>',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonLoginClientId' => array(
+        'type'  => 'str',
+        'value' => '<AmazonPay LoginClientId>',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'blAmazonLoginActive' => array(
+        'type'  => 'bool',
+        'value' => 'true',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'blAmazonSandboxActive' => array(
+        'type'  => 'bool',
+        'value' => 'true',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'blAmazonLogging' => array(
+        'type'  => 'bool',
+        'value' => 'true',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonLoginButtonStyle' => array(
+        'type'  => 'select',
+        'value' => 'LwA-Gold',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonPayButtonStyle' => array(
+        'type'  => 'select',
+        'value' => 'PwA-Gold',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonLocale' => array(
+        'type'  => 'select',
+        'value' => 'DE',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'aAmazonLanguages' => array(
+        'type'  => 'aarr',
+        'value' => array('en' => 'en-GB', 'de' => 'de-DE', 'fr' => 'fr-FR', 'it' => 'it-IT', 'es' => 'es-ES'),
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonMode' => array(
+        'type'  => 'select',
+        'value' => 'Sync',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonAuthorize' => array(
+        'type'  => 'select',
+        'value' => 'IPN',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonCapture' => array(
+        'type'  => 'select',
+        'value' => 'SHIPPED',
+        'module' => 'module:bestitamazonpay4oxid'
+    ),
+    'sAmazonERPModeStatus' => array(
+        'type'  => 'str',
+        'value' => 'AP-Pend',
+        'module' => 'module:bestitamazonpay4oxid'
+    )
+);
