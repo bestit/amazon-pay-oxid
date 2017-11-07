@@ -100,6 +100,9 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testIsActive()
     {
+        if ($this->getTestConfig()->getShopEdition() !== 'EE') {
+            $this->markTestSkipped('Skip EE related tests for CE/PE edition');
+        }
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(3))
             ->method('getConfigParam')
