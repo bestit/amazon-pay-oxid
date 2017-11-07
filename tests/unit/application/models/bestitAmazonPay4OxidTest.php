@@ -100,6 +100,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testIsActive()
     {
+        $this->setConfigParam('blSkipViewUsage', true);
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(3))
             ->method('getConfigParam')
@@ -115,11 +116,11 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             }));
 
         $sActiveQuery = "SELECT OXACTIVE
-            FROM oxv_oxpayments_de
+            FROM oxpayments
             WHERE OXID = 'bestitamazon'";
 
         $sShippingQuery = "SELECT OXOBJECTID
-            FROM oxobject2payment AS o2p RIGHT JOIN oxv_oxdeliveryset_1_de AS d 
+            FROM oxobject2payment AS o2p RIGHT JOIN oxdeliveryset AS d 
               ON (o2p.OXOBJECTID = d.OXID AND d.OXACTIVE = 1)
             WHERE OXPAYMENTID = 'bestitamazon'
               AND OXTYPE='oxdelset'
