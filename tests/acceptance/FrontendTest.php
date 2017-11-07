@@ -6,6 +6,46 @@
 class FrontendTest extends oxAcceptanceTestCase
 {
     /**
+     * Adds configuration data for testing
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $aConfigData = $this->getAmazonPaySettings();
+        if (is_array($aConfigData) && !empty($aConfigData)) {
+            $this->callShopSC('oxConfig', null, null, $aConfigData);
+        }
+    }
+
+    /**
+     * Returns configuration data for tests
+     *
+     * @return array
+     */
+    private function getAmazonPaySettings()
+    {
+        return $this->getArrayFromFile(__DIR__ .'/config_data.php');
+    }
+
+    /**
+     * Returns data array from file
+     *
+     * @param $sFilePath
+     *
+     * @return array
+     */
+    private function getArrayFromFile($sFilePath)
+    {
+        $aData = [];
+        if (file_exists($sFilePath)) {
+            $aData = include $sFilePath;
+        }
+
+        return $aData;
+    }
+
+    /**
      * @group acceptance
      */
     public function testBasketBtnNextTopBlock()
