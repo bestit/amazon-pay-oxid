@@ -306,9 +306,9 @@ class bestitAmazonPay4Oxid_init
         );
 
         foreach ($aPossibleModuleNames as $sPossibleModuleName) {
-            if ($aVersions[$sPossibleModuleName]) {
+            if (isset($aVersions[$sPossibleModuleName])) {
                 return $aVersions[$sPossibleModuleName];
-            } elseif ($aVersions[strtolower($sPossibleModuleName)]) {
+            } elseif (isset($aVersions[strtolower($sPossibleModuleName)])) {
                 return $aVersions[strtolower($sPossibleModuleName)];
             }
         }
