@@ -1,0 +1,1 @@
+The module documentation can be found at [http://cdn.bestit-online.de/oxid_store/AmazonPay/Dokumentation_AmazonPay_OXID.pdf](http://cdn.bestit-online.de/oxid_store/AmazonPay/Dokumentation_AmazonPay_OXID.pdf)
