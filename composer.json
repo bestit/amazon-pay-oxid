@@ -5,7 +5,7 @@
   "keywords": ["oxid", "modules", "eShop"],
   "homepage": "https://www.bestit-online.de",
   "license": [
-    "GPL-3.0",
+    "GPL-3.0-only",
     "proprietary"
   ],
   "extra": {
