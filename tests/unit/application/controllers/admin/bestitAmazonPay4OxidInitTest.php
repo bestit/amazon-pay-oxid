@@ -337,6 +337,11 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidInit::onActivate();
         $oBestitAmazonPay4OxidInit::onActivate();
         $oBestitAmazonPay4OxidInit::onActivate();
+
+        $this->assertLoggedException(
+            OxidEsales\Eshop\Core\Exception\StandardException::class,
+            'exceptionError'
+        );
     }
 
     /**
