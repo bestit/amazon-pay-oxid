@@ -105,6 +105,7 @@ class bestitAmazonPay4OxidContainer
      * Returns the active user object.
      *
      * @return oxUser|bool
+     * @throws oxSystemComponentException
      */
     public function getActiveUser()
     {
@@ -164,6 +165,7 @@ class bestitAmazonPay4OxidContainer
      * Returns the database object.
      *
      * @return DatabaseInterface
+     * @throws oxConnectionException
      */
     public function getDatabase()
     {

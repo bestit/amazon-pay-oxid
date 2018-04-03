@@ -11,13 +11,35 @@ use PHPUnit_Extensions_Constraint_StringMatchIgnoreWhitespace as MatchIgnoreWhit
 class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 {
     /**
+     * @return string
+     */
+    private function _getTestInstanceName()
+    {
+        return (class_exists('bestitAmazonPay4Oxid_oxOrder_oxid5') === true) ?
+            'bestitAmazonPay4Oxid_oxOrder_oxid5' : 'bestitAmazonPay4Oxid_oxOrder';
+    }
+
+    /**
+     * @return bestitAmazonPay4Oxid_oxOrder|bestitAmazonPay4Oxid_oxOrder_oxid5
+     */
+    private function _getTestInstance()
+    {
+        if (class_exists('bestitAmazonPay4Oxid_oxOrder_oxid5') === true) {
+            return new bestitAmazonPay4Oxid_oxOrder_oxid5();
+        }
+
+        return new bestitAmazonPay4Oxid_oxOrder();
+    }
+
+    /**
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxOrder
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
-        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
+        $oBestitAmazonPay4OxidOxOrder = $this->_getTestInstance();
         self::setValue($oBestitAmazonPay4OxidOxOrder, '_oContainer', $oContainer);
 
         return $oBestitAmazonPay4OxidOxOrder;
@@ -28,17 +50,18 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testCreateInstance()
     {
-        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
-        self::assertInstanceOf('bestitAmazonPay4Oxid_oxOrder', $oBestitAmazonPay4OxidOxOrder);
+        $oBestitAmazonPay4OxidOxOrder = $this->_getTestInstance();
+        self::assertInstanceOf($this->_getTestInstanceName(), $oBestitAmazonPay4OxidOxOrder);
     }
 
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
-        $oBestitAmazonPay4OxidOxOrder = new bestitAmazonPay4Oxid_oxOrder();
+        $oBestitAmazonPay4OxidOxOrder = $this->_getTestInstance();
         self::assertInstanceOf(
             'bestitAmazonPay4OxidContainer',
             self::callMethod($oBestitAmazonPay4OxidOxOrder, '_getContainer')
@@ -51,6 +74,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::_callSyncAmazonAuthorize()
      * @covers ::_manageFullUserData()
      * @covers ::_performAmazonActions()
+     * @throws ReflectionException
      */
     public function testPreFinalizeOrder()
     {
@@ -72,7 +96,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->method('getShopId')
             ->will($this->returnValue(456));
 
-        $oConfig->expects($this->exactly(12))
+        $oConfig->expects($this->exactly(14))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('sAmazonMode'),
@@ -86,26 +110,28 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 array('sAmazonMode'),
                 array('blAmazonERP'),
                 array('sAmazonMode'),
+                array('blAmazonERP'),
                 array('sAmazonMode'),
-                array('sAmazonMode')
+                array('blAmazonERP')
             )
             ->will($this->onConsecutiveCalls(
-                'Sync',
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
                 0,
-                'Sync',
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
                 0,
-                'Sync',
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
                 0,
-                'Sync',
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
                 0,
-                'Sync',
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
                 0,
-                'Async',
-                'Async',
-                'Async'
+                bestitAmazonPay4OxidClient::BASIC_FLOW,
+                0,
+                bestitAmazonPay4OxidClient::OPTIMIZED_FLOW,
+                0
             ));
 
-        $oContainer->expects($this->exactly(19))
+        $oContainer->expects($this->exactly(21))
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
 
@@ -147,17 +173,19 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 null
             ));
 
-        $oSession->expects($this->exactly(5))
+        $oSession->expects($this->exactly(7))
             ->method('setVariable')
             ->withConsecutive(
                 array('blAmazonSyncChangePayment', 1),
+                array('sAmazonSyncResponseState', 'Open'),
+                array('sAmazonSyncResponseAuthorizationId', 'authorizationId'),
                 array('sAmazonSyncResponseState', 'Open'),
                 array('sAmazonSyncResponseAuthorizationId', 'authorizationId'),
                 array('blshowshipaddress', 1),
                 array('deladrid', 'newAddressId')
             );
 
-        $oContainer->expects($this->exactly(19))
+        $oContainer->expects($this->exactly(21))
             ->method('getSession')
             ->will($this->returnValue($oSession));
 
@@ -209,7 +237,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 $this->_getResponseObject($aOrderReferenceOpen)
             ));
 
-        $oClient->expects($this->exactly(5))
+        $oClient->expects($this->exactly(7))
             ->method('authorize')
             ->with(
                 null,
@@ -260,10 +288,31 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                             )
                         )
                     )
+                )),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AmazonAuthorizationId' => 'authorizationId',
+                            'AuthorizationStatus' => array(
+                                'State' => 'Open'
+                            )
+                        )
+                    )
+                )),
+                $this->_getResponseObject(array(
+                    'AuthorizeResult' => array(
+                        'AuthorizationDetails' => array(
+                            'AmazonAuthorizationId' => 'authorizationId',
+                            'AuthorizationStatus' => array(
+                                'State' => 'Declined',
+                                'ReasonCode' => 'TransactionTimedOut'
+                            )
+                        )
+                    )
                 ))
             ));
 
-        $oContainer->expects($this->exactly(23))
+        $oContainer->expects($this->exactly(25))
             ->method('getClient')
             ->will($this->returnValue($oClient));
 
@@ -282,21 +331,22 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                     'shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay&error=BESTITAMAZONPAY_PAYMENT_DECLINED_OR_REJECTED',
                     false
                 ),
+                array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false),
                 array('shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay', false)
             );
 
-        $oContainer->expects($this->exactly(16))
+        $oContainer->expects($this->exactly(18))
             ->method('getUtils')
             ->will($this->returnValue($oUtils));
 
         // UtilsDate
         $oUtilsDate = $this->_getUtilsDateMock();
 
-        $oUtilsDate->expects($this->exactly(5))
+        $oUtilsDate->expects($this->exactly(7))
             ->method('getTime')
             ->will($this->returnValue('123456789'));
 
-        $oContainer->expects($this->exactly(5))
+        $oContainer->expects($this->exactly(7))
             ->method('getUtilsDate')
             ->will($this->returnValue($oUtilsDate));
 
@@ -437,18 +487,18 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue(array()));
 
         $oPrice = $this->_getPriceMock();
-        $oPrice->expects($this->exactly(5))
+        $oPrice->expects($this->exactly(7))
             ->method('getBruttoPrice')
             ->will($this->returnValue(11.1));
         
-        $oBasket->expects($this->exactly(5))
+        $oBasket->expects($this->exactly(7))
             ->method('getPrice')
             ->will($this->returnValue($oPrice));
 
         $oCurrency = new stdClass();
         $oCurrency->name = 'EUR';
 
-        $oBasket->expects($this->exactly(5))
+        $oBasket->expects($this->exactly(7))
             ->method('getBasketCurrency')
             ->will($this->returnValue($oCurrency));
 
@@ -479,110 +529,123 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue(array($oFirstAddress)));
 
         $blIsAmazonOrder = null;
+        $blAuthorizeAsync = null;
 
         // No amazon order
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertTrue($blReturn);
         self::assertFalse($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Empty amazonOrderReferenceId
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Empty confirmOrderReference
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Status not open
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Error authorize
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Error InvalidPaymentMethod
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Cancel ORO
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Unexpected behaviour
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertFalse($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Logged in user already and Amazon address set as shipping
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertTrue($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // Logged in user but we have found user account in OXID with same email
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertTrue($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertFalse($blAuthorizeAsync);
 
         // All right
         $blReturn = self::callMethod(
             $oBestitAmazonPay4OxidOxOrder,
             '_preFinalizeOrder',
-            array(&$oBasket, &$oUser, &$blIsAmazonOrder)
+            array(&$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
         );
         self::assertTrue($blReturn);
         self::assertTrue($blIsAmazonOrder);
+        self::assertTrue($blAuthorizeAsync);
     }
 
     /**
      * @group unit
      * @covers ::_performAmazonActions()
+     * @throws ReflectionException
      */
     public function testPerformAmazonActions()
     {
@@ -617,30 +680,28 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         // Config
         $oConfig = $this->_getConfigMock();
 
-        $oConfig->expects($this->exactly(7))
+        $oConfig->expects($this->exactly(5))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blAmazonERP'),
                 array('sAmazonERPModeStatus'),
                 array('blAmazonERP'),
-                array('sAmazonMode'),
                 array('sAmazonCapture'),
-                array('blAmazonERP'),
-                array('sAmazonMode')
+                array('blAmazonERP')
             )
             ->will($this->onConsecutiveCalls(
                 1,
                 'ERPModeStatus',
                 0,
-                'Sync',
                 'DIRECT',
-                0,
-                'Async'
+                0
             ));
 
         $oContainer->expects($this->exactly(3))
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
+
+        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
 
         // Client
         $oClient = $this->_getClientMock();
@@ -651,40 +712,44 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         $oClient->expects($this->once())
             ->method('authorize');
 
-        $oContainer->expects($this->exactly(2))
+        $oClient->expects($this->exactly(3))
+            ->method('setOrderAttributes')
+            ->with($oBestitAmazonPay4OxidOxOrder);
+
+        $oContainer->expects($this->exactly(5))
             ->method('getClient')
             ->will($this->returnValue($oClient));
-        
-        $oBestitAmazonPay4OxidOxOrder = $this->_getObject($oContainer);
 
-        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
-        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
-        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions');
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions', array(false));
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions', array(false));
+        self::callMethod($oBestitAmazonPay4OxidOxOrder, '_performAmazonActions', array(true));
     }
 
     /**
      * @group unit
      * @covers ::finalizeOrder()
      * @covers ::_parentFinalizeOrder()
+     * @throws Exception
      */
     public function testFinalizeOrder()
     {
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_oxOrder $oBestitAmazonPay4OxidOxOrder */
+        $oBestitAmazonPay4OxidOxOrder = $this->getMock(
+            $this->_getTestInstanceName(),
+            array('_preFinalizeOrder', '_performAmazonActions', '_parentFinalizeOrder')
+        );
+
         $oContainer = $this->_getContainerMock();
 
         // Client
         $oClient = $this->_getClientMock();
         $oClient->expects($this->once())
             ->method('cancelOrderReference');
-        
+
         $oContainer->expects($this->once())
             ->method('getClient')
             ->will($this->returnValue($oClient));
 
-        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_oxOrder $oBestitAmazonPay4OxidOxOrder */
-        $oBestitAmazonPay4OxidOxOrder = $this->getMock(
-            'bestitAmazonPay4Oxid_oxOrder',
-            array('_preFinalizeOrder', '_performAmazonActions', '_parentFinalizeOrder')
-        );
         self::setValue($oBestitAmazonPay4OxidOxOrder, '_oContainer', $oContainer);
 
         $preReturn = false;
@@ -751,6 +816,8 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::validateDeliveryAddress()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testValidateDeliveryAddress()
     {
@@ -789,6 +856,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonChangePaymentLink()
+     * @throws Exception
      */
     public function testGetAmazonChangePaymentLink()
     {

@@ -23,6 +23,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidObjectFactory $objectFactory
      *
      * @return bestitAmazonPay4OxidLoginClient
+     * @throws ReflectionException
      */
     private function _getObject(
         $oUser,
@@ -54,6 +55,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getInstance()
+     * @throws oxSystemComponentException
      */
     public function testCreateInstance()
     {
@@ -65,6 +67,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::isActive()
+     * @throws ReflectionException
      */
     public function testIsActive()
     {
@@ -123,6 +126,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::showAmazonLoginButton()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testShowAmazonLoginButton()
     {
@@ -166,6 +171,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::showAmazonPayButton()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testShowAmazonPayButton()
     {
@@ -212,6 +219,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::processAmazonLogin()
+     * @throws Exception
      */
     public function testProcessAmazonLogin()
     {
@@ -240,6 +248,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::amazonUserIdExists()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testAmazonUserIdExists()
     {
@@ -286,6 +296,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::oxidUserExists()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testOxidUserExists()
     {
@@ -331,6 +343,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::createOxidUser()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testCreateOxidUser()
     {
@@ -400,6 +414,8 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::deleteUser()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testDeleteUser()
     {
@@ -444,6 +460,9 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::cleanAmazonPay()
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testCleanAmazonPay()
     {
@@ -480,6 +499,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonLanguage()
+     * @throws ReflectionException
      */
     public function testGetAmazonLanguage()
     {
@@ -516,6 +536,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getLangIdByAmazonLanguage()
+     * @throws ReflectionException
      */
     public function testGetLangIdByAmazonLanguage()
     {
@@ -559,6 +580,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getOrderLanguageId()
+     * @throws Exception
      */
     public function testGetOrderLanguageId()
     {

@@ -20,6 +20,8 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getActiveUser()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetActiveUser()
     {
@@ -79,6 +81,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getDatabase()
+     * @throws oxConnectionException
      */
     public function testGetDatabase()
     {

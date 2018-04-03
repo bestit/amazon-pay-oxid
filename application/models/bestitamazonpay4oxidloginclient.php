@@ -40,6 +40,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * Singleton instance
      *
      * @return bestitAmazonPay4OxidLoginClient
+     * @throws oxSystemComponentException
      */
     public static function getInstance()
     {
@@ -73,6 +74,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * Method checks if Amazon Login button can be showed
      *
      * @return bool
+     * @throws oxSystemComponentException
      */
     public function showAmazonLoginButton()
     {
@@ -89,6 +91,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * Method checks if Amazon Login button can be showed
      *
      * @return bool
+     * @throws oxConnectionException
      */
     public function showAmazonPayButton()
     {
@@ -106,6 +109,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * @param string $sAccessToken Access token
      *
      * @return object
+     * @throws Exception
      */
     public function processAmazonLogin($sAccessToken)
     {
@@ -118,6 +122,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * @param stdClass $oUserData
      *
      * @return boolean
+     * @throws oxConnectionException
      */
     public function amazonUserIdExists($oUserData)
     {
@@ -136,6 +141,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * @var stdClass $oUserData
      *
      * @return array
+     * @throws oxConnectionException
      */
     public function oxidUserExists($oUserData)
     {
@@ -153,6 +159,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * @var stdClass $oUserData
      *
      * @return boolean
+     * @throws oxSystemComponentException
      */
     public function createOxidUser($oUserData)
     {
@@ -191,7 +198,8 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      *
      * @var string $sId
      *
-     * @return array
+     * @return object
+     * @throws oxConnectionException
      */
     public function deleteUser($sId)
     {
@@ -205,6 +213,8 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Cleans Amazon pay as the selected one, including all related variables, records and values
      *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function cleanAmazonPay()
     {
@@ -250,6 +260,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      * @param oxOrder $oOrder Order object
      *
      * @return int
+     * @throws Exception
      */
     public function getOrderLanguageId(oxOrder $oOrder)
     {

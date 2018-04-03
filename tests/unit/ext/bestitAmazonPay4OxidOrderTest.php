@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_order
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -45,8 +47,144 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @covers ::updateUserWithAmazonData()
+     * @covers ::getAmazonBillingAddress()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function testUpdateUserWithAmazonData()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        // Client
+        $oClient = $this->_getClientMock();
+        $oClient->expects($this->exactly(2))
+            ->method('getOrderReferenceDetails')
+            //->with($oBasket)
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(array(
+                    'GetOrderReferenceDetailsResult' => array(
+                        'OrderReferenceDetails' => array()
+                    )
+                )),
+                $this->_getResponseObject(array(
+                    'GetOrderReferenceDetailsResult' => array(
+                        'OrderReferenceDetails' => array(
+                            'BillingAddress' => array(
+                                'PhysicalAddress' => 'PhysicalAddressValue'
+                            )
+                        )
+                    )
+                ))
+            ));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+
+        $oAddressUtil = $this->_getAddressUtilMock();
+
+        $oAddressUtil->expects($this->once())
+            ->method('parseAmazonAddress')
+            ->with('PhysicalAddressValue')
+            ->will($this->returnValue(array(
+                'FirstName' => 'FirstNameValue',
+                'LastName' => 'LastNameValue',
+                'City' => 'CityValue',
+                'StateOrRegion' => 'StateOrRegionValue',
+                'CountryId' => 'CountryIdValue',
+                'PostalCode' => 'PostalCodeValue'
+            )));
+
+        $oContainer->expects($this->once())
+            ->method('getAddressUtil')
+            ->will($this->returnValue($oAddressUtil));
+
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_order $bestitAmazonPay4OxidOrder */
+        $bestitAmazonPay4OxidOrder = $this->getMock(
+            'bestitAmazonPay4Oxid_order',
+            array('getUser')
+        );
+        self::setValue($bestitAmazonPay4OxidOrder, '_oContainer', $oContainer);
+
+        $oUser = $this->_getUserMock();
+
+        $oUser->expects($this->once())
+            ->method('assign')
+            ->with(array(
+                'oxfname' => 'FirstNameValue',
+                'oxlname' => 'LastNameValue',
+                'oxcity' => 'CityValue',
+                'oxstateid' => 'StateOrRegionValue',
+                'oxcountryid' => 'CountryIdValue',
+                'oxzip' => 'PostalCodeValue'
+            ));
+
+        $oUser->expects($this->once())
+            ->method('save');
+
+        $bestitAmazonPay4OxidOrder->expects($this->once())
+            ->method('getUser')
+            ->will($this->returnValue($oUser));
+
+        $bestitAmazonPay4OxidOrder->updateUserWithAmazonData();
+        $bestitAmazonPay4OxidOrder->updateUserWithAmazonData();
+    }
+
+    /**
+     * @group unit
+     * @covers ::getCountryName()
+     * @throws oxSystemComponentException
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
+     */
+    public function testGetCountryName()
+    {
+        $oCountry = $this->getMock('oxCountry', array(), array(), '', false);
+
+        $oCountry->expects($this->exactly(2))
+            ->method('load')
+            ->with('countryId')
+            ->will($this->onConsecutiveCalls(false, true));
+
+        $oCountry->expects($this->once())
+            ->method('getFieldData')
+            ->with('oxTitle')
+            ->will($this->returnValue('countryTitle'));
+
+        $oObjectFactory = $this->_getObjectFactoryMock();
+
+        $oObjectFactory->expects($this->exactly(2))
+            ->method('createOxidObject')
+            ->with('oxCountry')
+            ->will($this->returnValue($oCountry));
+
+        $oContainer = $this->_getContainerMock();
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getObjectFactory')
+            ->will($this->returnValue($oObjectFactory));
+
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_order $bestitAmazonPay4OxidOrder */
+        $bestitAmazonPay4OxidOrder = $this->getMock(
+            'bestitAmazonPay4Oxid_order',
+            array('getUser')
+        );
+        self::setValue($bestitAmazonPay4OxidOrder, '_oContainer', $oContainer);
+
+        self::assertEquals('', $bestitAmazonPay4OxidOrder->getCountryName('countryId'));
+        self::assertEquals('countryTitle', $bestitAmazonPay4OxidOrder->getCountryName('countryId'));
+    }
+
+    /**
+     * @group unit
      * @covers ::render()
      * @covers ::_setErrorAndRedirect()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxSystemComponentException
      */
     public function testRender()
     {

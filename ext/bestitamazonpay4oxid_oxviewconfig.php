@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -49,6 +50,8 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Method checks if Amazon pay is active and can be used
      *
      * @return boolean true/false
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     public function getAmazonPayIsActive()
     {
@@ -61,6 +64,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * @param string $sPropertyName property name
      *
      * @return mixed
+     * @throws oxSystemComponentException
      */
     public function getAmazonProperty($sPropertyName)
     {
@@ -73,6 +77,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * @param string $sConfigVariable Config variable name
      *
      * @return mixed
+     * @throws oxSystemComponentException
      */
     public function getAmazonConfigValue($sConfigVariable)
     {
@@ -83,6 +88,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Method checks if Amazon Login is active and can be used
      *
      * @return boolean true/false
+     * @throws oxSystemComponentException
      */
     public function getAmazonLoginIsActive()
     {
@@ -93,6 +99,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Method checks if Amazon Login is active and can be used
      *
      * @return boolean true/false
+     * @throws oxSystemComponentException
      */
     public function showAmazonLoginButton()
     {
@@ -103,6 +110,8 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Method checks if Amazon Pay is active and can be used
      *
      * @return boolean true/false
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     public function showAmazonPayButton()
     {
@@ -113,6 +122,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Method returns language for Amazon GUI elements
      *
      * @return string
+     * @throws oxSystemComponentException
      */
     public function getAmazonLanguage()
     {
@@ -127,11 +137,15 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      */
     public function getSelfLink()
     {
-        if ((bool)$this->_getContainer()->getConfig()->getConfigParam('sSSLShopURL') === true
-            && !$this->isAdmin()
-            && $this->getAmazonLoginIsActive()
-        ) {
-            return $this->getSslSelfLink();
+        try {
+            if ((bool)$this->_getContainer()->getConfig()->getConfigParam('sSSLShopURL') === true
+                && !$this->isAdmin()
+                && $this->getAmazonLoginIsActive()
+            ) {
+                return $this->getSslSelfLink();
+            }
+        } catch (Exception $oException) {
+            //Do nothing
         }
 
         return parent::getSelfLink();
@@ -141,6 +155,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      * Forces to return basket link if Amazon Login is active and we already have ORO in SSL
      *
      * @return string
+     * @throws oxSystemComponentException
      */
     public function getBasketLink()
     {

@@ -39,12 +39,11 @@ $(document).ready(function() {
         //Mobile only
         if (isMobile() === true) {
             //Payment change event for mobile version
-            $('#payment .dropdown-menu li').click(function() {
-                if ($('a', this).data("selection-id")=='bestitamazon'){
+            $('#payment').find('.dropdown-menu li').click(function() {
+                if ($('a', this).data("selection-id") === 'bestitamazon'){
                     $payWithAmazonDiv.show();
                     $(amazonPayNextStepButtonId).hide();
-                }
-                else {
+                } else {
                     $payWithAmazonDiv.hide();
                     $(amazonPayNextStepButtonId).show();
                 }
@@ -153,7 +152,7 @@ $(document).ready(function() {
         if (blDontShowAmazonButton === false) {
             $amazonLoginButton.show();
         } else {
-            $amazonLoginButton.remove();
+            $amazonLoginButton.hide();
         }
     } else if ($amazonLoginButton.length) {
         $amazonLoginButton.show();

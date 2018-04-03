@@ -64,10 +64,10 @@ $aLang = array(
     'SHOP_MODULE_sAmazonButtonUrlCUSTOM'                    => 'Custom Button URL',
     'SHOP_MODULE_sAmazonButtonUrlCUSTOMSandbox'             => 'Custom Button URL (Sandbox)',
 
-    'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration'  => 'Configuration',
+    'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration'   => 'Configuration',
     'SHOP_MODULE_sAmazonMode'                               => 'Authorize Mode',
-    'SHOP_MODULE_sAmazonMode_Sync'                          => 'Synchronous',
-    'SHOP_MODULE_sAmazonMode_Async'                         => 'Asynchronous',
+    'SHOP_MODULE_sAmazonMode_BASIC_FLOW'                    => 'Basic Flow',
+    'SHOP_MODULE_sAmazonMode_OPTIMIZED_FLOW'                => 'Optimized Flow',
     'SHOP_MODULE_sAmazonAuthorize'                          => 'Status updates',
     'SHOP_MODULE_sAmazonCapture'                            => 'Capture handling',
     'SHOP_MODULE_blAmazonERP'                               => 'ERP Mode',
@@ -114,4 +114,6 @@ $aLang = array(
 
     'BESTITAMAZONPAY_PLEASE_CHECK_REFUND_CHECKBOX'       => 'Please check the Confirm Refund checkbox to perform the refund',
     'BESTITAMAZONPAY_INVALID_REFUND_AMOUNT'              => 'Invalid refund amount, please correct and try again',
+
+    'BESTIT_AMAZON_QUICK_CONFIG' => 'Quick configuration'
 );

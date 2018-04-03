@@ -34,6 +34,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
      * @param oxDbMetaDataHandler $oDbMetaDataHandler
      *
      * @return bestitAmazonPay4Oxid_init
+     * @throws ReflectionException
      */
     private function _getObject(
         oxConfig $oConfig,
@@ -68,6 +69,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getConfig()
+     * @throws ReflectionException
      */
     public function testGetConfig()
     {
@@ -80,6 +82,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getDatabase()
+     * @throws ReflectionException
      */
     public function testGetDatabase()
     {
@@ -92,6 +95,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getUtilsView()
+     * @throws ReflectionException
      */
     public function testGetUtilsView()
     {
@@ -103,6 +107,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getModule()
+     * @throws ReflectionException
      */
     public function testGetModule()
     {
@@ -114,6 +119,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getModuleCache()
+     * @throws ReflectionException
      */
     public function testGetModuleCache()
     {
@@ -128,6 +134,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getModuleInstaller()
+     * @throws ReflectionException
      */
     public function testGetModuleInstaller()
     {
@@ -142,6 +149,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getDbMetaDataHandler()
+     * @throws ReflectionException
      */
     public function testGetDbMetaDataHandler()
     {
@@ -158,6 +166,8 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::_executeSqlFile()
      * @covers ::_removeTempVersionNumberFromDatabase()
      * @covers ::_deactivateOldModule()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testOnActivate()
     {
@@ -179,10 +189,22 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 '2.3.0'
             ));
 
-        $oConfig->expects($this->exactly(3))
+        $oConfig->expects($this->exactly(5))
             ->method('getConfigParam')
-            ->with('sCompileDir')
-            ->will($this->returnValue($this->oRoot->url()));
+            ->withConsecutive(
+                array('sCompileDir'),
+                array('sAmazonMode'),
+                array('sCompileDir'),
+                array('sAmazonMode'),
+                array('sCompileDir')
+            )
+            ->will($this->onConsecutiveCalls(
+                $this->oRoot->url(),
+                'Sync',
+                $this->oRoot->url(),
+                'Async',
+                $this->oRoot->url()
+            ));
 
         $oConfig->expects($this->exactly(2))
             ->method('getShopId')
@@ -338,15 +360,21 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidInit::onActivate();
         $oBestitAmazonPay4OxidInit::onActivate();
 
-        $this->assertLoggedException(
-            OxidEsales\Eshop\Core\Exception\StandardException::class,
-            'exceptionError'
-        );
+        if (method_exists($this, 'assertLoggedException')
+            && class_exists('OxidEsales\Eshop\Core\Exception\StandardException')
+        ) {
+            $this->assertLoggedException(
+                'OxidEsales\Eshop\Core\Exception\StandardException',
+                'exceptionError'
+            );
+        }
     }
 
     /**
      * @group unit
      * @covers ::onDeactivate()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testOnDeactivate()
     {
@@ -374,6 +402,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getCurrentVersion()
+     * @throws ReflectionException
      */
     public function testGetCurrentVersion()
     {
@@ -409,6 +438,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::flagForUpdate()
+     * @throws ReflectionException
      */
     public function testFlagForUpdate()
     {

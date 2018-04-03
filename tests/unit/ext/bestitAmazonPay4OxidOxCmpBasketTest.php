@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxcmp_basket
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -47,21 +49,31 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::render()
      * @covers ::cleanAmazonPay()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
+     * @throws Exception
      */
     public function testRender()
     {
         $oContainer = $this->_getContainerMock();
 
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(7))
+        $oConfig->expects($this->exactly(9))
             ->method('getRequestParameter')
             ->withConsecutive(
                 array('cl'),
                 array('cl'),
                 array('cl'),
                 array('cl'),
+                array('bestitAmazonPay4OxidErrorCode'),
                 array('error'),
                 array('cl'),
+                array('bestitAmazonPay4OxidErrorCode'),
                 array('error')
             )
             ->will($this->onConsecutiveCalls(
@@ -70,7 +82,9 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
                 'some',
                 'some',
                 '',
+                '',
                 'some',
+                '',
                 'errorValue'
             ));
         $oConfig->expects($this->exactly(2))
@@ -83,16 +97,24 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
 
         // Session
         $oSession = $this->_getSessionMock();
-        $oSession->expects($this->exactly(3))
+        $oSession->expects($this->exactly(5))
             ->method('getVariable')
-            ->with('blAmazonSyncChangePayment')
+            ->withConsecutive(
+                array('blAmazonSyncChangePayment'),
+                array('blAmazonSyncChangePayment'),
+                array('amazonOrderReferenceId'),
+                array('blAmazonSyncChangePayment'),
+                array('amazonOrderReferenceId')
+            )
             ->will($this->onConsecutiveCalls(
                 false,
                 true,
-                true
+                'amazonOrderReferenceIdValue',
+                true,
+                'amazonOrderReferenceIdValue'
             ));
 
-        $oContainer->expects($this->exactly(3))
+        $oContainer->expects($this->exactly(5))
             ->method('getSession')
             ->will($this->returnValue($oSession));
 
@@ -110,7 +132,7 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
         $oUserException->expects($this->exactly(2))
             ->method('setMessage')
             ->withConsecutive(
-                array('BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED'),
+                array(bestitAmazonPay4Oxid_oxcmp_basket::BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED),
                 array('errorValue')
             );
 
@@ -148,6 +170,16 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
         $oContainer->expects($this->exactly(2))
             ->method('getUtils')
             ->will($this->returnValue($oUtils));
+
+        // Client
+        $oClient = $this->_getClientMock();
+        $oClient->expects($this->exactly(2))
+            ->method('cancelOrderReference')
+            ->with(null, array('amazon_order_reference_id' => 'amazonOrderReferenceIdValue'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
 
         $oBestitAmazonPay4OxidOxCmpBasket = $this->_getObject($oContainer);
         $oBestitAmazonPay4OxidOxCmpBasket->render();

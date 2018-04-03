@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -51,6 +52,8 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
      * @param string $sShipSet the string to quote
      *
      * @return boolean
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     protected function _getShippingAvailableForPayment($sShipSet)
     {
@@ -83,6 +86,8 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
      * @param oxBasket $oBasket
      *
      * @return mixed
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     protected function _processResult($aResult, $oUser, $oBasket)
     {
@@ -130,12 +135,17 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
     }
     
     /**
+     * Returns the delivery set data.
      *
-     * @param string $sShipSet current ship set id (can be null if not set yet)
-     * @param oxuser $oUser    active user
-     * @param double $oBasket  basket object
+     *
+     * @param string   $sShipSet current ship set id (can be null if not set yet)
+     * @param oxUser   $oUser    active user
+     * @param oxBasket $oBasket  basket object
      *
      * @return array
+     *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function getDeliverySetData($sShipSet, $oUser, $oBasket)
     {

@@ -48,5 +48,11 @@ $aLang = array(
     'BESTITAMAZONPAY_EMAIL_PLEASE_UPDATE_PAYMENT'              => 'et mettre à jour le moyen de paiement pour votre commande. Nous enverrons alors automatiquement une nouvelle demande d\'autorisation à Amazon Pay et vous recevrez un email de confirmation',
     'BESTITAMAZONPAY_EMAIL_KIND_REGARDS'                       => 'Cordialement',
     'BESTITAMAZONPAY_EMAIL_DECLINED_TEXT'                      => 'Amazon Pay a malheureusement refusé votre paiement pour votre commande dans notre boutique en ligne',
-    'BESTITAMAZONPAY_EMAIL_CONTACT_US'                          => 'Merci de nous contacter',
+    'BESTITAMAZONPAY_EMAIL_CONTACT_US'                         => 'Merci de nous contacter',
+    'BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED'               => 'Amazon Pay ne peut pas être utilisé avec la devise sélectionnée. Sélectionnez ci-possible une autre devise sur le site marchant.',
+    'BESTITAMAZONPAY_BILLING_ADDRESS'                          => 'Adresse de facturation',
+    'BESTITAMAZONPAY_UPDATE_BILLING_ADDRESS'                   => 'Utiliser l\'adresse de facturation d\'Amazon',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT'                  => 'Adresse de facturation actuelle',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_NEW'                      => 'Adresse de facturation d\'Amazon',
+    'BESTITAMAZONPAY_THANK_YOU_MESSAGE'                        => 'Votre transaction avec Amazon Pay est en cours de validation. Vous serez informé prochainement de son suivi.',
 );

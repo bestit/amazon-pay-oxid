@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidOxCmpUserTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxcmp_user
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidOxCmpUserTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -47,6 +49,10 @@ class bestitAmazonPay4OxidOxCmpUserTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::amazonLogin()
      * @covers ::_setErrorAndRedirect()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testAmazonLogin()
     {
@@ -255,6 +261,7 @@ class bestitAmazonPay4OxidOxCmpUserTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_afterLogout()
+     * @throws ReflectionException
      */
     public function testAfterLogout()
     {

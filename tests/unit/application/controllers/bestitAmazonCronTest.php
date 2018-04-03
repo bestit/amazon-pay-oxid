@@ -14,6 +14,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonCron
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -35,6 +36,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -52,6 +54,9 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::_updateRefundDetails()
      * @covers ::_processOrderStates()
      * @covers ::_addToMessages()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxSystemComponentException
      */
     public function testRender()
     {
@@ -279,6 +284,8 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::_getOperationName()
      * @covers ::_getOrder()
      * @covers ::_getParams()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testAmazonCall()
     {
@@ -355,7 +362,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
 
         $oBestitAmazonIpn = $this->_getObject($oContainer);
 
-        self::assertFalse($oBestitAmazonIpn->amazonCall());
+        self::assertNull($oBestitAmazonIpn->amazonCall());
         self::assertAttributeEquals(
             array(
                 'sError' => 'Please specify operation you want to call (&operation=) '
@@ -366,25 +373,25 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
         );
 
         self::setValue($oBestitAmazonIpn, '_aViewData', array());
-        self::assertTrue($oBestitAmazonIpn->amazonCall());
+        self::assertNull($oBestitAmazonIpn->amazonCall());
         self::assertAttributeEquals(
-            array('sMessage' => "<pre>Array\n(\n    [0] => firstResponse\n)\n</pre>"),
+            array('sMessage' => "<pre>stdClass Object\n(\n    [0] => firstResponse\n)\n</pre>"),
             '_aViewData',
             $oBestitAmazonIpn
         );
 
         self::setValue($oBestitAmazonIpn, '_aViewData', array());
-        self::assertTrue($oBestitAmazonIpn->amazonCall());
+        self::assertNull($oBestitAmazonIpn->amazonCall());
         self::assertAttributeEquals(
-            array('sMessage' => "<pre>Array\n(\n    [0] => secondResponse\n)\n</pre>"),
+            array('sMessage' => "<pre>stdClass Object\n(\n    [0] => secondResponse\n)\n</pre>"),
             '_aViewData',
             $oBestitAmazonIpn
         );
 
         self::setValue($oBestitAmazonIpn, '_aViewData', array());
-        self::assertTrue($oBestitAmazonIpn->amazonCall());
+        self::assertNull($oBestitAmazonIpn->amazonCall());
         self::assertAttributeEquals(
-            array('sMessage' => "<pre>Array\n(\n    [0] => thirdResponse\n)\n</pre>"),
+            array('sMessage' => "<pre>stdClass Object\n(\n    [0] => thirdResponse\n)\n</pre>"),
             '_aViewData',
             $oBestitAmazonIpn
         );

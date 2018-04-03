@@ -1,0 +1,21 @@
+sudo: required
+language: php
+services:
+  - docker
+before_script:
+  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
+  - docker pull "$IMAGE_NAME" || true
+script:
+  - docker run --entrypoint "" -v $(pwd):/app -w /app $IMAGE_NAME /bin/bash -c "chmod +x ./build.sh && ./build.sh"
+before_deploy:
+  - ssh-keyscan $DEPLOYMENT_SERVER >> $HOME/.ssh/known_hosts
+  - (umask  077 ; echo $DEPLOYMENT_SSH_KEY | base64 --decode > /tmp/deploy_rsa)
+  - eval "$(ssh-agent -s)"
+  - chmod 600 /tmp/deploy_rsa
+  - ssh-add /tmp/deploy_rsa
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: ./deploy.sh
+  on:
+    branch: master

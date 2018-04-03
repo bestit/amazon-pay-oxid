@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_user extends bestitAmazonPay4Oxid_user_parent
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -49,6 +50,7 @@ class bestitAmazonPay4Oxid_user extends bestitAmazonPay4Oxid_user_parent
      * Set Amazon reference ID to session
      *
      * @return mixed
+     * @throws oxSystemComponentException
      */
     public function render()
     {

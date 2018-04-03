@@ -49,4 +49,10 @@ $aLang = array(
     'BESTITAMAZONPAY_EMAIL_KIND_REGARDS'                       => 'Distinti saluti',
     'BESTITAMAZONPAY_EMAIL_DECLINED_TEXT'                      => 'Purtroppo il pagamento per il Suo ordine nel nostro negozio Online é stato respinto da Amazon Pay',
     'BESTITAMAZONPAY_EMAIL_CONTACT_US'                         => 'Per favore contattateci.',
+    'BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED'               => 'Amazon Pay non può essere utilizzato con la valuta selezionata. Per favore selezionare se possibile una valuta differente sul sito web del venditore.',
+    'BESTITAMAZONPAY_BILLING_ADDRESS'                          => 'Indirizzo di fatturazione',
+    'BESTITAMAZONPAY_UPDATE_BILLING_ADDRESS'                   => 'Utilizza l\'indirizzo di fatturazione di Amazon',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT'                  => 'Indirizzo di fatturazione attuale',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_NEW'                      => 'Indirizzo di fatturazione di Amazon',
+    'BESTITAMAZONPAY_THANK_YOU_MESSAGE'                        => 'La vostra transazione con Amazon Pay è in fase di validazione. Vi informeremo del risultato della transazione a breve.',
 );

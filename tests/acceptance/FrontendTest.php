@@ -1,5 +1,9 @@
 <?php
 
+if (class_exists('oxAcceptanceTestCase') === false) {
+    return;
+}
+
 /**
  * Class FrontendTest
  */
@@ -11,9 +15,8 @@ class FrontendTest extends oxAcceptanceTestCase
     protected function setUp()
     {
         parent::setUp();
-
         $aConfigData = $this->getAmazonPaySettings();
-        
+
         if (is_array($aConfigData) && !empty($aConfigData)) {
             $this->callShopSC('oxConfig', null, null, $aConfigData);
         }
@@ -36,14 +39,14 @@ class FrontendTest extends oxAcceptanceTestCase
      *
      * @return array
      */
+
     private function getArrayFromFile($sFilePath)
     {
-        $aData = [];
-        
+        $aData = array();
+
         if (file_exists($sFilePath)) {
             $aData = include $sFilePath;
         }
-
         return $aData;
     }
 

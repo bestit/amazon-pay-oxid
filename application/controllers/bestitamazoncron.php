@@ -40,6 +40,7 @@ class bestitAmazonCron extends oxUBase
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -65,10 +66,12 @@ class bestitAmazonCron extends oxUBase
     /**
      * Processes the order states.
      *
-     * @param string  $sQuery
-     * @param string  $sClientFunction
+     * @param string $sQuery
+     * @param string $sClientFunction
      *
      * @return array
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _processOrderStates($sQuery, $sClientFunction)
     {
@@ -89,6 +92,8 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * Authorize unauthorized orders or orders with pending status
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _updateAuthorizedOrders()
     {
@@ -112,6 +117,8 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * Update declined orders state
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _updateDeclinedOrders()
     {
@@ -135,6 +142,8 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * Update suspended orders
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _updateSuspendedOrders()
     {
@@ -158,6 +167,8 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * Capture orders with Authorize status=open
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _captureOrders()
     {
@@ -186,6 +197,7 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * Check and update refund details for made refunds
+     * @throws Exception
      */
     protected function _updateRefundDetails()
     {
@@ -210,6 +222,8 @@ class bestitAmazonCron extends oxUBase
 
     /**
      * The render function
+     * @throws Exception
+     * @throws oxSystemComponentException
      */
     public function render()
     {
@@ -247,6 +261,7 @@ class bestitAmazonCron extends oxUBase
      * Method returns Operation name
      *
      * @return mixed
+     * @throws oxSystemComponentException
      */
     protected function _getOperationName()
     {
@@ -264,6 +279,7 @@ class bestitAmazonCron extends oxUBase
      * Method returns Order object
      *
      * @return null|oxOrder
+     * @throws oxSystemComponentException
      */
     protected function _getOrder()
     {
@@ -285,6 +301,7 @@ class bestitAmazonCron extends oxUBase
      * Method returns Parameters from GET aParam array
      *
      * @return array
+     * @throws oxSystemComponentException
      */
     protected function _getParams()
     {
@@ -305,6 +322,7 @@ class bestitAmazonCron extends oxUBase
      *
      * index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&oxid=87feca21ce31c34f0d3dceb8197a2375
      * index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&aParams[AmazonOrderReferenceId]=51fd6a7381e7a0220b0f166fe331e420&aParams[AmazonAuthorizationId]=S02-8774768-9373076-A060413
+     * @throws oxSystemComponentException
      */
     public function amazonCall()
     {
@@ -317,14 +335,12 @@ class bestitAmazonCron extends oxUBase
             );
 
             $this->_addToMessages('<pre>'.print_r($oResult, true).'</pre>');
-            return true;
+            return;
         }
 
         $this->setViewData(array(
             'sError' => 'Please specify operation you want to call (&operation=) '
                 .'and use &oxid= parameter to specify order ID or use &aParams[\'key\']=value'
         ));
-
-        return false;
     }
 }

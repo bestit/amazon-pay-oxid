@@ -14,6 +14,7 @@ class bestitAmazonIpnTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonIpn
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -35,6 +36,7 @@ class bestitAmazonIpnTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -47,6 +49,10 @@ class bestitAmazonIpnTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::render()
      * @covers ::_getContainer()
      * @covers ::_processError()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testRender()
     {

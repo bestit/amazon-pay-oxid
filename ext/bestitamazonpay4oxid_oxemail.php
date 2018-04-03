@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -65,6 +66,8 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      * @param string  $sSubject
      *
      * @return bool
+     * @throws oxSystemComponentException
+     * @throws Exception
      */
     private function _baseMailSetup($oOrder, $sTemplate, $sSubject)
     {
@@ -120,10 +123,12 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      * Sets mailer additional settings and sends Amazon Invalid payment mail to user.
      * Returns true on success.
      *
-     * @param oxOrder $oOrder order object
-     * @param string $sSubject user defined subject [optional]
+     * @param oxOrder $oOrder   order object
+     * @param string  $sSubject user defined subject [optional]
      *
      * @return bool
+     * @throws oxSystemComponentException
+     * @throws Exception
      */
     public function sendAmazonInvalidPaymentEmail($oOrder, $sSubject = null)
     {
@@ -139,10 +144,12 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      * Sets mailer additional settings and sends Amazon Rejected payment mail to user.
      * Returns true on success.
      *
-     * @param oxOrder $oOrder order object
-     * @param string $sSubject user defined subject [optional]
+     * @param oxOrder $oOrder   order object
+     * @param string  $sSubject user defined subject [optional]
      *
      * @return bool
+     * @throws oxSystemComponentException
+     * @throws Exception
      */
     public function sendAmazonRejectedPaymentEmail($oOrder, $sSubject = null)
     {

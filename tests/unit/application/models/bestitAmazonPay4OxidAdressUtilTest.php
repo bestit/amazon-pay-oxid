@@ -16,6 +16,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
      * @param oxLang            $oLanguage
      *
      * @return bestitAmazonPay4OxidAddressUtil
+     * @throws ReflectionException
      */
     private function _getObject(oxConfig $oConfig, DatabaseInterface $oDatabase, oxLang $oLanguage)
     {
@@ -39,7 +40,10 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group  unit
      * @covers ::parseAmazonAddress()
+     * @covers ::_parseAddressFields()
      * @covers ::_parseSingleAddress()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testParseAmazonAddress()
     {
@@ -119,10 +123,10 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
                 'LastName' => 'LName',
                 'FirstName' => 'FName MName',
                 'CountryId' => 'countryId',
-                'CompanyName' => 'Street Name 2a',
-                'Street' => 'Address Line',
-                'StreetNr' => '2',
-                'AddInfo' => '(Two)',
+                'CompanyName' => 'Address Line 2 (Two)',
+                'Street' => 'Street Name',
+                'StreetNr' => '2a',
+                'AddInfo' => '',
                 'AddressLine1' => 'Street Name 2a',
                 'AddressLine2' => 'Address Line 2 (Two)'
             ),
@@ -137,10 +141,10 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
                 'LastName' => 'LName',
                 'FirstName' => 'FName MName',
                 'CountryId' => 'countryId',
-                'CompanyName' => 'Street Name 2a Address Line 2 (Two)',
-                'Street' => 'Address Line',
-                'StreetNr' => '3',
-                'AddInfo' => '(Three) €',
+                'CompanyName' => 'Address Line 2 (Two), Address Line 3 (Three) €',
+                'Street' => 'Street Name',
+                'StreetNr' => '2a',
+                'AddInfo' => '',
                 'AddressLine1' => 'Street Name 2a',
                 'AddressLine2' => 'Address Line 2 (Two)',
                 'AddressLine3' => 'Address Line 3 (Three) €'
@@ -156,10 +160,10 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
                 'LastName' => 'LName',
                 'FirstName' => 'FName MName',
                 'CountryId' => 'countryId',
-                'CompanyName' => 'Street Name 2a Address Line 2 (Two)',
-                'Street' => 'Address Line',
-                'StreetNr' => '3',
-                'AddInfo' => '(Three) EUR',
+                'CompanyName' => 'Address Line 2 (Two), Address Line 3 (Three) EUR',
+                'Street' => 'Street Name',
+                'StreetNr' => '2a',
+                'AddInfo' => '',
                 'AddressLine1' => 'Street Name 2a',
                 'AddressLine2' => 'Address Line 2 (Two)',
                 'AddressLine3' => 'Address Line 3 (Three) EUR'
@@ -171,6 +175,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group  unit
      * @covers ::encodeString()
+     * @throws ReflectionException
      */
     public function testEncodeString()
     {

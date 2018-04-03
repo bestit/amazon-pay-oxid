@@ -27,11 +27,70 @@
 class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
 {
     /**
+     * Returns parsed Street name and Street number in array
+     *
+     * @param string $sString Full address
+     *
+     * @return string
+     */
+    protected function _parseSingleAddress($sString)
+    {
+        preg_match('/\s*([^\d]*[^\d\s])\s*(\d[^\s]*)\s*(.*)/', $sString, $aResult);
+
+        return $aResult;
+    }
+
+    /**
+     * Parses the amazon address fields.
+     *
+     * @param \stdClass $oAmazonData
+     * @param array     $aResult
+     */
+    protected function _parseAddressFields($oAmazonData, array &$aResult)
+    {
+        // Cleanup address fields and store them to an array
+        $aAmazonAddresses = array(
+            1 => is_string($oAmazonData->AddressLine1) ? trim($oAmazonData->AddressLine1) : '',
+            2 => is_string($oAmazonData->AddressLine2) ? trim($oAmazonData->AddressLine2) : '',
+            3 => is_string($oAmazonData->AddressLine3) ? trim($oAmazonData->AddressLine3) : ''
+        );
+
+        $aReverseOrderCountries = array('DE', 'AT');
+        $aMap = array_flip($aReverseOrderCountries);
+        $aCheckOrder = isset($aMap[$oAmazonData->CountryCode]) === true ? array (2, 1) : array(1, 2);
+        $sStreet = '';
+        $sCompany = '';
+
+        foreach ($aCheckOrder as $iCheck) {
+            if ($aAmazonAddresses[$iCheck] !== '') {
+                if ($sStreet !== '') {
+                    $sCompany = $aAmazonAddresses[$iCheck];
+                    break;
+                }
+
+                $sStreet = $aAmazonAddresses[$iCheck];
+            }
+        }
+
+        if ($aAmazonAddresses[3] !== '') {
+            $sCompany = ($sCompany === '') ? $aAmazonAddresses[3] : "{$sCompany}, {$aAmazonAddresses[3]}";
+        }
+
+        $aResult['CompanyName'] = $sCompany;
+
+        $aAddress = $this->_parseSingleAddress($sStreet);
+        $aResult['Street'] = isset($aAddress[1]) === true ? $aAddress[1] : '';
+        $aResult['StreetNr'] = isset($aAddress[2]) === true ? $aAddress[2] : '';
+        $aResult['AddInfo'] = isset($aAddress[3]) === true ? $aAddress[3] : '';
+    }
+
+    /**
      * Returns Parsed address from Amazon by specific rules
      *
      * @param object $oAmazonData Address object
      *
      * @return array Parsed Address
+     * @throws oxConnectionException
      */
     public function parseAmazonAddress($oAmazonData)
     {
@@ -44,30 +103,16 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
         $aResult['FirstName'] = implode(' ', $aFullName);
 
         $sTable = getViewName('oxcountry');
+        $oAmazonData->CountryCode = (string)$oAmazonData->CountryCode === 'UK' ? 'GB' : $oAmazonData->CountryCode;
         $sSql = "SELECT OXID
             FROM {$sTable}
-            WHERE OXISOALPHA2 = " . $this->getDatabase()->quote($oAmazonData->CountryCode);
+            WHERE OXISOALPHA2 = ".$this->getDatabase()->quote($oAmazonData->CountryCode);
 
         //Country ID
         $aResult['CountryId'] = $this->getDatabase()->getOne($sSql);
 
         //Parsing address
-        $aAddress = array();
-        $aResult['CompanyName'] = '';
-
-        if (!empty($oAmazonData->AddressLine3)) {
-            $aAddress = $this->_parseSingleAddress($oAmazonData->AddressLine3);
-            $aResult['CompanyName'] = trim($oAmazonData->AddressLine1 . ' ' . $oAmazonData->AddressLine2);
-        } else if (!empty($oAmazonData->AddressLine2)) {
-            $aAddress = $this->_parseSingleAddress($oAmazonData->AddressLine2);
-            $aResult['CompanyName'] = $oAmazonData->AddressLine1;
-        } else if (!empty($oAmazonData->AddressLine1)) {
-            $aAddress = $this->_parseSingleAddress($oAmazonData->AddressLine1);
-        }
-
-        $aResult['Street'] = isset($aAddress[1]) ? $aAddress[1] : '';
-        $aResult['StreetNr'] = isset($aAddress[2]) ? $aAddress[2] : '';
-        $aResult['AddInfo'] = isset($aAddress[3]) ? $aAddress[3] : '';
+        $this->_parseAddressFields($oAmazonData, $aResult);
 
         //If shop runs in non UTF-8 mode encode values to ANSI
         if ($this->getConfig()->isUtf() === false) {
@@ -75,21 +120,6 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
                 $aResult[$sKey] = $this->encodeString($sValue);
             }
         }
-
-        return $aResult;
-    }
-
-
-    /**
-     * Returns parsed Street name and Street number in array
-     *
-     * @param string $sString Full address
-     *
-     * @return string
-     */
-    protected function _parseSingleAddress($sString)
-    {
-        preg_match('/\s*([^\d]*[^\d\s])\s*(\d[^\s]*)\s*(.*)/', $sString, $aResult);
 
         return $aResult;
     }

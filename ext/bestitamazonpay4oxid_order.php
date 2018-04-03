@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -44,10 +45,12 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
 
         return $this->_oContainer;
     }
-    
+
     /**
      * @param string $sError
      * @param string $sRedirectUrl
+     *
+     * @throws oxSystemComponentException
      */
     protected function _setErrorAndRedirect($sError, $sRedirectUrl)
     {
@@ -57,7 +60,79 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
         $this->_getContainer()->getUtilsView()->addErrorToDisplay($oEx, false, true);
         $this->_getContainer()->getUtils()->redirect($sRedirectUrl, false);
     }
-    
+
+    /**
+     * Returns the amazon billing address.
+     *
+     * @return array|null
+     * @throws Exception
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function getAmazonBillingAddress()
+    {
+        $oOrderReferenceDetails = $this->_getContainer()->getClient()->getOrderReferenceDetails();
+        $oDetails = $oOrderReferenceDetails->GetOrderReferenceDetailsResult->OrderReferenceDetails;
+
+        if (isset($oDetails->BillingAddress) === true) {
+            $aParsedData = $this->_getContainer()
+                ->getAddressUtil()
+                ->parseAmazonAddress($oDetails->BillingAddress->PhysicalAddress);
+
+            return array(
+                'oxfname' => $aParsedData['FirstName'],
+                'oxlname' => $aParsedData['LastName'],
+                'oxcity' => $aParsedData['City'],
+                'oxstateid' => $aParsedData['StateOrRegion'],
+                'oxcountryid' => $aParsedData['CountryId'],
+                'oxzip' => $aParsedData['PostalCode']
+            );
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the county name for the current billing address country.
+     *
+     * @param string $sCountryId
+     *
+     * @return string
+     * @throws oxSystemComponentException
+     */
+    public function getCountryName($sCountryId)
+    {
+        /** @var oxCountryList $oCountryList */
+        $oCountry = $this->_getContainer()->getObjectFactory()->createOxidObject('oxCountry');
+
+        return ($oCountry->load($sCountryId) === true) ? (string) $oCountry->getFieldData('oxTitle') : '';
+    }
+
+    /**
+     * Updates the user data with the amazon data.
+     * @throws Exception
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function updateUserWithAmazonData()
+    {
+        $billingAddress = $this->getAmazonBillingAddress();
+
+        if ($billingAddress !== null) {
+            $oUser = $this->getUser();
+            $oUser->assign($billingAddress);
+            $oUser->save();
+        }
+    }
+
+    /**
+     * The main render function with additional payment checks.
+     *
+     * @return mixed
+     *
+     * @throws Exception
+     * @throws oxSystemComponentException
+     */
     public function render()
     {
         $sTemplate = parent::render();
@@ -103,8 +178,16 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                     if ($oReferenceDetails === null
                         || (string)$oReferenceDetails->OrderReferenceStatus->State !== 'Draft'
                     ) {
+                        $sAdditionalParameters = '';
+
+                        // check if there is any information about an error
+                        if ($oData->Error->Code) {
+                            $sAdditionalParameters = '&bestitAmazonPay4OxidErrorCode='.$oData->Error->Code
+                                .'&error='.$oData->Error->Message;
+                        }
+
                         $this->_getContainer()->getUtils()->redirect(
-                            $oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay',
+                            $oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay'.$sAdditionalParameters,
                             false
                         );
                         return $sTemplate;

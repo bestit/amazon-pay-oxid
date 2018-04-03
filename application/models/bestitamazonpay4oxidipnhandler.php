@@ -54,10 +54,11 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * Singleton instance
      *
      * @return bestitAmazonPay4OxidIpnHandler
+     * @throws oxSystemComponentException
      */
     public static function getInstance()
     {
-        if (!isset(self::$_instance)) {
+        if (self::$_instance === null) {
             self::$_instance = oxNew(__CLASS__);
         }
 
@@ -68,6 +69,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * Returns the logger.
      *
      * @return Logger
+     * @throws Exception
      */
     protected function _getLogger()
     {
@@ -86,6 +88,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param string $sLevel
      * @param string $sMessage
      * @param array  $oIpnMessage
+     * @throws Exception
      */
     public function logIPNResponse($sLevel, $sMessage, $oIpnMessage = null)
     {
@@ -103,6 +106,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param string $sBody
      *
      * @return stdClass|bool
+     * @throws Exception
      */
     protected function _getMessage($sBody)
     {
@@ -135,6 +139,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param string $sId
      *
      * @return bool|oxOrder
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _loadOrderById($sIdName, $sId)
     {
@@ -160,6 +166,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param stdClass $oData
      *
      * @return boolean
+     * @throws Exception
      */
     protected function _orderReferenceUpdate($oData)
     {
@@ -183,6 +190,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param stdClass $oData
      *
      * @return boolean
+     * @throws Exception
      */
     protected function _paymentAuthorize($oData)
     {
@@ -206,6 +214,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param stdClass $oData
      *
      * @return boolean
+     * @throws Exception
      */
     protected function _paymentCapture($oData)
     {
@@ -228,6 +237,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param stdClass $oData
      *
      * @return boolean
+     * @throws oxConnectionException
+     * @throws Exception
      */
     protected function _paymentRefund($oData)
     {
@@ -258,6 +269,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param string $sBody
      *
      * @return bool
+     * @throws Exception
+     * @throws oxConnectionException
      */
     public function processIPNAction($sBody)
     {

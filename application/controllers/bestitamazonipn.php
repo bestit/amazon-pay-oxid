@@ -53,6 +53,7 @@ class bestitAmazonIpn extends oxUBase
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -67,6 +68,8 @@ class bestitAmazonIpn extends oxUBase
      * @param string $sError
      *
      * @return string
+     * @throws oxSystemComponentException
+     * @throws Exception
      */
     protected function _processError($sError)
     {
@@ -79,6 +82,9 @@ class bestitAmazonIpn extends oxUBase
      * The controller entry point.
      *
      * @return string
+     * @throws Exception
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function render()
     {

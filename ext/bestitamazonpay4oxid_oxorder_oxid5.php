@@ -21,12 +21,10 @@
  * @link      http://www.bestit-online.de
  */
 
-use \OxidEsales\Eshop\Application\Model\Basket;
-
 /**
  * Class bestitAmazonPay4Oxid_oxOrder
  */
-class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
+class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_oxid5_parent
 {
     /**
      * @var null|bestitAmazonPay4OxidContainer
@@ -100,7 +98,7 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
 
         // If we don't have user logged in but we have found user account in OXID with same email
         // that came from Amazon, then add new shipping address and log user in
-        $oDatabase = $oContainer->getDatabase();
+        $oDatabase = $this->_getContainer()->getDatabase();
 
         $sQuery = "SELECT OXID
             FROM oxuser
@@ -152,9 +150,9 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
     /**
      * Calls Authorize method in Amazon depending on settings
      *
-     * @param Basket $oBasket
-     * @param string $sAmazonOrderReferenceId
-     * @param bool   $blOptimizedFlow
+     * @param oxBasket $oBasket
+     * @param string   $sAmazonOrderReferenceId
+     * @param bool     $blOptimizedFlow
      *
      * @return bool
      * @throws Exception
@@ -232,15 +230,15 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
     }
 
     /**
-     * @param Basket $oBasket
-     * @param oxUser $oUser
-     * @param bool   $blIsAmazonOrder
-     * @param bool   $blAuthorizeAsync
+     * @param oxBasket $oBasket
+     * @param oxUser   $oUser
+     * @param bool     $blIsAmazonOrder
+     * @param bool     $blAuthorizeAsync
      *
      * @return bool
      * @throws Exception
      */
-    protected function _preFinalizeOrder(Basket &$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
+    protected function _preFinalizeOrder(oxBasket &$oBasket, &$oUser, &$blIsAmazonOrder, &$blAuthorizeAsync)
     {
         $blAuthorizeAsync = false;
         $oContainer = $this->_getContainer();
@@ -355,13 +353,13 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
     }
 
     /**
-     * @param Basket $oBasket
-     * @param oxUser $oUser
-     * @param bool   $blRecalculatingOrder
+     * @param oxBasket $oBasket
+     * @param oxUser   $oUser
+     * @param bool     $blRecalculatingOrder
      *
      * @return int
      */
-    protected function _parentFinalizeOrder(Basket $oBasket, oxUser $oUser, $blRecalculatingOrder)
+    protected function _parentFinalizeOrder(oxBasket $oBasket, oxUser $oUser, $blRecalculatingOrder)
     {
         return parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
     }
@@ -370,14 +368,14 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
      * Confirm Order details to Amazon if payment id is bestitamazon and amazonreferenceid exists
      * Update user details with the full details received from amazon
      *
-     * @param Basket     $oBasket
+     * @param oxBasket   $oBasket
      * @param oxUser     $oUser
      * @param bool|false $blRecalculatingOrder
      *
      * @return int
      * @throws Exception
      */
-    public function finalizeOrder(Basket $oBasket, $oUser, $blRecalculatingOrder = false)
+    public function finalizeOrder(oxBasket $oBasket, $oUser, $blRecalculatingOrder = false)
     {
         if ($this->_preFinalizeOrder($oBasket, $oUser, $blIsAmazonOrder, $blAuthorizeAsync) === false) {
             return oxOrder::ORDER_STATE_PAYMENTERROR;

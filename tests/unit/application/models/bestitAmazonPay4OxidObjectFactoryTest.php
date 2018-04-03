@@ -20,6 +20,7 @@ class bestitAmazonPay4OxidObjectFactoryTest extends bestitAmazon4OxidUnitTestCas
     /**
      * @group  unit
      * @covers ::createOxidObject()
+     * @throws oxSystemComponentException
      */
     public function testCreateOxidObject()
     {

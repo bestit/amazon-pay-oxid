@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -53,6 +54,7 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
      * @param oxOrder $oOrder Order object
      *
      * @return oxUserPayment
+     * @throws oxSystemComponentException
      */
     protected function _getPaymentType(oxOrder $oOrder)
     {
@@ -71,13 +73,14 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
 
         return $oUserPayment;
     }
-    
+
     /**
      * Executes parent method parent::render(), creates oxOrder, passes
      * it's data to Smarty engine and returns name of template file
      * "order_overview.tpl".
      *
      * @return string
+     * @throws oxSystemComponentException
      */
     public function render()
     {
@@ -125,6 +128,7 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
 
     /**
      * Sends refund request to Amazon
+     * @throws Exception
      */
     public function refundAmazonOrder()
     {
@@ -161,6 +165,8 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
      * Gets All refunds for the order
      *
      * @return array
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     public function getRefunds()
     {
@@ -173,9 +179,10 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
 
         return $oDb->getAll($sSql);
     }
-    
+
     /**
      * Gets refunds status for the order
+     * @throws Exception
      */
     public function getRefundsStatus()
     {

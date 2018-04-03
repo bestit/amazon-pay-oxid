@@ -49,4 +49,10 @@ $aLang = array(
     'BESTITAMAZONPAY_EMAIL_KIND_REGARDS'                       => 'Kind regards',
     'BESTITAMAZONPAY_EMAIL_DECLINED_TEXT'                      => 'Unfortunately Amazon Pay declined the payment for your order in our online shop',
     'BESTITAMAZONPAY_EMAIL_CONTACT_US'                         => 'Please contact us',
+    'BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED'               => 'Amazon Pay can’t be used with the selected currency. Please select another currency on the merchant site, if possible.',
+    'BESTITAMAZONPAY_BILLING_ADDRESS'                          => 'Billing address',
+    'BESTITAMAZONPAY_UPDATE_BILLING_ADDRESS'                   => 'Use Amazon billing address',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT'                  => 'Current billing address',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_NEW'                      => 'Amazon billing address',
+    'BESTITAMAZONPAY_THANK_YOU_MESSAGE'                        => 'Your transaction with Amazon Pay is currently being validated. Please be aware that we will inform you shortly as needed.',
 );

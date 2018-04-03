@@ -40,6 +40,7 @@ class bestitAmazonPay4OxidObjectFactory
      * @param string $sClass
      *
      * @return object
+     * @throws oxSystemComponentException
      */
     public function createOxidObject($sClass)
     {

@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -48,6 +49,9 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     /**
      * @param $sObjectId
      * @param $sAmazonOrderReferenceId
+     *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     protected function _setObjectAmazonReferenceId($sObjectId, $sAmazonOrderReferenceId)
     {
@@ -62,6 +66,8 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * @param $sObjectId
      *
      * @return false|string
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     protected function _getObjectAmazonReferenceId($sObjectId)
     {
@@ -76,6 +82,9 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * Creates user if user is not logged in, if user is logged in creates new shipping address
      *
      * @param object $oAmazonData User data received from Amazon WS
+     *
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _managePrimaryUserData($oAmazonData)
     {
@@ -186,10 +195,11 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             }
         }
     }
-    
+
     /**
      * Get's primary user details and logins user if one is not logged in
      * Add's new address if user is logged in.
+     * @throws Exception
      */
     public function setPrimaryAmazonUserData()
     {
@@ -231,6 +241,7 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * Set's order remark to session
      *
      * @return mixed
+     * @throws oxSystemComponentException
      */
     public function validatePayment()
     {
@@ -261,6 +272,7 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * Template variable getter. Returns order remark
      *
      * @return string
+     * @throws oxSystemComponentException
      */
     public function getOrderRemark()
     {

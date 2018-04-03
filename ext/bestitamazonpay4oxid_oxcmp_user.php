@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -48,6 +49,10 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
     /**
      * @param string $sError
      * @param string $sRedirectUrl
+     *
+     * @throws oxSystemComponentException
+     * @throws oxSystemComponentException
+     * @throws oxSystemComponentException
      */
     protected function _setErrorAndRedirect($sError, $sRedirectUrl)
     {
@@ -60,6 +65,9 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
 
     /**
      * Amazon login
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     * @throws Exception
      */
     public function amazonLogin()
     {
@@ -146,6 +154,8 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
      * Deletes Amazon User data
      *
      * @return null
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     protected function _afterLogout()
     {

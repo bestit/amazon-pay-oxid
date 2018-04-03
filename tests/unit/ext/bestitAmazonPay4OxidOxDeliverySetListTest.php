@@ -14,6 +14,7 @@ class bestitAmazonPay4OxidOxDeliverySetListTest extends bestitAmazon4OxidUnitTes
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxDeliverySetList
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -35,6 +36,7 @@ class bestitAmazonPay4OxidOxDeliverySetListTest extends bestitAmazon4OxidUnitTes
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -50,6 +52,9 @@ class bestitAmazonPay4OxidOxDeliverySetListTest extends bestitAmazon4OxidUnitTes
      * @covers ::getDeliverySetData()
      * @covers ::_processResult()
      * @covers ::_getShippingAvailableForPayment()
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testGetDeliverySetData()
     {

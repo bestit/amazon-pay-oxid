@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidUserTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_user
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidUserTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -46,6 +48,8 @@ class bestitAmazonPay4OxidUserTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::render()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testRender()
     {

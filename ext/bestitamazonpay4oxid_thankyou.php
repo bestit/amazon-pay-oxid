@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -49,6 +50,8 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
      * Delete Amazon pay details after checkout completed
      *
      * @return mixed
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
      */
     public function render()
     {

@@ -53,7 +53,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.0.2',
+    'version' => '3.1.0',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -71,6 +71,7 @@ $aModule = array(
         'order_main' => 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_order_main',
         'oxemail' => 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxemail',
         'oxsession' => 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxsession',
+        'module_config' => 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_module_config'
     ),
     'files' => array(
         'bestitamazonpay4oxid_init' => 'bestit/amazonpay4oxid/application/controllers/admin/bestitamazonpay4oxid_init.php',
@@ -83,8 +84,7 @@ $aModule = array(
         'bestitamazonpay4oxidcontainer' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidcontainer.php',
         'bestitamazonpay4oxidipnhandler' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidipnhandler.php',
         'bestitamazonpay4oxidloginclient' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidloginclient.php',
-        'bestitamazonpay4oxidobjectfactory' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidobjectfactory.php',
-        'bestitamazonpay4oxidparameterhandler' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidparameterhandler.php'
+        'bestitamazonpay4oxidobjectfactory' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidobjectfactory.php'
     ),
     'blocks' => array(
         array(
@@ -127,7 +127,11 @@ $aModule = array(
             'block' => 'footer_main', // flow + azure
             'file' => 'application/blocks/bestitamazonpay4oxid_loginbutton.tpl'
         ),
-
+        array(
+            'template' => 'module_config.tpl',
+            'block' => 'admin_module_config_group',
+            'file' => 'application/blocks/bestitamazonpay4oxid_module_config.tpl'
+        ),
         //Just for Mobile templates
         array(
             'template' => 'page/checkout/basket.tpl',
@@ -138,6 +142,11 @@ $aModule = array(
             'template' => 'page/checkout/payment.tpl',
             'block' => 'mb_select_payment',
             'file' => 'application/blocks/bestitamazonpay4oxid_payment.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/thankyou.tpl',
+            'block' => 'checkout_thankyou_info',
+            'file' => 'application/blocks/bestitamazonpay4oxid_thankyou.tpl'
         )
     ),
     'templates' => array(
@@ -273,9 +282,9 @@ $aModule = array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'sAmazonMode',
             'type' => 'select',
-            'value' => 'Sync',
+            'value' => 'OPTIMIZED_FLOW',
             'position' => '1',
-            'constrains' => 'Async|Sync'
+            'constrains' => 'OPTIMIZED_FLOW|BASIC_FLOW'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -332,6 +341,11 @@ $aModule = array(
         'onDeactivate' => 'bestitAmazonPay4Oxid_init::onDeactivate'
     )
 );
+
+if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
+    $aModule['version'] = '2.6.0';
+    $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
+}
 
 if ($sCurrentVersion !== null && version_compare($sCurrentVersion, $aModule['version'], '<')) {
     bestitAmazonPay4Oxid_init::flagForUpdate();

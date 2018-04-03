@@ -22,6 +22,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidObjectFactory $objectFactory
      *
      * @return bestitAmazonPay4OxidClient
+     * @throws ReflectionException
      */
     private function _getObject(
         $oClient,
@@ -95,6 +96,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getInstance()
+     * @throws Exception
      */
     public function testCreateInstance()
     {
@@ -107,6 +109,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::_getAmazonClient()
      * @covers ::_getLogger()
+     * @throws ReflectionException
      */
     public function testGetAmazonClient()
     {
@@ -141,6 +144,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonProperty()
+     * @throws ReflectionException
      */
     public function testGetAmazonProperty()
     {
@@ -189,6 +193,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::getOrderReferenceDetails()
      * @covers ::processOrderReference()
      * @covers ::_convertResponse()
+     * @throws Exception
      */
     public function testGetOrderReferenceDetailsWithoutOrder()
     {
@@ -241,6 +246,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::processOrderReference()
      * @covers ::_convertResponse()
      * @covers ::authorize()
+     * @throws Exception
      */
     public function testGetOrderReferenceDetailsWithOrder()
     {
@@ -304,15 +310,13 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
         );
 
         $oOrder = $this->_getOrderMock();
-        $oOrder->expects($this->exactly(13))
+        $oOrder->expects($this->exactly(11))
             ->method('getFieldData')
             ->withConsecutive(
                 array('bestitamazonorderreferenceid'),
                 array('bestitamazonorderreferenceid'),
                 array('bestitamazonorderreferenceid'),
-                array('oxtransstatus'),
                 array('bestitamazonorderreferenceid'),
-                array('oxtransstatus'),
                 array('bestitamazonorderreferenceid'),
                 array('oxtransstatus'),
                 //authorize
@@ -326,9 +330,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 'referenceId',
                 'referenceId',
                 'referenceId',
-                'transStatus',
                 'referenceId',
-                'AMZ-Order-Suspended',
                 'referenceId',
                 'AMZ-Order-Suspended',
                 //authorize
@@ -375,6 +377,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::setOrderReferenceDetails()
+     * @covers ::_addSandboxSimulationParams()
+     * @throws Exception
      */
     public function testSetOrderReferenceDetails()
     {
@@ -443,6 +447,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::confirmOrderReference()
+     * @throws Exception
      */
     public function testConfirmOrderReference()
     {
@@ -524,6 +529,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @param string $sFunctionUnderTest
      * @param string $sAmazonStatus
+     * @throws ReflectionException
      */
     private function _cancelCloseOrderTestBase($sFunctionUnderTest, $sAmazonStatus)
     {
@@ -578,6 +584,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::cancelOrderReference()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws ReflectionException
      */
     public function testCancelOrderReference()
     {
@@ -587,15 +597,26 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::closeOrderReference()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws ReflectionException
      */
     public function testCloseOrderReference()
     {
-        $this->_cancelCloseOrderTestBase('cancelOrderReference', 'AMZ-Order-Canceled');
+        $this->_cancelCloseOrderTestBase('closeOrderReference', 'AMZ-Order-Closed');
     }
 
     /**
      * @group unit
      * @covers ::closeAuthorization()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws Exception
      */
     public function testCloseAuthorization()
     {
@@ -658,6 +679,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::authorize()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws Exception
      */
     public function testAuthorize()
     {
@@ -750,6 +775,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::getAuthorizationDetails()
      * @covers ::processAuthorization()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws Exception
      */
     public function testGetAuthorizationDetails()
     {
@@ -795,7 +824,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                         return 'some';
                     }
 
-                    return 'Async';
+                    return bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
                 }
 
                 return false;
@@ -992,6 +1021,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::capture()
      * @covers ::setCaptureState()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws Exception
      */
     public function testCapture()
     {
@@ -1120,6 +1153,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::getCaptureDetails()
      * @covers ::setCaptureState()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
+     * @throws Exception
      */
     public function testGetCaptureDetails()
     {
@@ -1245,6 +1282,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::refund()
+     * @throws Exception
      */
     public function testRefund()
     {
@@ -1367,6 +1405,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::getRefundDetails()
      * @covers ::updateRefund()
+     * @throws Exception
      */
     public function testGetRefundDetails()
     {
@@ -1390,7 +1429,9 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             ),
             array(
                 $this->_getAmazonResponseParserMock(),
-                $this->_getAmazonResponseParserMock(array('Error' => array('Code' => 'errorCode', 'Message' => 'errorMessage'))),
+                $this->_getAmazonResponseParserMock(
+                    array('Error' => array('Code' => 'errorCode', 'Message' => 'errorMessage'))
+                ),
                 $this->_getAmazonResponseParserMock($aRefundResult)
             )
         );
@@ -1447,7 +1488,57 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @covers ::setOrderAttributes()
+     * @throws Exception
+     * @throws ReflectionException
+     */
+    public function testSetOrderAttributes()
+    {
+        $oClient = $this->_getOrderRequestClientMock(
+            'setOrderAttributes',
+            array(
+                array(array(
+                    'amazon_order_reference_id' => 'referenceId',
+                    'seller_order_id' => 'orderNumber'
+                ))
+            ),
+            array(
+                'response'
+            )
+        );
+
+        $oBestitAmazonPay4OxidClient = $this->_getObject(
+            $oClient,
+            $this->_getConfigMock(),
+            $this->_getDatabaseMock(),
+            $this->_getLanguageMock(),
+            $this->_getSessionMock(),
+            $this->_getUtilsDateMock(),
+            $this->_getObjectFactoryMock()
+        );
+
+        $oOrder = $this->_getOrderMock();
+        $oOrder->expects($this->exactly(2))
+            ->method('getFieldData')
+            ->withConsecutive(
+                array('bestitamazonorderreferenceid'),
+                array('oxordernr')
+            )
+            ->will($this->onConsecutiveCalls(
+                'referenceId',
+                'orderNumber'
+            ));
+
+        self::assertEquals(
+            'response',
+            $oBestitAmazonPay4OxidClient->setOrderAttributes($oOrder)
+        );
+    }
+
+    /**
+     * @group unit
      * @covers ::processAmazonLogin()
+     * @throws Exception
      */
     public function testProcessAmazonLogin()
     {

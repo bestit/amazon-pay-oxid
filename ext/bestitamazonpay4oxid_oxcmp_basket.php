@@ -26,6 +26,9 @@
  */
 class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_basket_parent
 {
+    const BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED = 'BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED';
+    const BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED = 'BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED';
+
     /**
      * @var null|bestitAmazonPay4OxidContainer
      */
@@ -35,6 +38,7 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -47,17 +51,44 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
 
     /**
      * Cleans Amazon pay as the selected one, including all related variables and values
+     *
+     * @param bool $cancelOrderReference
+     *
+     * @throws Exception
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
-    public function cleanAmazonPay()
+    public function cleanAmazonPay($cancelOrderReference = false)
     {
+        if ($cancelOrderReference === true) {
+            $this->_getContainer()->getClient()->cancelOrderReference(
+                null,
+                array('amazon_order_reference_id' => $this->_getContainer()
+                    ->getSession()
+                    ->getVariable('amazonOrderReferenceId')
+                )
+            );
+        }
+
         //Clean all related variables with user data and amazon reference id
         $this->_getContainer()->getModule()->cleanAmazonPay();
         $oConfig = $this->_getContainer()->getConfig();
-        $sError = (string)$oConfig->getRequestParameter('error');
 
-        //Bind redirect message if previous was not set
-        if ($sError === '') {
-            $sError = 'BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED';
+        $sErrorCode = (string)$oConfig->getRequestParameter('bestitAmazonPay4OxidErrorCode');
+        $sErrorMessage = (string)$oConfig->getRequestParameter('error');
+
+        if ($sErrorCode === 'CurrencyUnsupported') {
+            $sError = self::BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED;
+        } elseif ($sErrorCode == 'InvalidParameterValue'
+            && (stripos($sErrorMessage, 'presentmentCurrency') !== false
+                || stripos($sErrorMessage, 'currencyCode') !== false)
+        ) {
+            $sError = self::BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED;
+        } elseif ($sErrorMessage !== '') {
+            // error message directly by amazon pay
+            $sError = $sErrorMessage;
+        } else {
+            $sError = self::BESTITAMAZONPAY_ERROR_AMAZON_TERMINATED;
         }
 
         /** @var oxUserException $oEx */
@@ -72,7 +103,10 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     /**
      * Clears amazon pay variables.
      *
-     * @return mixed
+     * @return object
+     * @throws Exception
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function render()
     {
@@ -83,7 +117,7 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
             && $sClass !== 'thankyou'
             && (bool)$this->_getContainer()->getSession()->getVariable('blAmazonSyncChangePayment') === true
         ) {
-            $this->cleanAmazonPay();
+            $this->cleanAmazonPay(true);
         }
 
         return parent::render();

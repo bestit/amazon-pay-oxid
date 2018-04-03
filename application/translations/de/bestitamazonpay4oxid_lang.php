@@ -49,4 +49,10 @@ $aLang = array(
     'BESTITAMAZONPAY_EMAIL_KIND_REGARDS'                       => 'Mit freundlichen Grüßen',
     'BESTITAMAZONPAY_EMAIL_DECLINED_TEXT'                      => 'Leider wurde die Zahlung zu Ihrer Bestellung in unserem Onlineshop von Amazon Pay zurückgewiesen',
     'BESTITAMAZONPAY_EMAIL_CONTACT_US'                         => 'Bitte kontaktieren Sie uns',
+    'BESTITAMAZONPAY_ERROR_CURRENCY_UNSUPPORTED'               => 'Amazon Pay steht für die gewählte Währung nicht zur Verfügung. Bitte wählen Sie falls möglich eine andere Währung im Shop.',
+    'BESTITAMAZONPAY_BILLING_ADDRESS'                          => 'Rechnungsadresse',
+    'BESTITAMAZONPAY_UPDATE_BILLING_ADDRESS'                   => 'Rechnungsadresse von Amazon übernehmen',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT'                  => 'Aktuelle Rechnungsadresse',
+    'BESTITAMAZONPAY_BILLING_ADDRESS_NEW'                      => 'Amazon Rechnungsadresse',
+    'BESTITAMAZONPAY_THANK_YOU_MESSAGE'                        => 'Ihre Zahlung mit Amazon Pay ist derzeit noch in Prüfung. Bitte beachten Sie, dass wir uns mit Ihnen in Kürze per Email in Verbindung setzen werden, falls noch Unklarheiten bestehen sollten.',
 );

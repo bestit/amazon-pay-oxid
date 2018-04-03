@@ -19,6 +19,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
      * @param Logger                            $oLogger
      *
      * @return bestitAmazonPay4OxidIpnHandler
+     * @throws ReflectionException
      */
     private function _getObject(
         bestitAmazonPay4OxidClient $oClient,
@@ -39,6 +40,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @throws oxSystemComponentException
      */
     public function testCreateInstance()
     {
@@ -49,7 +51,9 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
-     * @covers ::processIPNAction
+     * @covers ::logIPNResponse
+     * @throws ReflectionException
+     * @throws Exception
      */
     public function testLogIPNResponse()
     {
@@ -90,6 +94,9 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::_paymentAuthorize
      * @covers ::_paymentCapture
      * @covers ::_paymentRefund
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testProcessIPNAction()
     {

@@ -78,6 +78,7 @@ class bestitAmazonPay4Oxid_init
 
     /**
      * @return DatabaseInterface
+     * @throws oxConnectionException
      */
     protected static function _getDatabase()
     {
@@ -116,6 +117,7 @@ class bestitAmazonPay4Oxid_init
      * @param oxModule $oModule
      *
      * @return oxModuleCache
+     * @throws oxSystemComponentException
      */
     protected static function _getModuleCache(oxModule $oModule)
     {
@@ -130,6 +132,7 @@ class bestitAmazonPay4Oxid_init
      * @param oxModuleCache $oModuleCache
      *
      * @return oxModuleInstaller
+     * @throws oxSystemComponentException
      */
     protected static function _getModuleInstaller(oxModuleCache $oModuleCache)
     {
@@ -185,6 +188,7 @@ class bestitAmazonPay4Oxid_init
 
     /**
      * Removes the temporary version number of the module from the database.
+     * @throws oxConnectionException
      */
     protected static function _removeTempVersionNumberFromDatabase()
     {
@@ -206,6 +210,7 @@ class bestitAmazonPay4Oxid_init
      * @param string $sFile
      *
      * @return bool
+     * @throws oxConnectionException
      */
     protected static function _executeSqlFile($sFile)
     {
@@ -231,6 +236,7 @@ class bestitAmazonPay4Oxid_init
 
     /**
      * Execute required sql statements.
+     * @throws oxConnectionException
      */
     public static function onActivate()
     {
@@ -270,6 +276,14 @@ class bestitAmazonPay4Oxid_init
                 self::_deactivateOldModule();
             }
 
+            if (version_compare($sUpdateFrom, '2.6.0', '<')) {
+                $blRemoveTempVersionNumber = true;
+                $sNewMode = ((string)self::_getConfig()->getConfigParam('sAmazonMode') === 'Sync') ?
+                    bestitAmazonPay4OxidClient::BASIC_FLOW : bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
+
+                self::_getConfig()->setConfigParam('sAmazonMode', $sNewMode);
+            }
+
             if ($blRemoveTempVersionNumber === true) {
                 self::_removeTempVersionNumberFromDatabase();
             }
@@ -280,6 +294,7 @@ class bestitAmazonPay4Oxid_init
 
     /**
      * Disable amazon pay on deactivation.
+     * @throws oxConnectionException
      */
     public static function onDeactivate()
     {
@@ -306,9 +321,9 @@ class bestitAmazonPay4Oxid_init
         );
 
         foreach ($aPossibleModuleNames as $sPossibleModuleName) {
-            if (isset($aVersions[$sPossibleModuleName])) {
+            if (isset($aVersions[$sPossibleModuleName]) === true) {
                 return $aVersions[$sPossibleModuleName];
-            } elseif (isset($aVersions[strtolower($sPossibleModuleName)])) {
+            } elseif (isset($aVersions[strtolower($sPossibleModuleName)]) === true) {
                 return $aVersions[strtolower($sPossibleModuleName)];
             }
         }
@@ -365,5 +380,15 @@ class bestitAmazonPay4Oxid_init
         foreach (self::_streamSafeGlob($sSmartyDir, '*.php') as $sFileName) {
             unlink($sFileName);
         }
+    }
+
+    /**
+     * Returns true if the shop version is greater than 6.0.
+     *
+     * @return bool
+     */
+    public static function isOxidSix()
+    {
+        return version_compare(self::_getConfig()->getActiveShop()->getFieldData('oxversion'), '6.0', '>=');
     }
 }

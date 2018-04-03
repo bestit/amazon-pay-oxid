@@ -43,6 +43,13 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
      */
     public function getIsSelectedCurrencyAvailable()
     {
+        $oConfig = $this->getConfig();
+        $blEnableMultiCurrency = (bool)$oConfig->getConfigParam('bestitAmazonPay4OxidEnableMultiCurrency');
+
+        if ($blEnableMultiCurrency === true) {
+            return true;
+        }
+
         if ($this->_isSelectedCurrencyAvailable === null) {
             $this->_isSelectedCurrencyAvailable = true;
 
@@ -51,7 +58,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
                 'UK' => 'GBP',
                 'US' => 'USD'
             );
-            $sLocale = (string)$this->getConfig()->getConfigParam('sAmazonLocale');
+            $sLocale = (string)$oConfig->getConfigParam('sAmazonLocale');
             $sCurrency = (string)$this->getSession()->getBasket()->getBasketCurrency()->name;
 
             //If Locale is DE and currency is not EURO don't allow Amazon checkout process
@@ -67,6 +74,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
      * Method checks if Amazon Pay is active and can be used
      *
      * @return bool
+     * @throws oxConnectionException
      */
     public function isActive()
     {
@@ -135,6 +143,8 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
     /**
      * Cleans Amazon pay as the selected one, including all related variables, records and values
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function cleanAmazonPay()
     {
@@ -159,6 +169,8 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
     /**
      * Deletes previously created user accounts which was not used
      *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function cleanUpUnusedAccounts()
     {

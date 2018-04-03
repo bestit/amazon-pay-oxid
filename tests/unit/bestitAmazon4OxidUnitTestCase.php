@@ -18,6 +18,7 @@ abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
      * @param array  $arguments
      *
      * @return mixed
+     * @throws ReflectionException
      */
     public static function callMethod($object, $methodName, array $arguments = array())
     {
@@ -33,6 +34,7 @@ abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
      * @param object $object
      * @param string $valueName
      * @param mixed  $value
+     * @throws ReflectionException
      */
     public static function setValue($object, $valueName, $value)
     {
@@ -45,11 +47,11 @@ abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
     /**
      * @param array $aResponse
      *
-     * @return mixed
+     * @return stdClass
      */
     protected function _getResponseObject(array $aResponse = array())
     {
-        return json_decode(json_encode($aResponse));
+        return (object) json_decode(json_encode($aResponse));
     }
 
     /**

@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxViewConfig
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -46,6 +48,9 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonPayIsActive()
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testGetAmazonPayIsActive()
     {
@@ -67,6 +72,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonProperty()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetAmazonProperty()
     {
@@ -89,6 +96,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonConfigValue()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetAmazonConfigValue()
     {
@@ -114,6 +123,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonLoginIsActive()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetAmazonLoginIsActive()
     {
@@ -135,6 +146,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::showAmazonLoginButton()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testShowAmazonLoginButton()
     {
@@ -156,6 +169,9 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::showAmazonPayButton()
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testShowAmazonPayButton()
     {
@@ -177,6 +193,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonLanguage()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetAmazonLanguage()
     {
@@ -198,6 +216,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getSelfLink()
+     * @throws ReflectionException
      */
     public function testGetSelfLink()
     {
@@ -230,6 +249,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getBasketLink()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testGetBasketLink()
     {

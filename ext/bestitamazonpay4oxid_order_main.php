@@ -35,6 +35,7 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
+     * @throws oxSystemComponentException
      */
     protected function _getContainer()
     {
@@ -47,14 +48,18 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
 
     /**
      * Capture order after changing it to shipped
+     * @throws Exception
      */
     public function sendorder()
     {
         parent::sendorder();
+        /** @var oxOrder $oOrder */
         $oOrder = $this->_getContainer()->getObjectFactory()->createOxidObject('oxOrder');
 
-        if ($oOrder->load($this->getEditObjectId()) === true) {
-            $this->_getContainer()->getClient()->capture($oOrder);
+        if ($oOrder->load($this->getEditObjectId()) === true
+            && $oOrder->getFieldData('oxPaymentType') === 'bestitamazon'
+        ) {
+            $this->_getContainer()->getClient()->saveCapture($oOrder);
         }
     }
 }

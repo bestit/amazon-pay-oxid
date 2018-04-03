@@ -8,6 +8,7 @@
 
     [{assign var="sAmazonSellerId" value=$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]
     [{assign var="sModuleUrl" value=$oViewConf->getModuleUrl('bestitamazonpay4oxid')}]
+    [{assign var="oBasketCurrency" value=$oxcmp_basket->getBasketCurrency()}]
 
     [{oxscript include="`$sAmazonWidgetUrl`?sellerId=`$sAmazonSellerId`" priority=11}]
     [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
@@ -27,7 +28,10 @@
 
             new OffAmazonPayments.Widgets.Wallet({
                 sellerId: '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]',
-                amazonOrderReferenceId:  '[{$smarty.session.amazonOrderReferenceId}]',
+                amazonOrderReferenceId: '[{$smarty.session.amazonOrderReferenceId}]',
+                [{if $oViewConf->getAmazonConfigValue('bestitAmazonPay4OxidEnableMultiCurrency')}]
+                    presentmentCurrency: '[{$oBasketCurrency->name}]',
+                [{/if}]
                 design: {
                     designMode: 'responsive'
                 },
@@ -35,7 +39,7 @@
                     $("#paymentNextStepBottom").fadeIn();
                 },
                 onError: function(error) {
-                    setTimeout(function(){window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]cl=user&fnc=cleanAmazonPay';} , 3000);
+                    setTimeout(function(){window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]cl=user&fnc=cleanAmazonPay&bestitAmazonPay4OxidErrorCode='+error.getErrorCode()+'&error='+error.getErrorMessage();} , 3000);
                 }
             }).bind("walletWidgetDiv");
         });

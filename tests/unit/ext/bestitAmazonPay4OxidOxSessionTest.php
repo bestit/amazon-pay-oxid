@@ -11,6 +11,7 @@ class bestitAmazonPay4OxidOxSessionTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getRequireSessionWithParams()
+     * @throws ReflectionException
      */
     public function testGetRequireSessionWithParams()
     {

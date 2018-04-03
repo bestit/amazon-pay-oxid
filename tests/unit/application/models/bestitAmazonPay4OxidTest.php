@@ -17,6 +17,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
      * @param oxSession         $oSession
      *
      * @return bestitAmazonPay4Oxid
+     * @throws ReflectionException
      */
     private function _getObject(
         $oUser,
@@ -46,13 +47,49 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group  unit
      * @covers ::getIsSelectedCurrencyAvailable
+     * @throws ReflectionException
      */
     public function testGetIsSelectedCurrencyAvailable()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(7))
+        $oConfig->expects($this->exactly(16))
             ->method('getConfigParam')
-            ->will($this->onConsecutiveCalls('DE', 'DE', 'UK', 'UK', 'US', 'US', 'ST'));
+            ->withConsecutive(
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonLocale'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency')
+            )
+            ->will($this->onConsecutiveCalls(
+                false,
+                'DE',
+                false,
+                false,
+                'DE',
+                false,
+                'UK',
+                false,
+                'UK',
+                false,
+                'US',
+                false,
+                'US',
+                false,
+                'ST',
+                true
+            ));
 
         $aCurrentReturns = array('ST', 'EUR', 'ST', 'GBP', 'ST', 'USD', 'ST');
 
@@ -92,20 +129,41 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         self::assertTrue($oBestitAmazonPay4Oxid->getIsSelectedCurrencyAvailable());
         self::setValue($oBestitAmazonPay4Oxid, '_isSelectedCurrencyAvailable', null);
         self::assertTrue($oBestitAmazonPay4Oxid->getIsSelectedCurrencyAvailable());
+        self::setValue($oBestitAmazonPay4Oxid, '_isSelectedCurrencyAvailable', null);
+        self::assertTrue($oBestitAmazonPay4Oxid->getIsSelectedCurrencyAvailable());
     }
 
     /**
      * @group  unit
      * @covers ::isActive()
+     * @throws oxConnectionException
+     * @throws ReflectionException
      */
     public function testIsActive()
     {
         $this->setConfigParam('blSkipViewUsage', true);
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(3))
+        $oConfig->expects($this->exactly(7))
             ->method('getConfigParam')
-            ->with('sAmazonSellerId')
-            ->will($this->onConsecutiveCalls(null, 'sellerId', 'sellerId'));
+            ->withConsecutive(
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonSellerId'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonSellerId'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonSellerId')
+            )
+            ->will($this->onConsecutiveCalls(
+                false,
+                false,
+                null,
+                false,
+                'sellerId',
+                false,
+                'sellerId',
+                false
+            ));
 
         $oDatabase = $this->_getDatabaseMock();
         $oDatabase->expects($this->exactly(5))
@@ -225,6 +283,9 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
      * @group  unit
      * @covers ::cleanAmazonPay()
      * @covers ::cleanUpUnusedAccounts()
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
      */
     public function testCleanAmazonPay()
     {

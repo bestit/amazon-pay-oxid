@@ -12,6 +12,7 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
      * @param bestitAmazonPay4OxidContainer $oContainer
      *
      * @return bestitAmazonPay4Oxid_oxEmail
+     * @throws ReflectionException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -33,6 +34,7 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::_getContainer()
+     * @throws ReflectionException
      */
     public function testGetContainer()
     {
@@ -46,6 +48,7 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @param string $sMethod
      * @param string $sSubject
+     * @throws ReflectionException
      */
     private function _sendMailTest($sMethod, $sSubject)
     {
@@ -131,6 +134,7 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::sendAmazonInvalidPaymentEmail()
      * @covers ::_baseMailSetup()
+     * @throws ReflectionException
      */
     public function testSendAmazonInvalidPaymentEmail()
     {
@@ -144,6 +148,7 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::sendAmazonRejectedPaymentEmail()
      * @covers ::_baseMailSetup()
+     * @throws ReflectionException
      */
     public function testSendAmazonRejectedPaymentEmail()
     {

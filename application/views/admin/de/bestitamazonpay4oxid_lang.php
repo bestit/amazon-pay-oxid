@@ -64,10 +64,10 @@ $aLang = array(
     'SHOP_MODULE_sAmazonButtonUrlCUSTOM'                   => 'Benutzerdefinierte Button-URL',
     'SHOP_MODULE_sAmazonButtonUrlCUSTOMSandbox'            => 'Benutzerdefinierte Button-URL (Sandbox)',
 
-    'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration' => 'Konfiguration',
+    'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration'  => 'Konfiguration',
     'SHOP_MODULE_sAmazonMode'                              => 'Autorisierungsmodus',
-    'SHOP_MODULE_sAmazonMode_Sync'                         => 'Synchron',
-    'SHOP_MODULE_sAmazonMode_Async'                        => 'Asynchron',
+    'SHOP_MODULE_sAmazonMode_BASIC_FLOW'                   => 'Basic Flow',
+    'SHOP_MODULE_sAmazonMode_OPTIMIZED_FLOW'               => 'Optimierter Flow',
     'SHOP_MODULE_sAmazonAuthorize'                         => 'Statusupdates',
     'SHOP_MODULE_sAmazonCapture'                           => 'Art des Captures',
     'SHOP_MODULE_blAmazonERP'                              => 'ERP-Modus',
@@ -114,4 +114,6 @@ $aLang = array(
 
     'BESTITAMAZONPAY_PLEASE_CHECK_REFUND_CHECKBOX'       => 'Bitte aktivieren Sie die “Erstattung bestätigen”-Checkbox, um die Erstattung durchzuführen.',
     'BESTITAMAZONPAY_INVALID_REFUND_AMOUNT'              => 'Ungültiger Rückerstattungsbetrag, bitte korrigieren und erneut versuchen',
+
+    'BESTIT_AMAZON_QUICK_CONFIG' => 'Schnell Konfiguration'
 );

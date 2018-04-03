@@ -60,7 +60,7 @@
                     color: '[{$aButtonStyle.1}]',
                     language: '[{$oViewConf->getAmazonLanguage()}]',
                     authorization: function() {
-                        loginOptions =  {scope: 'profile payments:widget payments:shipping_address', popup: true};
+                        loginOptions =  {scope: 'profile payments:widget payments:shipping_address payments:billing_address', popup: true};
                         authRequest = amazon.Login.authorize(loginOptions, function(response) {
                             addressConsentToken = response.access_token;
                         });
@@ -84,7 +84,7 @@
     [{if $oViewConf->getActiveClassName()=='user'}]
         <div id="amazonPayButtonLine" class="lineBox">
             [{$smarty.capture.sBestitAmazonPayButton}]
-            <h3>[{ oxmultilang ident="BESTITAMAZONPAYLOGIN_PURCHASE_WITH_AMAZON" }]</h3>
+            <h3>[{oxmultilang ident="BESTITAMAZONPAYLOGIN_PURCHASE_WITH_AMAZON"}]</h3>
             <div style="clear:both;"></div>
         </div>
     [{else}]

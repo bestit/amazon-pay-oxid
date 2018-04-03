@@ -24,7 +24,7 @@
                 color: '[{$aButtonStyle.1}]',
                 language: '[{$oViewConf->getAmazonLanguage()}]',
                 authorization: function() {
-                    loginOptions =  {scope: 'profile payments:widget payments:shipping_address', popup: true};
+                    loginOptions =  {scope: 'profile payments:widget payments:shipping_address payments:billing_address', popup: true};
                     authRequest = amazon.Login.authorize (loginOptions, '[{$oViewConf->getSslSelfLink()|html_entity_decode}]fnc=amazonLogin');
                 },
                 onError: function(error) {
