@@ -154,6 +154,50 @@
     position:relative;
 }
 
+.amazonContentGroup {
+    float: right;
+}
+
+.amazonTooltip {
+    display: inline-block;
+    position: relative;
+    margin-right: 6px;
+}
+
+.amazonTooltip i {
+    display: inline-block;
+    background: gray;
+    color: white;
+    border-radius: 50%;
+    line-height: 16px;
+    height: 16px;
+    width: 16px;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.amazonTooltipContent {
+    display: none;
+    position: absolute;
+    border: 1px solid gray;
+    background-color: #ddd;
+    font-size: 11px;
+    color: darkslategrey;
+    width: 240px;
+    min-height: 20px;
+    border-radius: 2px;
+    padding: 6px;
+    left: -113px;
+    bottom: 20px;
+}
+
+.amazonTooltip:hover .amazonTooltipContent {
+    display: block;
+}
+
 /* Widget sizes for desktop version*/
 #addressBookWidgetDiv {width: 600px; height: 300px;}
 #walletWidgetDiv {width:400px;height:266px;}
