@@ -93,7 +93,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
         );
 
         $oDatabase = $this->_getDatabaseMock();
-        $oDatabase->expects($this->exactly(5))
+        $oDatabase->expects($this->exactly(6))
             ->method('getAll')
             ->withConsecutive(
                 array(new MatchIgnoreWhitespace(
@@ -125,6 +125,12 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
                     FROM bestitamazonrefunds
                     WHERE STATE = 'Pending'
                       AND BESTITAMAZONREFUNDID != ''"
+                )),
+                array(new MatchIgnoreWhitespace(
+                    "SELECT OXID, OXORDERNR FROM oxorder
+                    WHERE BESTITAMAZONORDERREFERENCEID != ''
+                      AND BESTITAMAZONAUTHORIZATIONID != ''
+                      AND OXTRANSSTATUS = 'AMZ-Capture-Completed'"
                 ))
             )
             ->will($this->onConsecutiveCalls(
@@ -132,17 +138,21 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
                 $oOrderResponse,
                 $oOrderResponse,
                 $oOrderResponse,
-                array(array('BESTITAMAZONREFUNDID' => 1), array('BESTITAMAZONREFUNDID' => 2))
+                array(array('BESTITAMAZONREFUNDID' => 1), array('BESTITAMAZONREFUNDID' => 2)),
+                $oOrderResponse
             ));
 
-        $oContainer->expects($this->exactly(5))
+        $oContainer->expects($this->exactly(6))
             ->method('getDatabase')
             ->will($this->returnValue($oDatabase));
 
         $oOrder = $this->_getOrderMock();
-        $oOrder->expects($this->exactly(12))
+        $oOrder->expects($this->exactly(15))
             ->method('load')
             ->withConsecutive(
+                array(1),
+                array(2),
+                array(3),
                 array(1),
                 array(2),
                 array(3),
@@ -161,12 +171,12 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
             }));
 
         $oObjectFactory = $this->_getObjectFactoryMock();
-        $oObjectFactory->expects($this->exactly(12))
+        $oObjectFactory->expects($this->exactly(15))
             ->method('createOxidObject')
             ->with('oxOrder')
             ->will($this->returnValue($oOrder));
 
-        $oContainer->expects($this->exactly(12))
+        $oContainer->expects($this->exactly(15))
             ->method('getObjectFactory')
             ->will($this->returnValue($oObjectFactory));
 
@@ -242,8 +252,20 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
                     )
                 ))
             ));
+        $oClient->expects($this->exactly(2))
+            ->method('closeOrderReference')
+            ->with($oOrder)
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(),
+                $this->_getResponseObject(array(
+                    'CloseOrderReferenceResult' => array(),
+                    'ResponseMetadata' => array(
+                        'RequestId' => '1'
+                    )
+                ))
+            ));
 
-        $oContainer->expects($this->exactly(10))
+        $oContainer->expects($this->exactly(12))
             ->method('getClient')
             ->will($this->returnValue($oClient));
 
@@ -271,6 +293,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
                     .'Suspended Order #234 - Status updated to: referenceStatusValue<br/>'
                     .'Capture Order #234 - Status updated to: captureStateValue<br/>'
                     .'Refund ID: referenceId - Status: refundStateValue<br/>'
+                    .'Order #234 - Closed<br/>'
                     .'Done'
             ),
             '_aViewData',
@@ -289,7 +312,6 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testAmazonCall()
     {
-
         $oContainer = $this->_getContainerMock();
 
         $oConfig = $this->_getConfigMock();
