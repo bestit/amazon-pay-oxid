@@ -1,5 +1,3 @@
-[{$smarty.block.parent}]
-
 [{capture name="sBestitAmazonPayButton"}]
 
     [{*Older Amazon Pay functionality !*}]
@@ -91,3 +89,5 @@
         [{$smarty.capture.sBestitAmazonPayButton}]
     [{/if}]
 [{/if}]
+
+[{$smarty.block.parent}]
