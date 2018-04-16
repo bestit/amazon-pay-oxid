@@ -80,6 +80,7 @@ $aModule = array(
         'bestitamazoncron' => 'bestit/amazonpay4oxid/application/controllers/bestitamazoncron.php',
         'bestitamazonpay4oxid' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxid.php',
         'bestitamazonpay4oxidaddressutil' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidaddressutil.php',
+        'bestitamazonpay4oxidbasketutil' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidbasketutil.php',
         'bestitamazonpay4oxidclient' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidclient.php',
         'bestitamazonpay4oxidcontainer' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidcontainer.php',
         'bestitamazonpay4oxidipnhandler' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidipnhandler.php',
@@ -147,6 +148,11 @@ $aModule = array(
             'template' => 'page/checkout/thankyou.tpl',
             'block' => 'checkout_thankyou_info',
             'file' => 'application/blocks/bestitamazonpay4oxid_thankyou.tpl'
+        ),
+        array(
+            'template' => 'page/details/inc/productmain.tpl',
+            'block' => 'details_productmain_tobasket',
+            'file' => 'application/blocks/bestitamazonpay4oxid_detailsbutton.tpl'
         )
     ),
     'templates' => array(
@@ -154,6 +160,7 @@ $aModule = array(
         'bestitamazonpay4oxid_main.tpl' => 'bestit/amazonpay4oxid/application/views/admin/tpl/bestitamazonpay4oxid_main.tpl',
         'bestitamazonpay4oxid_invalidpayment.tpl' => 'bestit/amazonpay4oxid/application/views/azure/tpl/email/html/bestitamazonpay4oxid_invalidpayment.tpl',
         'bestitamazonpay4oxid_rejectedpayment.tpl' => 'bestit/amazonpay4oxid/application/views/azure/tpl/email/html/bestitamazonpay4oxid_rejectedpayment.tpl',
+        'bestitamazonpay4oxid_paybutton.tpl' => 'bestit/amazonpay4oxid/application/views/bestitamazonpay4oxid_paybutton.tpl',
     ),
     'settings' => array(
         array(
