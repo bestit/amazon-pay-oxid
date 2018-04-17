@@ -9,7 +9,12 @@
     [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
     [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
 
-    <div id="amazonLoginButton" style="display: none;"></div>
+    <div id="amazonLoginButton" style="display: none;">
+        <div class="amazonTooltip">
+            <i>?</i>
+            <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_LOGIN_BUTTON_HINT"}]</div>
+        </div>
+    </div>
 
     [{capture name="sBestitAmazonLoginScript"}]
         $(document).ready(function () {

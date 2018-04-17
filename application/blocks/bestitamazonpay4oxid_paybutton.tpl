@@ -10,8 +10,14 @@
         [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
         [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
 
-        <div id="payWithAmazonDiv">
-            <img src="[{$oViewConf->getAmazonProperty('sAmazonButtonUrl')}]?sellerId=[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]&size=x-large" title="[{ oxmultilang ident='BESTITAMAZONPAY_PAY_WITH_AMAZON_BUTTON'}]"/>
+        <div class="amazonContentGroup">
+            <div class="amazonTooltip">
+                <i>?</i>
+                <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
+            </div>
+            <div id="payWithAmazonDiv">
+                <img src="[{$oViewConf->getAmazonProperty('sAmazonButtonUrl')}]?sellerId=[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]&size=x-large" title="[{ oxmultilang ident='BESTITAMAZONPAY_PAY_WITH_AMAZON_BUTTON'}]"/>
+            </div>
         </div>
 
         [{capture name="sBestitAmazonScript"}]
@@ -43,7 +49,14 @@
         [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
         [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
 
-        <div id="payWithAmazonDiv"></div>
+        <div class="amazonContentGroup">
+            <div class="amazonTooltip">
+                <i>?</i>
+                <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
+            </div>
+            <div id="payWithAmazonDiv"></div>
+        </div>
+
 
         [{capture name="sBestitAmazonLoginScript"}]
             $(document).ready(function () {
