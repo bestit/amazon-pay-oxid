@@ -55,4 +55,6 @@ $aLang = array(
     'BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT'                  => 'Adresse de facturation actuelle',
     'BESTITAMAZONPAY_BILLING_ADDRESS_NEW'                      => 'Adresse de facturation d\'Amazon',
     'BESTITAMAZONPAY_THANK_YOU_MESSAGE'                        => 'Votre transaction avec Amazon Pay est en cours de validation. Vous serez informé prochainement de son suivi.',
+    'BESTITAMAZONPAY_LOGIN_BUTTON_HINT'                        => 'Connectez-vous avec vos identifiants Amazon et payez facilement avec les informations de paiement et de livraison enregistrées sur votre compte Amazon.',
+    'BESTITAMAZONPAY_PAY_BUTTON_HINT'                          => 'Connectez-vous avec vos identifiants Amazon et payez facilement avec les informations de paiement et de livraison enregistrées sur votre compte Amazon.'
 );
