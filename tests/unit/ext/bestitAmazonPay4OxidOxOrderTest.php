@@ -847,10 +847,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 
         $oUser = $this->_getUserMock();
         self::assertEquals(0, $oBestitAmazonPay4OxidOxOrder->validateDeliveryAddress($oUser));
-        self::assertEquals(
-            oxOrder::ORDER_STATE_INVALIDDElADDRESSCHANGED,
-            $oBestitAmazonPay4OxidOxOrder->validateDeliveryAddress($oUser)
-        );
+        self::assertEquals(7, $oBestitAmazonPay4OxidOxOrder->validateDeliveryAddress($oUser));
     }
 
     /**
