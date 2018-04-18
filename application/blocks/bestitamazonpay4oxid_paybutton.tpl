@@ -10,12 +10,12 @@
         [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
         [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
 
-        <div class="amazonContentGroup">
+        <div id="payWithAmazonDiv" class="amazonContentGroup">
             <div class="amazonTooltip">
                 <i>?</i>
                 <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
             </div>
-            <div id="payWithAmazonDiv">
+            <div id="payWithAmazonButton">
                 <img src="[{$oViewConf->getAmazonProperty('sAmazonButtonUrl')}]?sellerId=[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]&size=x-large" title="[{ oxmultilang ident='BESTITAMAZONPAY_PAY_WITH_AMAZON_BUTTON'}]"/>
             </div>
         </div>
@@ -32,7 +32,7 @@
                     onError: function(error) {
                         window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]cl=basket&amazonOrderReferenceId=' + amazonOrderReferenceId;
                     }
-                }).bind("payWithAmazonDiv");
+                }).bind("payWithAmazonButton");
             });
         [{/capture}]
         [{oxscript add=$smarty.capture.sBestitAmazonScript}]
@@ -49,12 +49,12 @@
         [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
         [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
 
-        <div class="amazonContentGroup">
+        <div id="payWithAmazonDiv" class="amazonContentGroup">
             <div class="amazonTooltip">
                 <i>?</i>
                 <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
             </div>
-            <div id="payWithAmazonDiv"></div>
+            <div id="payWithAmazonButton"></div>
         </div>
 
 
@@ -65,7 +65,7 @@
                 [{assign var="aButtonStyle" value="-"|explode:$oViewConf->getAmazonConfigValue('sAmazonPayButtonStyle')}]
 
                 var authRequest;
-                OffAmazonPayments.Button('payWithAmazonDiv', '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]', {
+                OffAmazonPayments.Button('payWithAmazonButton', '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]', {
                     type: '[{$aButtonStyle.0}]',
                     size: ($('meta[name=apple-mobile-web-app-capable]').attr("content")=='yes') ? 'medium' : 'small',
                     color: '[{$aButtonStyle.1}]',
@@ -91,6 +91,8 @@
 
 [{/capture}]
 
+[{$smarty.block.parent}]
+
 [{if $smarty.capture.sBestitAmazonPayButton|trim}]
     [{if $oViewConf->getActiveClassName()=='user'}]
         <div id="amazonPayButtonLine" class="lineBox">
@@ -102,5 +104,3 @@
         [{$smarty.capture.sBestitAmazonPayButton}]
     [{/if}]
 [{/if}]
-
-[{$smarty.block.parent}]

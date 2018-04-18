@@ -1,4 +1,4 @@
-#payWithAmazonDiv img{
+#payWithAmazonButton img{
     cursor:pointer;
 }
 
@@ -6,7 +6,7 @@
     position:relative;
 }
 
-#optionNoRegistration #payWithAmazonDiv{
+#optionNoRegistration #payWithAmazonButton{
     float:none;
     margin:0;
     position:absolute;
@@ -22,14 +22,21 @@
     //display:none;
 }
 
-#payment #payWithAmazonDiv{
+#payment #payWithAmazonDiv {
     display:none;
+}
+
+#payment #payWithAmazonButton{
     float:right;
-    margin-top: -59px;
     margin-right: 10px;
 }
 
-#amazonMobile #payWithAmazonDiv{
+#payment .amazonContentGroup{
+    display: none;
+    margin-top: -62px;
+}
+
+#amazonMobile #payWithAmazonButton{
     margin:0 auto;
     width:200px;
     float:none;
@@ -123,8 +130,8 @@
    padding: 9px 10px 10px;
 }
 
-#amazonPayButtonLine #payWithAmazonDiv{
-    float:left;
+#amazonPayButtonLine #payWithAmazonButton{
+    float: right;
     display: inline-flex;
 }
 
@@ -134,7 +141,7 @@
     line-height: 30px;
 }
 
-#amazonMobile #amazonPayButtonLine #payWithAmazonDiv {
+#amazonMobile #amazonPayButtonLine #payWithAmazonButton {
     float: none;
     display: block;
 }
@@ -156,12 +163,14 @@
 
 .amazonContentGroup {
     float: right;
+    margin-top: 2px;
 }
 
 .amazonTooltip {
     display: inline-block;
     position: relative;
     margin-right: 6px;
+    line-height: 30px;
 }
 
 .amazonTooltip i {
@@ -221,19 +230,23 @@
         text-align: center;
     }
 
-    #payWithAmazonDiv {
-        text-align: center;
+    #payWithAmazonButton {
         float: none !important;
         padding: 5px 0 0 0;
         margin: 0 !important;
-        clear: both;
-        display: block !important;
+        display: inline-block;
     }
 
     #amazonPayButtonLine h3 {
         margin: 5px 0 0 0;
         text-align: center;
         float: none;
+    }
+
+    .amazonContentGroup {
+        text-align: center;
+        float: none;
+        clear: both;
     }
 }
 
@@ -249,7 +262,7 @@
     margin-top: 10px;
 }
 
-.cl-basket.is-checkout #payWithAmazonDiv {
+.cl-basket.is-checkout #payWithAmazonButton {
     float: right;
     margin-right: 10px;
 }
