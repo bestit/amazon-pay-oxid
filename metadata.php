@@ -153,6 +153,11 @@ $aModule = array(
             'template' => 'page/details/inc/productmain.tpl',
             'block' => 'details_productmain_tobasket',
             'file' => 'application/blocks/bestitamazonpay4oxid_detailsbutton.tpl'
+        ),
+        array(
+            'template' => 'module_config.tpl',
+            'block' => 'admin_module_config_form',
+            'file' => 'application/blocks/bestitamazonpay4oxid_module_config_form.tpl'
         )
     ),
     'templates' => array(
