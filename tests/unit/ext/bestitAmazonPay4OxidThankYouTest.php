@@ -47,6 +47,29 @@ class bestitAmazonPay4OxidThankYouTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @covers ::init()
+     * @throws ReflectionException
+     * @throws oxSystemComponentException
+     */
+    public function testInit()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oBasketUtil = $this->_getBasketUtilMock();
+
+        $oBasketUtil->expects($this->once())
+            ->method('restoreQuickCheckoutBasket');
+
+        $oContainer->expects($this->once())
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
+
+        $oBestitAmazonPay4OxidThankYou = $this->_getObject($oContainer);
+        $oBestitAmazonPay4OxidThankYou->init();
+    }
+
+    /**
+     * @group unit
      * @covers ::render()
      * @throws oxSystemComponentException
      * @throws oxConnectionException

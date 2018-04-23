@@ -128,13 +128,17 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
             return $this->_blActive = false;
         }
 
+        $oConfig = $this->getConfig();
+
         //If Amazon SellerId is empty
-        if ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') === '') {
+        if ((string)$oConfig->getConfigParam('sAmazonSellerId') === '') {
             return $this->_blActive = false;
         }
 
         //If basket items price = 0
-        if ((int)$this->getSession()->getBasket()->getPrice()->getBruttoPrice() === 0) {
+        if ((string)$oConfig->getRequestParameter('cl') !== 'details'
+            && (int)$this->getSession()->getBasket()->getPrice()->getBruttoPrice() === 0
+        ) {
             return $this->_blActive = false;
         }
 

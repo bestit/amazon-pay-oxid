@@ -143,10 +143,12 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
     {
         $this->setConfigParam('blSkipViewUsage', true);
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(7))
+        $oConfig->expects($this->exactly(9))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonSellerId'),
                 array('bestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonSellerId'),
                 array('bestitAmazonPay4OxidEnableMultiCurrency'),
@@ -162,11 +164,23 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
                 'sellerId',
                 false,
                 'sellerId',
+                false,
+                'sellerId',
                 false
             ));
 
+
+        $oConfig->expects($this->exactly(3))
+            ->method('getRequestParameter')
+            ->with('cl')
+            ->will($this->onConsecutiveCalls(
+               'details',
+               'some',
+               'some'
+            ));
+
         $oDatabase = $this->_getDatabaseMock();
-        $oDatabase->expects($this->exactly(5))
+        $oDatabase->expects($this->exactly(6))
             ->method('quote')
             ->with('shippingId')
             ->will($this->returnCallback(function ($sValue) {
@@ -189,12 +203,15 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             WHERE OXDELSETID = 'shippingId'
             LIMIT 1";
 
-        $oDatabase->expects($this->exactly(18))
+        $oDatabase->expects($this->exactly(21))
             ->method('getOne')
             ->withConsecutive(
                 array(new MatchIgnoreWhitespace($sActiveQuery)),
                 array(new MatchIgnoreWhitespace($sActiveQuery)),
                 array(new MatchIgnoreWhitespace($sShippingQuery)),
+                array(new MatchIgnoreWhitespace($sActiveQuery)),
+                array(new MatchIgnoreWhitespace($sShippingQuery)),
+                array(new MatchIgnoreWhitespace($sDeliverySetQuery)),
                 array(new MatchIgnoreWhitespace($sActiveQuery)),
                 array(new MatchIgnoreWhitespace($sShippingQuery)),
                 array(new MatchIgnoreWhitespace($sDeliverySetQuery)),
@@ -217,6 +234,9 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
                 1,
                 'shippingId',
                 false,
+                1,
+                'shippingId',
+                'deliverySetId',
                 1,
                 'shippingId',
                 'deliverySetId',
@@ -271,6 +291,9 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         self::setValue($oBestitAmazonPay4Oxid, '_isSelectedCurrencyAvailable', true);
         self::setValue($oBestitAmazonPay4Oxid, '_blActive', null);
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
+
+        self::setValue($oBestitAmazonPay4Oxid, '_blActive', null);
+        self::assertTrue($oBestitAmazonPay4Oxid->isActive());
 
         self::setValue($oBestitAmazonPay4Oxid, '_blActive', null);
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
