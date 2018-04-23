@@ -201,6 +201,8 @@
     padding: 6px;
     left: -113px;
     bottom: 20px;
+    z-index: 999;
+    line-height: normal;
 }
 
 .amazonTooltip:hover .amazonTooltipContent {
