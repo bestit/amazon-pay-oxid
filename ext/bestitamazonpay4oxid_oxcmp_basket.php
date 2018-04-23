@@ -122,5 +122,76 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
 
         return parent::render();
     }
+
+    /**
+     * Parent function wrapper.
+     *
+     * @param null|string $sProductId
+     * @param null|float $dAmount
+     * @param null|array $aSelectList
+     * @param null|array $aPersistentParameters
+     * @param bool $blOverride
+     *
+     * @return mixed
+     */
+    protected function _parentToBasket(
+        $sProductId = null,
+        $dAmount = null,
+        $aSelectList = null,
+        $aPersistentParameters = null,
+        $blOverride = false
+    ) {
+        return parent::tobasket($sProductId, $dAmount, $aSelectList, $aPersistentParameters, $blOverride);
+    }
+
+    /**
+     * Check if we are using amazon quick checkout.
+     *
+     * @param null|string $sProductId
+     * @param null|float $dAmount
+     * @param null|array $aSelectList
+     * @param null|array $aPersistentParameters
+     * @param bool $blOverride
+     *
+     * @return mixed
+     * @throws oxSystemComponentException
+     */
+    public function tobasket(
+        $sProductId = null,
+        $dAmount = null,
+        $aSelectList = null,
+        $aPersistentParameters = null,
+        $blOverride = false
+    ) {
+        $oContainer = $this->_getContainer();
+        $oConfig = $oContainer->getConfig();
+        $isAmazonPay = (bool)$oConfig->getRequestParameter('bestitAmazonPayIsAmazonPay');
+        $sReturn = null;
+
+        if ($isAmazonPay === true) {
+            $oContainer->getBasketUtil()->setQuickCheckoutBasket();
+            $sAmazonOrderReferenceId = $oConfig->getRequestParameter('amazonOrderReferenceId');
+            $sAccessToken = $oConfig->getRequestParameter('access_token');
+            $sReturn = 'user?fnc=amazonLogin&redirectCl=user&amazonOrderReferenceId='.$sAmazonOrderReferenceId
+                .'&access_token='.$sAccessToken;
+        }
+
+        $sDefaultReturn = $this->_parentToBasket(
+            $sProductId,
+            $dAmount,
+            $aSelectList,
+            $aPersistentParameters,
+            $blOverride
+        );
+
+        if ($isAmazonPay === true) {
+            $oSession = $oContainer->getSession();
+            $oSession->setVariable('blAddedNewItem', false);
+            $oSession->setVariable('isAmazonPayQuickCheckout', true);
+            return $sReturn;
+        }
+
+        return $sDefaultReturn;
+    }
 }
 

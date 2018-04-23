@@ -47,6 +47,68 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @covers ::__construct()
+     * @throws ReflectionException
+     */
+    public function testConstructor()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oSession = $this->_getSessionMock();
+
+        $oSession->expects($this->exactly(3))
+            ->method('getVariable')
+            ->with('isAmazonPayQuickCheckout')
+            ->will($this->onConsecutiveCalls(null, 1, 1));
+
+        $oSession->expects($this->once())
+            ->method('deleteVariable')
+            ->with('isAmazonPayQuickCheckout');
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->exactly(2))
+            ->method('getRequestParameter')
+            ->with('cl')
+            ->will($this->onConsecutiveCalls('someClass', 'payment'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        $oBasketUtil = $this->_getBasketUtilMock();
+        $oBasketUtil->expects($this->once())
+            ->method('restoreQuickCheckoutBasket');
+
+        $oContainer->expects($this->once())
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
+
+        $oModule = $this->_getModuleMock();
+        $oModule->expects($this->once())
+            ->method('cleanAmazonPay');
+
+        $oContainer->expects($this->once())
+            ->method('getModule')
+            ->will($this->returnValue($oModule));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->getMockBuilder('bestitAmazonPay4Oxid_oxViewConfig')
+            ->disableOriginalConstructor()
+            ->getMock();
+        self::setValue($oBestitAmazonPay4OxidOxViewConfig, '_oContainer', $oContainer);
+
+        $oReflectedClass = new ReflectionClass('bestitAmazonPay4Oxid_oxViewConfig');
+        $oConstructor = $oReflectedClass->getConstructor();
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
+    }
+
+    /**
+     * @group unit
      * @covers ::getAmazonPayIsActive()
      * @throws oxSystemComponentException
      * @throws oxConnectionException

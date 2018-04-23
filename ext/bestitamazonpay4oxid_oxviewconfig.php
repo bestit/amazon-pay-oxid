@@ -32,6 +32,33 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
     protected $_oContainer = null;
 
     /**
+     * Restore basket if amazon quick checkout was aborted.
+     *
+     * bestitAmazonPay4Oxid_oxViewConfig constructor.
+     *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $oContainer = $this->_getContainer();
+        $oSession = $oContainer->getSession();
+
+        if ((bool)$oSession->getVariable('isAmazonPayQuickCheckout') === true) {
+            $sCurrentClass = $oContainer->getConfig()->getRequestParameter('cl');
+            $aCheckoutClasses = array('order', 'payment', 'thankyou', 'user');
+
+            if (in_array($sCurrentClass, $aCheckoutClasses) === false) {
+                $oContainer->getBasketUtil()->restoreQuickCheckoutBasket();
+                $oSession->deleteVariable('isAmazonPayQuickCheckout');
+                $oContainer->getModule()->cleanAmazonPay();
+            }
+        }
+    }
+
+    /**
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer

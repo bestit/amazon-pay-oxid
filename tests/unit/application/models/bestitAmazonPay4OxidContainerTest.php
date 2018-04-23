@@ -199,4 +199,15 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
         self::assertInstanceOf('oxUtilsView', $oContainer->getUtilsView());
         self::assertAttributeNotEmpty('_oUtilsViewObject', $oContainer);
     }
+
+    /**
+     * @group unit
+     * @covers ::getBasketUtil()
+     */
+    public function testGetBasketUtil()
+    {
+        $oContainer = new bestitAmazonPay4OxidContainer();
+        self::assertInstanceOf('bestitAmazonPay4OxidBasketUtil', $oContainer->getBasketUtil());
+        self::assertAttributeNotEmpty('_oBasketUtil', $oContainer);
+    }
 }

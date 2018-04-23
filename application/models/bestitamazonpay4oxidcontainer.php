@@ -102,6 +102,11 @@ class bestitAmazonPay4OxidContainer
     protected $_oUtilsViewObject = null;
 
     /**
+     * @var null|bestitAmazonPay4OxidBasketUtil
+     */
+    protected $_oBasketUtil = null;
+
+    /**
      * Returns the active user object.
      *
      * @return oxUser|bool
@@ -300,5 +305,17 @@ class bestitAmazonPay4OxidContainer
         }
 
         return $this->_oUtilsViewObject;
+    }
+
+    /**
+     * @return bestitAmazonPay4OxidBasketUtil
+     */
+    public function getBasketUtil()
+    {
+        if ($this->_oBasketUtil === null) {
+            $this->_oBasketUtil = oxRegistry::get('bestitAmazonPay4OxidBasketUtil');
+        }
+
+        return $this->_oBasketUtil;
     }
 }
