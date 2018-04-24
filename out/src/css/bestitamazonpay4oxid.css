@@ -1,4 +1,4 @@
-#payWithAmazonButton img{
+.payWithAmazonButton img{
     cursor:pointer;
 }
 
@@ -6,7 +6,7 @@
     position:relative;
 }
 
-#optionNoRegistration #payWithAmazonButton{
+#optionNoRegistration .payWithAmazonButton{
     float:none;
     margin:0;
     position:absolute;
@@ -26,7 +26,7 @@
     display:none;
 }
 
-#payment #payWithAmazonButton{
+#payment .payWithAmazonButton{
     float:right;
     margin-right: 10px;
 }
@@ -36,7 +36,7 @@
     margin-top: -62px;
 }
 
-#amazonMobile #payWithAmazonButton{
+#amazonMobile .payWithAmazonButton{
     margin:0 auto;
     width:200px;
     float:none;
@@ -130,7 +130,7 @@
    padding: 9px 10px 10px;
 }
 
-#amazonPayButtonLine #payWithAmazonButton{
+#amazonPayButtonLine .payWithAmazonButton{
     float: right;
     display: inline-flex;
 }
@@ -141,7 +141,7 @@
     line-height: 30px;
 }
 
-#amazonMobile #amazonPayButtonLine #payWithAmazonButton {
+#amazonMobile #amazonPayButtonLine .payWithAmazonButton {
     float: none;
     display: block;
 }
@@ -232,7 +232,7 @@
         text-align: center;
     }
 
-    #payWithAmazonButton {
+    .payWithAmazonButton {
         float: none !important;
         padding: 5px 0 0 0;
         margin: 0 !important;
@@ -264,11 +264,20 @@
     margin-top: 10px;
 }
 
-.cl-basket.is-checkout #payWithAmazonButton {
+.cl-basket.is-checkout .payWithAmazonButton {
     float: right;
     margin-right: 10px;
 }
 
 .amazonBillingAddress .submitButton {
     margin-top: 12px;
+}
+
+.modal-footer #payWithAmazonDiv {
+    float: left;
+
+}
+
+.modal-footer .payWithAmazonButton {
+    display: inline-block;
 }
