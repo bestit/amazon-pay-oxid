@@ -91,7 +91,7 @@ $aModule = array(
         array(
             'template' => 'page/checkout/basket.tpl',
             'block' => 'basket_btn_next_top', // flow + azure
-            'file' => 'application/blocks/bestitamazonpay4oxid_paybutton.tpl'
+            'file' => 'application/blocks/bestitamazonpay4oxid_basket.tpl'
         ),
         array(
             'template' => 'page/checkout/user.tpl',
@@ -158,6 +158,11 @@ $aModule = array(
             'template' => 'module_config.tpl',
             'block' => 'admin_module_config_form',
             'file' => 'application/blocks/bestitamazonpay4oxid_module_config_form.tpl'
+        ),
+        array(
+            'template' => 'widget/minibasket/minibasket.tpl',
+            'block' => 'widget_minibasket_total',
+            'file' => 'application/blocks/bestitamazonpay4oxid_minibasket.tpl'
         )
     ),
     'templates' => array(
@@ -166,6 +171,7 @@ $aModule = array(
         'bestitamazonpay4oxid_invalidpayment.tpl' => 'bestit/amazonpay4oxid/application/views/azure/tpl/email/html/bestitamazonpay4oxid_invalidpayment.tpl',
         'bestitamazonpay4oxid_rejectedpayment.tpl' => 'bestit/amazonpay4oxid/application/views/azure/tpl/email/html/bestitamazonpay4oxid_rejectedpayment.tpl',
         'bestitamazonpay4oxid_paybutton.tpl' => 'bestit/amazonpay4oxid/application/views/bestitamazonpay4oxid_paybutton.tpl',
+        'bestitamazonpay4oxid_src.tpl' => 'bestit/amazonpay4oxid/application/views/bestitamazonpay4oxid_src.tpl',
     ),
     'settings' => array(
         array(
@@ -346,6 +352,13 @@ $aModule = array(
                 |CaptureAmazonRejected
                 |CaptureAmazonClosed
                 |RefundAmazonRejected'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blShowAmazonPayButtonInBasketFlyout',
+            'type' => 'bool',
+            'value' => 'true',
+            'position' => '7'
         )
     ),
     'events' => array(

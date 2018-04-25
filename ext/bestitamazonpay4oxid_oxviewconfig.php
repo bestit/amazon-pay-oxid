@@ -31,6 +31,8 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      */
     protected $_oContainer = null;
 
+    const CODE_INJECTED_STATIC_CACHE_KEY = 'bestitAmazonPay4OxidCodeInjected';
+
     /**
      * Restore basket if amazon quick checkout was aborted.
      *
@@ -198,6 +200,58 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
         }
 
         return parent::getBasketLink();
+    }
+
+    /**
+     * Loads the injected code map from the static cache.
+     *
+     * @return array|mixed
+     *
+     * @throws oxSystemComponentException
+     */
+    protected function _getInjectedCode()
+    {
+        $oUtils = $this->_getContainer()->getUtils();
+        $aCodeInjected = $oUtils->fromStaticCache(self::CODE_INJECTED_STATIC_CACHE_KEY);
+        return $aCodeInjected === null ? array() : $aCodeInjected;
+    }
+
+    /**
+     * Marks the type as already injected.
+     *
+     * @param $sType
+     *
+     * @throws oxSystemComponentException
+     */
+    public function setJSCodeInjected($sType)
+    {
+        $aCodeInjected = $this->_getInjectedCode();
+        $aCodeInjected[$sType] = true;
+        $this->_getContainer()->getUtils()->toStaticCache(self::CODE_INJECTED_STATIC_CACHE_KEY, $aCodeInjected);
+    }
+
+    /**
+     * Checks if the code with given type was already injected.
+     *
+     * @param $sType
+     *
+     * @return bool
+     * @throws oxSystemComponentException
+     */
+    public function wasJSCodeInjected($sType)
+    {
+        $aCodeInjected = $this->_getInjectedCode();
+        return isset($aCodeInjected[$sType]) && $aCodeInjected[$sType];
+    }
+
+    /**
+     * Returns a unique id.
+     *
+     * @return string
+     */
+    public function getUniqueButtonId()
+    {
+        return uniqid();
     }
 }
 
