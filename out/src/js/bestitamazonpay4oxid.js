@@ -56,6 +56,13 @@ $(document).ready(function() {
         }
     }
 
+    var $amazonBasketModalButton = $('#amazonPayBasketModalButton');
+
+    if ($amazonBasketModalButton.length) {
+        $('.basketFlyout .modal-footer .btn.btn-default').before($amazonBasketModalButton);
+        $amazonBasketModalButton.show();
+    }
+
     //If Amazon Login button exists try to place it to proper place in the page
     var $amazonLoginButton = $('#amazonLoginButton');
 

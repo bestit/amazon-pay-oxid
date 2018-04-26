@@ -90,6 +90,7 @@ $aLang = array(
     'SHOP_MODULE_sSandboxSimulation_CaptureAmazonRejected'                           => 'Capture : AmazonRejected',
     'SHOP_MODULE_sSandboxSimulation_CaptureAmazonClosed'                             => 'Capture : AmazonClosed',
     'SHOP_MODULE_sSandboxSimulation_RefundAmazonRejected'                            => 'Refund : AmazonRejected',
+    'SHOP_MODULE_blShowAmazonPayButtonInBasketFlyout'                                => 'Show Amazon Pay Button at basket flyout',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLanguages'  => 'Language Settings',
     'SHOP_MODULE_aAmazonLanguages'                      => "Language mapping ('Oxid language abbreviation' => 'Amazon language value')",
