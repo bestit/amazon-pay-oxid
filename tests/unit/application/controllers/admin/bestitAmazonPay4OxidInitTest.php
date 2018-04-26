@@ -206,7 +206,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 $this->oRoot->url()
             ));
 
-        $oConfig->expects($this->exactly(2))
+        $oConfig->expects($this->exactly(5))
             ->method('getShopId')
             ->will($this->returnValue(123));
 
@@ -224,18 +224,31 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 return "'{$sValue}'";
             }));
 
-        $oDatabase->expects($this->exactly(3))
+        $sPaymentsQuery = "SELECT COUNT(OXID)
+            FROM oxpayments
+            WHERE OXID IN ('jagamazon', 'bestitamazon')";
+
+        $sSignatureQuery = "SELECT OXVARVALUE
+            FROM oxconfig
+            WHERE OXVARNAME = 'sAmazonSignature'
+              AND OXSHOPID = '123'";
+
+        $oDatabase->expects($this->exactly(6))
             ->method('getOne')
             ->withConsecutive(
-                array(new MatchIgnoreWhitespace(
-                    "SELECT COUNT(OXID)
-                    FROM oxpayments
-                    WHERE OXID IN ('jagamazon', 'bestitamazon')"
-                ))
+                array(new MatchIgnoreWhitespace($sPaymentsQuery)),
+                array(new MatchIgnoreWhitespace($sSignatureQuery)),
+                array(new MatchIgnoreWhitespace($sPaymentsQuery)),
+                array(new MatchIgnoreWhitespace($sSignatureQuery)),
+                array(new MatchIgnoreWhitespace($sPaymentsQuery)),
+                array(new MatchIgnoreWhitespace($sSignatureQuery))
             )->will($this->onConsecutiveCalls(
                 false,
+                false,
                 1,
-                0
+                '',
+                0,
+                'signature'
             ));
 
         $sDbDir = dirname(__FILE__).'/../../../../../_db/';
@@ -250,7 +263,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $aSecondSqlRows = explode(';', $sSecondSqlFile);
         $aSecondSqlRows = array_map('trim', $aSecondSqlRows);
 
-        $oDatabase->expects($this->exactly(49))
+        $oDatabase->expects($this->exactly(50))
             ->method('execute')
             ->withConsecutive(
                 array(new MatchIgnoreWhitespace(
@@ -314,7 +327,19 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[12])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[13])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[14])),
-                array(new MatchIgnoreWhitespace($aSecondSqlRows[15]))
+                array(new MatchIgnoreWhitespace($aSecondSqlRows[15])),
+                array(new MatchIgnoreWhitespace(
+                    "DELETE 
+                    FROM `oxconfig` 
+                    WHERE oxmodule = 'module:bestitAmazonPay4Oxid_tmp'
+                      AND oxshopid = '123'"
+                )),
+                array(new MatchIgnoreWhitespace(
+                    "UPDATE oxconfig 
+                    SET OXVARTYPE = 'str' 
+                    WHERE OXVARNAME = 'sAmazonSignature'
+                      AND OXSHOPID = '123'"
+                ))
             );
 
         $oUtilsView = $this->_getUtilsViewMock();
