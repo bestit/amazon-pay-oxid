@@ -289,6 +289,23 @@ class bestitAmazonPay4Oxid_init
             }
         }
 
+        // Keep signature after module deactivation on reactivate
+        $sShopId = $oConfig->getShopId();
+        $sSql = "SELECT OXVARVALUE
+            FROM oxconfig
+            WHERE OXVARNAME = 'sAmazonSignature'
+              AND OXSHOPID = '{$sShopId}'";
+
+        $sValue = self::_getDatabase()->getOne($sSql);
+
+        if ($sValue !== false && $sValue !== '') {
+            $sQuery = "UPDATE oxconfig SET OXVARTYPE = 'str' 
+                WHERE OXVARNAME = 'sAmazonSignature'
+                  AND OXSHOPID = '{$sShopId}'";
+
+            self::_getDatabase()->execute($sQuery);
+        }
+
         self::clearTmp();
     }
 
