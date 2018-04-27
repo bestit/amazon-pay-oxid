@@ -210,6 +210,14 @@
     display: block;
 }
 
+.amazonPayDetails .amazonContentGroup {
+    float: none;
+}
+
+.amazonPayDetails .amazonContentGroup #payWithAmazonButton {
+    display: inline-block;
+}
+
 /* Widget sizes for desktop version*/
 #addressBookWidgetDiv {width: 600px; height: 300px;}
 #walletWidgetDiv {width:400px;height:266px;}

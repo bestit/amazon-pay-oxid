@@ -111,7 +111,7 @@
             <div style="clear:both;"></div>
         </div>
     [{else}]
-        <div [{if $blCanBuy === false}]style="display:none"[{/if}]>
+        <div [{if $addToCart}]class="amazonPayDetails"[{/if}] [{if $blCanBuy === false}]style="display:none"[{/if}]>
             [{$smarty.capture.sBestitAmazonPayButton}]
         </div>
     [{/if}]
