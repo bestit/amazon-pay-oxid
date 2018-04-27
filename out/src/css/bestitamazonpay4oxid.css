@@ -214,7 +214,7 @@
     float: none;
 }
 
-.amazonPayDetails .amazonContentGroup #payWithAmazonButton {
+.amazonPayDetails .amazonContentGroup .payWithAmazonButton {
     display: inline-block;
 }
 
