@@ -392,7 +392,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                     'amount' => 1.1,
                     'currency_code' => 'currency',
                     'platform_id' => 'A26EQAZK19E0U2',
-                    'store_name' => 'shopName'
+                    'store_name' => 'shopName',
+                    'seller_order_id' => 'orderId'
                 ))
             )
             ->will($this->onConsecutiveCalls(
@@ -431,6 +432,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
         $oBasket->expects($this->once())
             ->method('getPrice')
             ->will($this->returnValue($oPrice));
+
+        $oBasket->expects($this->once())
+            ->method('getOrderId')
+            ->will($this->returnValue('orderId'));
 
         $oCurrency = new stdClass();
         $oCurrency->name = 'currency';
