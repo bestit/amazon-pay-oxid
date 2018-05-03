@@ -27,6 +27,9 @@
         [{/capture}]
         [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
         <div id="payWithAmazonDiv" class="amazonContentGroup">
+            [{if $showOrText}]
+                <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
+            [{/if}]
             <div class="amazonTooltip">
                 <i>?</i>
                 <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
@@ -35,6 +38,9 @@
                 <img src="[{$oViewConf->getAmazonProperty('sAmazonButtonUrl')}]?sellerId=[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]&size=x-large"
                      title="[{oxmultilang ident='BESTITAMAZONPAY_PAY_WITH_AMAZON_BUTTON'}]"/>
             </div>
+            [{if $showOrText}]
+                <span class="amazonPayOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
+            [{/if}]
         </div>
     [{/if}]
 
@@ -94,11 +100,17 @@
         [{/capture}]
         [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
         <div id="payWithAmazonDiv" class="amazonContentGroup">
+            [{if $showOrText}]
+                <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
+            [{/if}]
             <div class="amazonTooltip">
                 <i>?</i>
                 <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_PAY_BUTTON_HINT"}]</div>
             </div>
             <div id="payWithAmazonButton[{$sButtonId}]" class="payWithAmazonButton"></div>
+            [{if $showOrText}]
+                <span class="amazonPayOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
+            [{/if}]
         </div>
     [{/if}]
 [{/capture}]
