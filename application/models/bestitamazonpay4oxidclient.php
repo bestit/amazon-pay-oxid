@@ -353,7 +353,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                     'amount' => $oBasket->getPrice()->getBruttoPrice(),
                     'currency_code' => $oBasket->getBasketCurrency()->name,
                     'platform_id' => 'A26EQAZK19E0U2',
-                    'store_name' => $this->getConfig()->getActiveShop()->getFieldData('oxname')
+                    'store_name' => $this->getConfig()->getActiveShop()->getFieldData('oxname'),
+                    'seller_order_id' => $oBasket->getOrderId()
                 )
             );
         }
