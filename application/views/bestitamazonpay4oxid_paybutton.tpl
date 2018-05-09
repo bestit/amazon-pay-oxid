@@ -26,7 +26,7 @@
             });
         [{/capture}]
         [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
-        <div id="payWithAmazonDiv" class="amazonContentGroup">
+        <div class="amazonContentGroup">
             [{if $showOrText}]
                 <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
             [{/if}]
@@ -99,7 +99,7 @@
             });
         [{/capture}]
         [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
-        <div id="payWithAmazonDiv" class="amazonContentGroup">
+        <div class="amazonContentGroup">
             [{if $showOrText}]
                 <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
             [{/if}]
