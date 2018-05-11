@@ -1,3 +1,9 @@
+// Workaround for oxid bug 6675 (https://bugs.oxid-esales.com/view.php?id=6675)
+if (typeof Carousel === 'undefined') {
+  var Carousel = function () {};
+  Carousel.prototype.init = function () {};
+}
+
 if (typeof amazonPayNextStepButtonId === 'undefined') {
     var amazonPayNextStepButtonId = '#paymentNextStepBottom';
 }
