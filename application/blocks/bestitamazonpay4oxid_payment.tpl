@@ -1,10 +1,4 @@
 [{if $oViewConf->getAmazonPayIsActive() && $oView->getCheckedPaymentId()=='bestitamazon' && $smarty.session.amazonOrderReferenceId}]
-
-    [{if $oViewConf->getAmazonLoginIsActive()}]
-        [{assign var="sAmazonWidgetUrl" value=$oViewConf->getAmazonProperty('sAmazonLoginWidgetUrl')}]
-    [{else}]
-        [{assign var="sAmazonWidgetUrl" value=$oViewConf->getAmazonProperty('sAmazonWidgetUrl')}]
-    [{/if}]
     [{include file="bestitamazonpay4oxid_src.tpl"}]
 
     <div class="hidden">[{$smarty.block.parent}]</div>
