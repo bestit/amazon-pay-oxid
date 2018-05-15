@@ -382,6 +382,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testSetOrderReferenceDetails()
     {
+        $sModuleVersion = bestitAmazonPay4Oxid_init::getCurrentVersion();
+
         $oClient = $this->_getAmazonClientMock();
         $oClient->expects($this->exactly(2))
             ->method('setOrderReferenceDetails')
@@ -392,7 +394,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                     'amount' => 1.1,
                     'currency_code' => 'currency',
                     'platform_id' => 'A26EQAZK19E0U2',
-                    'store_name' => 'shopName'
+                    'store_name' => 'shopName',
+                    'custom_information' => "created by best it, OXID eShop v1.2.3, v{$sModuleVersion}"
                 ))
             )
             ->will($this->onConsecutiveCalls(
@@ -406,9 +409,20 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             ->with('amazonOrderReferenceId')
             ->will($this->returnValue('referenceId'));
 
+        $oShop = $this->_getShopMock();
+        $oShop->expects($this->exactly(2))
+            ->method('getFieldData')
+            ->withConsecutive(array('oxname'), array('oxversion'))
+            ->will($this->onConsecutiveCalls('shopName', '1.2.3'));
+
+        $oConfig = parent::_getConfigMock();
+        $oConfig->expects($this->any())
+            ->method('getActiveShop')
+            ->will($this->returnValue($oShop));
+
         $oBestitAmazonPay4OxidClient = $this->_getObject(
             $oClient,
-            $this->_getConfigMock(),
+            $oConfig,
             $this->_getDatabaseMock(),
             $this->_getLanguageMock(),
             $oSession,

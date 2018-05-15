@@ -2,11 +2,13 @@ sudo: required
 language: php
 services:
   - docker
+env: TRAVIS_ERROR_LEVEL=22519 # E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT
 before_script:
   - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
   - docker pull "$IMAGE_NAME" || true
 script:
-  - docker run --entrypoint "" -v $(pwd):/app -w /app $IMAGE_NAME /bin/bash -c "chmod +x ./build.sh && ./build.sh"
+  - docker run --entrypoint "" -v $(pwd):/app -w /app -e TRAVIS_ERROR_LEVEL=${TRAVIS_ERROR_LEVEL} $IMAGE_NAME /bin/bash -c "chmod +x ./build.sh && ./build.sh 5"
+  - docker run --entrypoint "" -v $(pwd):/app -w /app -e TRAVIS_ERROR_LEVEL=${TRAVIS_ERROR_LEVEL} $IMAGE_NAME /bin/bash -c "chmod +x ./build.sh && ./build.sh 6"
 before_deploy:
   - ssh-keyscan $DEPLOYMENT_SERVER >> $HOME/.ssh/known_hosts
   - (umask  077 ; echo $DEPLOYMENT_SSH_KEY | base64 --decode > /tmp/deploy_rsa)
@@ -18,4 +20,4 @@ deploy:
   skip_cleanup: true
   script: ./deploy.sh
   on:
-    branch: master
+    branch: develop

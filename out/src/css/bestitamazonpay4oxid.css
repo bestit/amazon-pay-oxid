@@ -1,4 +1,4 @@
-#payWithAmazonDiv img{
+.payWithAmazonButton img{
     cursor:pointer;
 }
 
@@ -6,7 +6,7 @@
     position:relative;
 }
 
-#optionNoRegistration #payWithAmazonDiv{
+#optionNoRegistration .payWithAmazonButton{
     float:none;
     margin:0;
     position:absolute;
@@ -22,14 +22,20 @@
     //display:none;
 }
 
-#payment #payWithAmazonDiv{
+#payment #payWithAmazonDiv {
     display:none;
+}
+
+#payment .payWithAmazonButton{
     float:right;
-    margin-top: -59px;
     margin-right: 10px;
 }
 
-#amazonMobile #payWithAmazonDiv{
+#payment .amazonContentGroup{
+    margin-top: 12px;
+}
+
+#amazonMobile .payWithAmazonButton{
     margin:0 auto;
     width:200px;
     float:none;
@@ -118,13 +124,14 @@
 }
 
 #amazonPayButtonLine.lineBox{
-   border: 1px solid #999999;
-   margin: 20px 0;
-   padding: 9px 10px 10px;
+    border: 1px solid #999999;
+    margin: 20px 0;
+    padding: 9px 10px 10px;
+    clear: both;
 }
 
-#amazonPayButtonLine #payWithAmazonDiv{
-    float:left;
+#amazonPayButtonLine .payWithAmazonButton{
+    float: right;
     display: inline-flex;
 }
 
@@ -134,7 +141,7 @@
     line-height: 30px;
 }
 
-#amazonMobile #amazonPayButtonLine #payWithAmazonDiv {
+#amazonMobile #amazonPayButtonLine .payWithAmazonButton {
     float: none;
     display: block;
 }
@@ -154,6 +161,62 @@
     position:relative;
 }
 
+.amazonContentGroup {
+    float: right;
+    margin-top: 2px;
+}
+
+.amazonTooltip {
+    display: inline-block;
+    position: relative;
+    margin-right: 6px;
+    line-height: 30px;
+}
+
+.amazonTooltip i {
+    display: inline-block;
+    background: gray;
+    color: white;
+    border-radius: 50%;
+    line-height: 16px;
+    height: 16px;
+    width: 16px;
+    text-align: center;
+    font-size: 12px;
+    cursor: pointer;
+    font-style: normal;
+    font-weight: bold;
+}
+
+.amazonTooltipContent {
+    display: none;
+    position: absolute;
+    border: 1px solid gray;
+    background-color: #ddd;
+    font-size: 11px;
+    color: darkslategrey;
+    width: 240px;
+    min-height: 20px;
+    border-radius: 2px;
+    padding: 6px;
+    left: -113px;
+    bottom: 20px;
+    z-index: 999;
+    line-height: normal;
+}
+
+.amazonTooltip:hover .amazonTooltipContent {
+    display: block;
+}
+
+.amazonPayDetails .amazonContentGroup {
+    float: none;
+}
+
+.amazonPayDetails .amazonContentGroup .payWithAmazonButton {
+    display: inline-block;
+}
+
 /* Widget sizes for desktop version*/
 #addressBookWidgetDiv {width: 600px; height: 300px;}
 #walletWidgetDiv {width:400px;height:266px;}
@@ -166,12 +229,51 @@
 #amazonMobile #readOnlyAddressBookWidgetDiv {width: 100%; height: 185px;}
 #amazonMobile #readOnlyWalletWidgetDiv {width: 100%; height: 235px;}
 
+.amazonPayOr {
+    margin-right: 12px;
+}
+
+.amazonPayPreOr {
+    display: none;
+}
+
 @media screen and (max-width: 768px) {
     /* Widget sizes for mobile version*/
     #addressBookWidgetDiv {width: 100%; height: 300px;}
     #walletWidgetDiv {width: 100%; height: 300px;}
     #readOnlyAddressBookWidgetDiv {width: 100%; height: 185px;}
     #readOnlyWalletWidgetDiv {width: 100%; height: 235px;}
+
+    #amazonLoginButton{
+        text-align: center;
+    }
+
+    .payWithAmazonButton {
+        float: none !important;
+        padding: 5px 0 0 0;
+        margin: 0 !important;
+        display: inline-block;
+    }
+
+    #amazonPayButtonLine h3 {
+        margin: 5px 0 0 0;
+        text-align: center;
+        float: none;
+    }
+
+    .amazonContentGroup {
+        text-align: center;
+        float: none;
+        clear: both;
+    }
+
+    .amazonPayPreOr {
+        display: block;
+    }
+
+    .amazonPayOr {
+        display: none;
+    }
 }
 
 /* Flow */
@@ -186,11 +288,20 @@
     margin-top: 10px;
 }
 
-.cl-basket.is-checkout #payWithAmazonDiv {
-    float: right;
+.cl-basket.is-checkout .payWithAmazonButton {
+    display: inline-block;
     margin-right: 10px;
 }
 
 .amazonBillingAddress .submitButton {
     margin-top: 12px;
+}
+
+.modal-footer .amazonContentGroup {
+    float: left;
+
+}
+
+.modal-footer .payWithAmazonButton {
+    display: inline-block;
 }

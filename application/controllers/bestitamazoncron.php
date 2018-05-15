@@ -221,6 +221,28 @@ class bestitAmazonCron extends oxUBase
     }
 
     /**
+     * Update suspended orders
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
+     */
+    protected function _closeOrders()
+    {
+        $aProcessed = $this->_processOrderStates(
+            "SELECT OXID, OXORDERNR FROM oxorder
+            WHERE BESTITAMAZONORDERREFERENCEID != ''
+              AND BESTITAMAZONAUTHORIZATIONID != ''
+              AND OXTRANSSTATUS = 'AMZ-Capture-Completed'",
+            'closeOrderReference'
+        );
+
+        foreach ($aProcessed as $sOrderNumber => $oData) {
+            if (isset($oData->CloseOrderReferenceResult, $oData->ResponseMetadata->RequestId)) {
+                $this->_addToMessages("Order #{$sOrderNumber} - Closed<br/>");
+            }
+        }
+    }
+
+    /**
      * The render function
      * @throws Exception
      * @throws oxSystemComponentException
@@ -250,6 +272,9 @@ class bestitAmazonCron extends oxUBase
 
             //Check refund stats
             $this->_updateRefundDetails();
+
+            //Check for order which can be closed
+            $this->_closeOrders();
             
             $this->_addToMessages('Done');
         }

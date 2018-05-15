@@ -13,6 +13,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      *
      * @return bestitAmazonPay4Oxid_oxViewConfig
      * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
@@ -24,6 +26,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testCreateInstance()
     {
@@ -35,6 +39,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::_getContainer()
      * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testGetContainer()
     {
@@ -43,6 +49,68 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
             'bestitAmazonPay4OxidContainer',
             self::callMethod($oBestitAmazonPay4OxidOxViewConfig, '_getContainer')
         );
+    }
+
+    /**
+     * @group unit
+     * @covers ::__construct()
+     * @throws ReflectionException
+     */
+    public function testConstructor()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oSession = $this->_getSessionMock();
+
+        $oSession->expects($this->exactly(3))
+            ->method('getVariable')
+            ->with('isAmazonPayQuickCheckout')
+            ->will($this->onConsecutiveCalls(null, 1, 1));
+
+        $oSession->expects($this->once())
+            ->method('deleteVariable')
+            ->with('isAmazonPayQuickCheckout');
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->exactly(2))
+            ->method('getRequestParameter')
+            ->with('cl')
+            ->will($this->onConsecutiveCalls('someClass', 'payment'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        $oBasketUtil = $this->_getBasketUtilMock();
+        $oBasketUtil->expects($this->once())
+            ->method('restoreQuickCheckoutBasket');
+
+        $oContainer->expects($this->once())
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
+
+        $oModule = $this->_getModuleMock();
+        $oModule->expects($this->once())
+            ->method('cleanAmazonPay');
+
+        $oContainer->expects($this->once())
+            ->method('getModule')
+            ->will($this->returnValue($oModule));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->getMockBuilder('bestitAmazonPay4Oxid_oxViewConfig')
+            ->disableOriginalConstructor()
+            ->getMock();
+        self::setValue($oBestitAmazonPay4OxidOxViewConfig, '_oContainer', $oContainer);
+
+        $oReflectedClass = new ReflectionClass('bestitAmazonPay4Oxid_oxViewConfig');
+        $oConstructor = $oReflectedClass->getConstructor();
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
+        $oConstructor->invoke($oBestitAmazonPay4OxidOxViewConfig);
     }
 
     /**
@@ -72,8 +140,9 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::getAmazonProperty()
-     * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testGetAmazonProperty()
     {
@@ -98,6 +167,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::getAmazonConfigValue()
      * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testGetAmazonConfigValue()
     {
@@ -125,6 +195,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::getAmazonLoginIsActive()
      * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testGetAmazonLoginIsActive()
     {
@@ -148,6 +219,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::showAmazonLoginButton()
      * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testShowAmazonLoginButton()
     {
@@ -195,6 +267,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::getAmazonLanguage()
      * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testGetAmazonLanguage()
     {
@@ -217,6 +290,8 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @group unit
      * @covers ::getSelfLink()
      * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
      */
     public function testGetSelfLink()
     {
@@ -251,6 +326,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
      * @covers ::getBasketLink()
      * @throws oxSystemComponentException
      * @throws ReflectionException
+     * @throws oxConnectionException
      */
     public function testGetBasketLink()
     {
@@ -282,5 +358,95 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidOxViewConfig, '_aViewData', array('basketlink' => ''));
         self::assertEquals('shopSecureHomeUrl?cl=basket', $oBestitAmazonPay4OxidOxViewConfig->getBasketLink());
+    }
+
+    /**
+     * @group unit
+     * @covers ::setJSCodeInjected()
+     * @covers ::_getInjectedCode()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     */
+    public function testSetJSCodeInjected()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oUtils = $this->_getUtilsMock();
+        $oUtils->expects($this->exactly(2))
+            ->method('fromStaticCache')
+            ->with(bestitAmazonPay4Oxid_oxViewConfig::CODE_INJECTED_STATIC_CACHE_KEY)
+            ->will($this->onConsecutiveCalls(
+                null,
+                array('keyOne' => true)
+            ));
+
+        $oUtils->expects($this->exactly(2))
+            ->method('toStaticCache')
+            ->withConsecutive(
+                array(
+                    bestitAmazonPay4Oxid_oxViewConfig::CODE_INJECTED_STATIC_CACHE_KEY,
+                    array('firstNewKey' => true)
+                ),
+                array(
+                    bestitAmazonPay4Oxid_oxViewConfig::CODE_INJECTED_STATIC_CACHE_KEY,
+                    array('keyOne' => true, 'secondNewKey' => true)
+                )
+            );
+
+        $oContainer->expects($this->exactly(4))
+            ->method('getUtils')
+            ->will($this->returnValue($oUtils));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->_getObject($oContainer);
+        $oBestitAmazonPay4OxidOxViewConfig->setJSCodeInjected('firstNewKey');
+        $oBestitAmazonPay4OxidOxViewConfig->setJSCodeInjected('secondNewKey');
+    }
+
+    /**
+     * @group unit
+     * @covers ::wasJSCodeInjected()
+     * @covers ::_getInjectedCode()
+     * @throws oxSystemComponentException
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     */
+    public function testWasJSCodeInjected()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oUtils = $this->_getUtilsMock();
+        $oUtils->expects($this->exactly(2))
+            ->method('fromStaticCache')
+            ->with(bestitAmazonPay4Oxid_oxViewConfig::CODE_INJECTED_STATIC_CACHE_KEY)
+            ->will($this->onConsecutiveCalls(
+                null,
+                array('secondKey' => true)
+            ));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getUtils')
+            ->will($this->returnValue($oUtils));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->_getObject($oContainer);
+        self::assertFalse($oBestitAmazonPay4OxidOxViewConfig->wasJSCodeInjected('firstKey'));
+        self::assertTrue($oBestitAmazonPay4OxidOxViewConfig->wasJSCodeInjected('secondKey'));
+    }
+
+    /**
+     * @group unit
+     * @covers ::getUniqueButtonId()
+     * @throws oxSystemComponentException
+     * @throws oxConnectionException
+     */
+    public function testGetUniqueButtonId()
+    {
+        $oBestitAmazonPay4OxidOxViewConfig = new bestitAmazonPay4Oxid_oxViewConfig();
+        $firstUniqueId = $oBestitAmazonPay4OxidOxViewConfig->getUniqueButtonId();
+        $secondUniqueId = $oBestitAmazonPay4OxidOxViewConfig->getUniqueButtonId();
+
+        self::assertNotEquals($firstUniqueId, $secondUniqueId);
+        self::assertRegExp('/[a-z0-9]{13}/i', $firstUniqueId);
+        self::assertRegExp('/[a-z0-9]{13}/i', $secondUniqueId);
     }
 }

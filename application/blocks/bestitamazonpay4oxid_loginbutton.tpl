@@ -1,16 +1,7 @@
 [{$smarty.block.parent}]
 
 [{if $oViewConf->showAmazonLoginButton()}]
-    [{assign var="sAmazonWidgetUrl" value=$oViewConf->getAmazonProperty('sAmazonLoginWidgetUrl')}]
-    [{assign var="sAmazonSellerId" value=$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]
-    [{assign var="sModuleUrl" value=$oViewConf->getModuleUrl('bestitamazonpay4oxid')}]
-
-    [{oxscript include="`$sAmazonWidgetUrl`?sellerId=`$sAmazonSellerId`" priority=11}]
-    [{oxscript include="`$sModuleUrl`out/src/js/bestitamazonpay4oxid.js" priority=11}]
-    [{oxstyle  include="`$sModuleUrl`out/src/css/bestitamazonpay4oxid.css"}]
-
-    <div id="amazonLoginButton" style="display: none;"></div>
-
+    [{include file="bestitamazonpay4oxid_src.tpl"}]
     [{capture name="sBestitAmazonLoginScript"}]
         $(document).ready(function () {
             amazon.Login.setClientId('[{$oViewConf->getAmazonConfigValue('sAmazonLoginClientId')}]');
@@ -35,4 +26,11 @@
     [{/capture}]
 
     [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
+
+    <div id="amazonLoginButton" style="display: none;">
+        <div class="amazonTooltip">
+            <i>?</i>
+            <div class="amazonTooltipContent">[{oxmultilang ident="BESTITAMAZONPAY_LOGIN_BUTTON_HINT"}]</div>
+        </div>
+    </div>
 [{/if}]

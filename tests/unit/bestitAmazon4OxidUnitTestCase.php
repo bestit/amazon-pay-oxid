@@ -95,6 +95,14 @@ abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
     }
 
     /**
+     * @return PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4OxidBasketUtil
+     */
+    protected function _getBasketUtilMock()
+    {
+        return $this->getMock('bestitAmazonPay4OxidBasketUtil');
+    }
+
+    /**
      * @return PHPUnit_Framework_MockObject_MockObject|oxConfig
      */
     protected function _getConfigMock()

@@ -53,10 +53,6 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
      * @throws ReflectionException
      * @throws oxConnectionException
      * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
-     * @throws Exception
      */
     public function testRender()
     {
@@ -187,5 +183,90 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidOxCmpBasket->render();
         $oBestitAmazonPay4OxidOxCmpBasket->render();
         $oBestitAmazonPay4OxidOxCmpBasket->render();
+    }
+
+    /**
+     * @group unit
+     * @covers ::tobasket()
+     * @throws ReflectionException
+     * @throws oxSystemComponentException
+     */
+    public function testToBasket()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->exactly(5))
+            ->method('getRequestParameter')
+            ->withConsecutive(
+                array('bestitAmazonPayIsAmazonPay'),
+                array('bestitAmazonPayIsAmazonPay'),
+                array('bestitAmazonPayIsAmazonPay'),
+                array('amazonOrderReferenceId'),
+                array('access_token')
+            )
+            ->will($this->onConsecutiveCalls(
+                null,
+                null,
+                1,
+                'amazonOrderReferenceId',
+                'accessToken'
+            ));
+
+        $oContainer->expects($this->exactly(3))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        // Session
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->exactly(2))
+            ->method('setVariable')
+            ->withConsecutive(
+                array('blAddedNewItem', false),
+                array('isAmazonPayQuickCheckout', true)
+            );
+
+        $oContainer->expects($this->once())
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        // BasketUtil
+        $oBasketUtil = $this->_getBasketUtilMock();
+        $oBasketUtil->expects($this->once())
+            ->method('setQuickCheckoutBasket');
+
+        $oContainer->expects($this->once())
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
+
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_oxcmp_basket $oBestitAmazonPay4OxidOxCmpBasket */
+        $oBestitAmazonPay4OxidOxCmpBasket = $this->getMock(
+            'bestitAmazonPay4Oxid_oxcmp_basket',
+            array('_parentToBasket')
+        );
+
+        self::setValue($oBestitAmazonPay4OxidOxCmpBasket, '_oContainer', $oContainer);
+
+        $oBestitAmazonPay4OxidOxCmpBasket->expects($this->exactly(3))
+            ->method('_parentToBasket')
+            ->withConsecutive(
+                array(null, null, null, null, false),
+                array(null, null, null, null, false),
+                array('productId', 1.0, array('selectList'), array('persistenParameter'), true)
+            )
+            ->will($this->returnValue('parentReturn'));
+
+        self::assertEquals('parentReturn', $oBestitAmazonPay4OxidOxCmpBasket->tobasket());
+        self::assertEquals('parentReturn', $oBestitAmazonPay4OxidOxCmpBasket->tobasket());
+        self::assertEquals(
+            'user?fnc=amazonLogin&redirectCl=user&amazonOrderReferenceId=amazonOrderReferenceId&access_token=accessToken',
+            $oBestitAmazonPay4OxidOxCmpBasket->tobasket(
+                'productId',
+                1.0,
+                array('selectList'),
+                array('persistenParameter'),
+                true
+            )
+        );
     }
 }

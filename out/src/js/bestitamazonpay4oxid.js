@@ -1,3 +1,9 @@
+// Workaround for oxid bug 6675 (https://bugs.oxid-esales.com/view.php?id=6675)
+if (typeof Carousel === 'undefined') {
+  var Carousel = function () {};
+  Carousel.prototype.init = function () {};
+}
+
 if (typeof amazonPayNextStepButtonId === 'undefined') {
     var amazonPayNextStepButtonId = '#paymentNextStepBottom';
 }
@@ -54,6 +60,13 @@ $(document).ready(function() {
                 $("#paymentMethods").hide();
             }
         }
+    }
+
+    var $amazonBasketModalButton = $('#amazonPayBasketModalButton');
+
+    if ($amazonBasketModalButton.length) {
+        $('.basketFlyout .modal-footer .btn.btn-default').before($amazonBasketModalButton);
+        $amazonBasketModalButton.show();
     }
 
     //If Amazon Login button exists try to place it to proper place in the page

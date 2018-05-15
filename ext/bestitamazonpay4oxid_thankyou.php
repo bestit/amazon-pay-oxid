@@ -47,6 +47,18 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
     }
 
     /**
+     * Restore the basket if necessary.
+     *
+     * @throws oxSystemComponentException
+     */
+    public function init()
+    {
+        parent::init();
+
+        $this->_getContainer()->getBasketUtil()->restoreQuickCheckoutBasket();
+    }
+
+    /**
      * Delete Amazon pay details after checkout completed
      *
      * @return mixed
