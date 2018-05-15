@@ -189,24 +189,30 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 '2.3.0'
             ));
 
-        $oConfig->expects($this->exactly(5))
+        $oConfig->expects($this->exactly(8))
             ->method('getConfigParam')
             ->withConsecutive(
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
+                array('bestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir')
             )
             ->will($this->onConsecutiveCalls(
+                false,
                 $this->oRoot->url(),
                 'Sync',
+                false,
                 $this->oRoot->url(),
                 'Async',
+                true,
                 $this->oRoot->url()
             ));
 
-        $oConfig->expects($this->exactly(5))
+        $oConfig->expects($this->exactly(6))
             ->method('getShopId')
             ->will($this->returnValue(123));
 
@@ -370,6 +376,11 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
 
         $oDbMetaDataHandler->expects($this->once())
             ->method('updateViews');
+
+        // check if config var blBestitAmazonPay4OxidEnableMultiCurrency get saved
+        $oConfig->expects($this->once())
+            ->method('saveShopConfVar')
+            ->with('bool', 'blBestitAmazonPay4OxidEnableMultiCurrency', true, 123, 'module:bestitamazonpay4oxid');
 
         $oBestitAmazonPay4OxidInit = $this->_getObject(
             $oConfig,
