@@ -116,7 +116,7 @@ $aModule = array(
         array(
             'template' => 'page/checkout/payment.tpl',
             'block' => 'checkout_payment_nextstep', // flow + azure
-            'file' => 'application/blocks/bestitamazonpay4oxid_paybutton.tpl'
+            'file' => 'application/blocks/bestitamazonpay4oxid_paybutton_nextstep.tpl'
         ),
         array(
             'template' => 'page/checkout/order.tpl',

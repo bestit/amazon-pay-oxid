@@ -32,8 +32,7 @@
 }
 
 #payment .amazonContentGroup{
-    display: none;
-    margin-top: -62px;
+    margin-top: 12px;
 }
 
 #amazonMobile .payWithAmazonButton{
@@ -302,7 +301,7 @@
     margin-top: 12px;
 }
 
-.modal-footer #payWithAmazonDiv {
+.modal-footer .amazonContentGroup {
     float: left;
 
 }
