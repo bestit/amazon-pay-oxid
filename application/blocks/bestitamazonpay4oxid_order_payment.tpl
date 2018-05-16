@@ -1,11 +1,5 @@
 [{assign var="oPayment" value=$oView->getPayment()}]
 [{if $oViewConf->getAmazonPayIsActive() && $oPayment->getId()=='bestitamazon' && $smarty.session.amazonOrderReferenceId}]
-
-    [{if $oViewConf->getAmazonLoginIsActive()}]
-        [{assign var="sAmazonWidgetUrl" value=$oViewConf->getAmazonProperty('sAmazonLoginWidgetUrl')}]
-    [{else}]
-        [{assign var="sAmazonWidgetUrl" value=$oViewConf->getAmazonProperty('sAmazonWidgetUrl')}]
-    [{/if}]
     [{include file="bestitamazonpay4oxid_src.tpl"}]
 
     [{oxscript include="`$sAmazonWidgetUrl`?sellerId=`$sAmazonSellerId`" priority=11}]
