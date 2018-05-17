@@ -53,7 +53,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.1.0',
+    'version' => '3.1.1',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -373,7 +373,7 @@ $aModule = array(
 );
 
 if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
-    $aModule['version'] = '2.6.0';
+    $aModule['version'] = '2.6.1';
     $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
 }
 
