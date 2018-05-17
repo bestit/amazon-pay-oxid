@@ -364,6 +364,13 @@ $aModule = array(
             'type' => 'bool',
             'value' => 'true',
             'position' => '7'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
+            'type' => 'bool',
+            'value' => 'false',
+            'position' => '8'
         )
     ),
     'events' => array(

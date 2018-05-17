@@ -306,6 +306,18 @@ class bestitAmazonPay4Oxid_init
             self::_getDatabase()->execute($sQuery);
         }
 
+        // copy multi currency option value from possible hidden feature to module config
+        if ((bool)$oConfig->getConfigParam('bestitAmazonPay4OxidEnableMultiCurrency') === true) {
+            $oConfig->setConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency', true);
+            $oConfig->saveShopConfVar(
+                'bool',
+                'blBestitAmazonPay4OxidEnableMultiCurrency',
+                true,
+                $oConfig->getShopId(),
+                'module:bestitamazonpay4oxid'
+            );
+        }
+
         self::clearTmp();
     }
 

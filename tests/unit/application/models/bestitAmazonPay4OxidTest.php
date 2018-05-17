@@ -55,22 +55,22 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         $oConfig->expects($this->exactly(16))
             ->method('getConfigParam')
             ->withConsecutive(
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency')
+                array('blBestitAmazonPay4OxidEnableMultiCurrency')
             )
             ->will($this->onConsecutiveCalls(
                 false,
@@ -146,14 +146,14 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         $oConfig->expects($this->exactly(9))
             ->method('getConfigParam')
             ->withConsecutive(
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonSellerId'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonSellerId'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonSellerId'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonSellerId')
             )
             ->will($this->onConsecutiveCalls(
