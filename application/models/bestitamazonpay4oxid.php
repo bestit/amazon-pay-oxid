@@ -44,7 +44,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
     public function getIsSelectedCurrencyAvailable()
     {
         $oConfig = $this->getConfig();
-        $blEnableMultiCurrency = (bool)$oConfig->getConfigParam('bestitAmazonPay4OxidEnableMultiCurrency');
+        $blEnableMultiCurrency = (bool)$oConfig->getConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency');
 
         if ($blEnableMultiCurrency === true) {
             return true;
