@@ -738,6 +738,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         //Update Order info
         if ($blProcessable === true && isset($oData->CaptureResult->CaptureDetails)) {
             $this->setCaptureState($oOrder, $oData->CaptureResult->CaptureDetails);
+            $this->closeOrderReference($oOrder);
         }
 
         return $oData;
