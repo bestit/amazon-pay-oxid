@@ -2,27 +2,27 @@
 set -euo pipefail
 
 OXID_VERSION=${1}
+DB_HOST=oxiddb
+DB_USER=root
+DB_PASS=dbpass
 
-service mysql start
 echo -ne "Waiting for mysql service"
-while ! mysqladmin ping -h"127.0.0.1" -P 3306 --silent; do
+while ! mysqladmin ping -h${DB_HOST} -P 3306 --silent; do
     echo -ne "."
     sleep 1
 done
 echo ""
-echo "=== Set mysql root password ==="
-mysqladmin -u root password dbpass
+
 echo "=== Generate default database ==="
-mysql -h127.0.0.1 -uroot -pdbpass -e "CREATE DATABASE oxidehop_ce"
-mysql -h127.0.0.1 -uroot -pdbpass -Doxidehop_ce << QUERY_INPUT
+mysql -h${DB_HOST} -u${DB_USER} -p${DB_PASS} -Doxidehop_ce << QUERY_INPUT
 SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';
 SET SESSION sql_mode = 'NO_ENGINE_SUBSTITUTION';
 QUERY_INPUT
 
-echo "=== Start build ==="
+echo "=== Start build for OXID ${OXID_VERSION} ==="
 
 CURRENT_DIR=${PWD}
-TEMP_DIR='/tmp/build'
+TEMP_DIR="/tmp/build_${OXID_VERSION}"
 BASE_DIR="${TEMP_DIR}/oxideshop_ce"
 SHOP_DIR="${BASE_DIR}/source"
 VENDOR_DIR="${SHOP_DIR}/modules/bestit"
@@ -40,8 +40,8 @@ cd ${TEMP_DIR}
 echo "=== Setup shop ==="
 if [[ ${OXID_VERSION} == 5 ]]; then
     git clone https://github.com/OXID-eSales/oxideshop_ce.git --branch b-5.3-ce
-    composer install -d ${SHOP_DIR} --ignore-platform-reqs
-    sed -i 's|<dbHost_ce>|127.0.0.1|; s|<dbName_ce>|oxidehop_ce|; s|<dbUser_ce>|root|; s|<dbPwd_ce>|dbpass|; s|<sShopURL_ce>|http://127.0.0.1|; s|<sShopDir_ce>|'${SHOP_DIR}'|; s|<sCompileDir_ce>|'${SHOP_DIR}'/tmp|; s|<iUtfMode>|0|; s|$this->iDebug = 0|$this->iDebug = 1|; s|mysql|mysqli|' ${SHOP_DIR}/config.inc.php
+    composer install -n -d ${SHOP_DIR} --ignore-platform-reqs
+    sed -i 's|<dbHost_ce>|'${DB_HOST}'|; s|<dbName_ce>|oxidehop_ce|; s|<dbUser_ce>|'${DB_USER}'|; s|<dbPwd_ce>|'${DB_PASS}'|; s|<sShopURL_ce>|http://127.0.0.1|; s|<sShopDir_ce>|'${SHOP_DIR}'|; s|<sCompileDir_ce>|'${SHOP_DIR}'/tmp|; s|<iUtfMode>|0|; s|$this->iDebug = 0|$this->iDebug = 1|; s|mysql|mysqli|' ${SHOP_DIR}/config.inc.php
     wget "https://raw.githubusercontent.com/OXID-eSales/oxideshop_demodata_ce/b-5.3/src/demodata.sql" -P oxideshop_ce/source/setup/sql/
 
     # Setup flow theme
@@ -52,14 +52,14 @@ if [[ ${OXID_VERSION} == 5 ]]; then
 
     cp ${CURRENT_DIR}/test_config.yml ${SHOP_DIR}
 elif [[ ${OXID_VERSION} == 6 ]]; then
-    git clone https://github.com/OXID-eSales/oxideshop_ce.git
+    git clone --branch b-6.x https://github.com/OXID-eSales/oxideshop_ce.git
 
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
     MODULES_PATH=''
-    composer install -d ${BASE_DIR} --ignore-platform-reqs
+    composer install -n -d ${BASE_DIR} --ignore-platform-reqs
     cp ${SHOP_DIR}/config.inc.php.dist ${SHOP_DIR}/config.inc.php
-    sed -i 's|<dbHost>|127.0.0.1|; s|<dbName>|oxidehop_ce|; s|<dbUser>|root|; s|<dbPwd>|dbpass|; s|<sShopURL>|http://localhost|; s|<sShopDir>|'${SHOP_DIR}'|; s|<sCompileDir>|'${SHOP_DIR}'/tmp|; s|$this->iDebug = 0|$this->iDebug = 1|' ${SHOP_DIR}/config.inc.php
+    sed -i 's|<dbHost>|'${DB_HOST}'|; s|<dbName>|oxidehop_ce|; s|<dbUser>|'${DB_USER}'|; s|<dbPwd>|'${DB_PASS}'|; s|<sShopURL>|http://localhost|; s|<sShopDir>|'${SHOP_DIR}'|; s|<sCompileDir>|'${SHOP_DIR}'/tmp|; s|$this->iDebug = 0|$this->iDebug = 1|' ${SHOP_DIR}/config.inc.php
     sed -i "s|\$this->edition = ''|\$this->edition = 'CE'|" ${SHOP_DIR}/config.inc.php
 
     rm ${BASE_DIR}/test_config.yml
@@ -85,5 +85,6 @@ cd ${MODULE_BASE_DIR}/tests/
 if [[ ${OXID_VERSION} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
 elif [[ ${OXID_VERSION} == 6 ]]; then
+    apt-get -y install sudo # oxid needs sudo -.-
     ${BASE_DIR}/vendor/bin/runtests
 fi

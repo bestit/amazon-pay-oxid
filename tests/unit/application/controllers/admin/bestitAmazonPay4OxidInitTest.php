@@ -398,6 +398,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
 
         if (method_exists($this, 'assertLoggedException')
             && class_exists('OxidEsales\Eshop\Core\Exception\StandardException')
+            && method_exists('OxidEsales\Eshop\Core\Exception\StandardException', 'debugOut')
         ) {
             $this->assertLoggedException(
                 'OxidEsales\Eshop\Core\Exception\StandardException',
