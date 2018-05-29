@@ -180,7 +180,10 @@ class bestitAmazonPay4Oxid_init
             return $oModuleInstaller->deactivate($oModule);
         } catch (oxException $oEx) {
             self::_getUtilsView()->addErrorToDisplay($oEx);
-            $oEx->debugOut();
+
+            if (method_exists($oEx, 'debugOut')) {
+                $oEx->debugOut();
+            }
         }
 
         return false;
