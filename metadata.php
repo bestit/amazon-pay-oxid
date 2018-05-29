@@ -168,6 +168,11 @@ $aModule = array(
             'template' => 'widget/minibasket/minibasket.tpl',
             'block' => 'widget_minibasket_total',
             'file' => 'application/blocks/bestitamazonpay4oxid_minibasket.tpl'
+        ),
+        array(
+            'template' => 'widget/minibasket/minibasket.tpl',
+            'block' => 'dd_layout_page_header_icon_menu_minibasket_functions',
+            'file' => 'application/blocks/bestitamazonpay4oxid_minibasket_functions.tpl'
         )
     ),
     'templates' => array(
