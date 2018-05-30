@@ -376,6 +376,13 @@ $aModule = array(
             'type' => 'bool',
             'value' => 'false',
             'position' => '8'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blShowAmazonPayButtonAtDetails',
+            'type' => 'bool',
+            'value' => 'true',
+            'position' => '8'
         )
     ),
     'events' => array(
