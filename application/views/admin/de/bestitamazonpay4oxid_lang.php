@@ -92,6 +92,7 @@ $aLang = array(
     'SHOP_MODULE_sSandboxSimulation_RefundAmazonRejected'                            => 'Refund : AmazonRejected',
     'SHOP_MODULE_blShowAmazonPayButtonInBasketFlyout'                                => 'Zeige Amazon Pay Button im Basket Flyout',
     'SHOP_MODULE_blBestitAmazonPay4OxidEnableMultiCurrency'                          => 'Fremdwährungen aktivieren',
+    'SHOP_MODULE_blShowAmazonPayButtonAtDetails'                                     => 'Amazon Pay-Button auf Produktdetailseite anzeigen',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLanguages'  => 'Sprach Einstellungen',
     'SHOP_MODULE_aAmazonLanguages'                      => "Sprach Einstellungen ('Oxid Sprachk&uuml;rzel' => 'Amazon Sprachwert')",
