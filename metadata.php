@@ -365,16 +365,16 @@ $aModule = array(
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
-            'name' => 'blShowAmazonPayButtonInBasketFlyout',
+            'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
             'type' => 'bool',
-            'value' => 'true',
+            'value' => 'false',
             'position' => '7'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
-            'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
+            'name' => 'blShowAmazonPayButtonInBasketFlyout',
             'type' => 'bool',
-            'value' => 'false',
+            'value' => 'true',
             'position' => '8'
         ),
         array(
@@ -382,7 +382,14 @@ $aModule = array(
             'name' => 'blShowAmazonPayButtonAtDetails',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '8'
+            'position' => '9'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blShowAmazonPayButtonAtCartPopup',
+            'type' => 'bool',
+            'value' => 'true',
+            'position' => '10'
         )
     ),
     'events' => array(
