@@ -253,5 +253,18 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
     {
         return uniqid();
     }
+
+    /**
+     * Returns the basket currency.
+     *
+     * @return string
+     * @throws oxSystemComponentException
+     */
+    public function getBasketCurrency()
+    {
+        $oCurrency = $this->_getContainer()->getSession()->getBasket()->getBasketCurrency();
+
+        return $oCurrency !== null ? $oCurrency->name : '';
+    }
 }
 
