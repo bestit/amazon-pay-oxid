@@ -192,13 +192,13 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $oConfig->expects($this->exactly(8))
             ->method('getConfigParam')
             ->withConsecutive(
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
-                array('bestitAmazonPay4OxidEnableMultiCurrency'),
+                array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir')
             )
             ->will($this->onConsecutiveCalls(
