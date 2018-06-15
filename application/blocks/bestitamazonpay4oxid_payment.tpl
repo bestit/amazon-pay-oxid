@@ -16,8 +16,8 @@
             new OffAmazonPayments.Widgets.Wallet({
                 sellerId: '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]',
                 amazonOrderReferenceId: '[{$smarty.session.amazonOrderReferenceId}]',
-                [{if $oViewConf->getAmazonConfigValue('bestitAmazonPay4OxidEnableMultiCurrency')}]
-                    presentmentCurrency: '[{$oBasketCurrency->name}]',
+                [{if $oViewConf->getAmazonConfigValue('blBestitAmazonPay4OxidEnableMultiCurrency')}]
+                    presentmentCurrency: '[{$oViewConf->getBasketCurrency()}]',
                 [{/if}]
                 design: {
                     designMode: 'responsive'

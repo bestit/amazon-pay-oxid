@@ -449,4 +449,38 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
         self::assertRegExp('/[a-z0-9]{13}/i', $firstUniqueId);
         self::assertRegExp('/[a-z0-9]{13}/i', $secondUniqueId);
     }
+
+    /**
+     * @group unit
+     * @covers ::getBasketCurrency()
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function testGetBasketCurrency()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oCurrency = new stdClass();
+        $oCurrency->name = 'currency';
+
+        $oBasket = $this->_getBasketMock();
+        $oBasket->expects($this->exactly(2))
+            ->method('getBasketCurrency')
+            ->will($this->onConsecutiveCalls(null, $oCurrency));
+
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->exactly(2))
+            ->method('getBasket')
+            ->will($this->returnValue($oBasket));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->_getObject($oContainer);
+
+        self::assertEquals('', $oBestitAmazonPay4OxidOxViewConfig->getBasketCurrency());
+        self::assertEquals('currency', $oBestitAmazonPay4OxidOxViewConfig->getBasketCurrency());
+    }
 }
