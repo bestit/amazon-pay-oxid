@@ -864,7 +864,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 
         $oClient->expects($this->exactly(2))
             ->method('getAmazonProperty')
-            ->with('sAmazonPaymentChangeLink', true)
+            ->with('sAmazonPayChangeLink', true)
             ->will($this->returnValue('paymentChangeLink'));
 
         $oClient->expects($this->exactly(2))

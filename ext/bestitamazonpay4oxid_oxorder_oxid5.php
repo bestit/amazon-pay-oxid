@@ -426,7 +426,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
     {
         $oClient = $this->_getContainer()->getClient();
         //Main part of the link related to selected locale in config
-        $sLink = $oClient->getAmazonProperty('sAmazonPaymentChangeLink', true);
+        $sLink = $oClient->getAmazonProperty('sAmazonPayChangeLink', true);
 
         //Send GetOrderReferenceDetails request to Amazon to get OrderLanguage string
         $oData = $oClient->getOrderReferenceDetails($this, array(), true);
