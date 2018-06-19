@@ -149,7 +149,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     public function testGetAmazonProperty()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(8))
+        $oConfig->expects($this->exactly(9))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blAmazonSandboxActive'),
@@ -159,9 +159,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 array('blAmazonSandboxActive'),
                 array('sAmazonLocale'),
                 array('blAmazonSandboxActive'),
+                array('sAmazonLocale'),
                 array('sAmazonLocale')
             )
-            ->will($this->onConsecutiveCalls(null, 'DE', null, 'DE', 1, 'DE', null, 'DE'));
+            ->will($this->onConsecutiveCalls(null, 'DE', null, 'DE', 1, 'DE', null, 'DE', 'DE'));
 
         $oBestitAmazonPay4OxidClient = $this->_getObject(
             $this->_getAmazonClientMock(),
@@ -185,6 +186,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals(
             'https://static-eu.payments-amazon.com/OffAmazonPayments/de/lpa/js/Widgets.js',
             $oBestitAmazonPay4OxidClient->getAmazonProperty('sAmazonLoginWidgetUrl', false)
+        );
+        self::assertEquals(
+            'https://payments.amazon.de/jr/your-account/orders?language=',
+            $oBestitAmazonPay4OxidClient->getAmazonProperty('sAmazonPayChangeLink', true)
         );
     }
 
