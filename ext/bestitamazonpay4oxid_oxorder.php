@@ -356,12 +356,12 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
 
     /**
      * @param Basket $oBasket
-     * @param oxUser $oUser
+     * @param User   $oUser
      * @param bool   $blRecalculatingOrder
      *
      * @return int
      */
-    protected function _parentFinalizeOrder(Basket $oBasket, oxUser $oUser, $blRecalculatingOrder)
+    protected function _parentFinalizeOrder(Basket $oBasket, $oUser, $blRecalculatingOrder = false)
     {
         return parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
     }
@@ -371,7 +371,7 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
      * Update user details with the full details received from amazon
      *
      * @param Basket     $oBasket
-     * @param oxUser     $oUser
+     * @param User       $oUser
      * @param bool|false $blRecalculatingOrder
      *
      * @return int
