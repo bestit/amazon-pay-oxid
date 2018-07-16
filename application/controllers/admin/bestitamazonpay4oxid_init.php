@@ -180,7 +180,10 @@ class bestitAmazonPay4Oxid_init
             return $oModuleInstaller->deactivate($oModule);
         } catch (oxException $oEx) {
             self::_getUtilsView()->addErrorToDisplay($oEx);
-            $oEx->debugOut();
+
+            if (method_exists($oEx, 'debugOut')) {
+                $oEx->debugOut();
+            }
         }
 
         return false;
@@ -307,7 +310,7 @@ class bestitAmazonPay4Oxid_init
         }
 
         // copy multi currency option value from possible hidden feature to module config
-        if ((bool)$oConfig->getConfigParam('bestitAmazonPay4OxidEnableMultiCurrency') === true) {
+        if ((bool)$oConfig->getConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency') === true) {
             $oConfig->setConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency', true);
             $oConfig->saveShopConfVar(
                 'bool',

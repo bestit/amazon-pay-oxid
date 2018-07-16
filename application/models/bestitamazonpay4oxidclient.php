@@ -82,6 +82,16 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     protected $_sAmazonButtonUrlUSSandbox = 'https://payments-sandbox.amazon.com/gp/widgets/button';
 
     /**
+     * Amazon Change Payment Link
+     *
+     * @var string
+     */
+    protected $_sAmazonPayChangeLinkDE = 'https://payments.amazon.de/jr/your-account/orders?language=';
+    protected $_sAmazonPayChangeLinkUK = 'https://payments.amazon.co.uk/jr/your-account/orders?language=';
+    protected $_sAmazonPayChangeLinkUS = 'https://payments.amazon.com/jr/your-account/orders?language=';
+    protected $_sAmazonPayChangeLinkCUSTOM = 'https://payments.amazon.com/jr/your-account/orders?language=';
+
+    /**
      * @var bestitAmazonPay4OxidClient
      */
     private static $_instance = null;
@@ -738,6 +748,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         //Update Order info
         if ($blProcessable === true && isset($oData->CaptureResult->CaptureDetails)) {
             $this->setCaptureState($oOrder, $oData->CaptureResult->CaptureDetails);
+            $this->closeOrderReference($oOrder);
         }
 
         return $oData;

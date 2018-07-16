@@ -53,7 +53,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.1.1',
+    'version' => '3.1.4',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -168,6 +168,11 @@ $aModule = array(
             'template' => 'widget/minibasket/minibasket.tpl',
             'block' => 'widget_minibasket_total',
             'file' => 'application/blocks/bestitamazonpay4oxid_minibasket.tpl'
+        ),
+        array(
+            'template' => 'widget/minibasket/minibasket.tpl',
+            'block' => 'dd_layout_page_header_icon_menu_minibasket_functions',
+            'file' => 'application/blocks/bestitamazonpay4oxid_minibasket_functions.tpl'
         )
     ),
     'templates' => array(
@@ -360,17 +365,31 @@ $aModule = array(
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
-            'name' => 'blShowAmazonPayButtonInBasketFlyout',
+            'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
             'type' => 'bool',
-            'value' => 'true',
+            'value' => 'false',
             'position' => '7'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
-            'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
+            'name' => 'blShowAmazonPayButtonInBasketFlyout',
             'type' => 'bool',
-            'value' => 'false',
+            'value' => 'true',
             'position' => '8'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blShowAmazonPayButtonAtDetails',
+            'type' => 'bool',
+            'value' => 'true',
+            'position' => '9'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'blShowAmazonPayButtonAtCartPopup',
+            'type' => 'bool',
+            'value' => 'true',
+            'position' => '10'
         )
     ),
     'events' => array(
@@ -380,7 +399,7 @@ $aModule = array(
 );
 
 if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
-    $aModule['version'] = '2.6.1';
+    $aModule['version'] = '2.6.4';
     $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
 }
 

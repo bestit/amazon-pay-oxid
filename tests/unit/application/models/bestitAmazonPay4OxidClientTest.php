@@ -149,7 +149,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     public function testGetAmazonProperty()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(8))
+        $oConfig->expects($this->exactly(9))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blAmazonSandboxActive'),
@@ -159,9 +159,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 array('blAmazonSandboxActive'),
                 array('sAmazonLocale'),
                 array('blAmazonSandboxActive'),
+                array('sAmazonLocale'),
                 array('sAmazonLocale')
             )
-            ->will($this->onConsecutiveCalls(null, 'DE', null, 'DE', 1, 'DE', null, 'DE'));
+            ->will($this->onConsecutiveCalls(null, 'DE', null, 'DE', 1, 'DE', null, 'DE', 'DE'));
 
         $oBestitAmazonPay4OxidClient = $this->_getObject(
             $this->_getAmazonClientMock(),
@@ -185,6 +186,10 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals(
             'https://static-eu.payments-amazon.com/OffAmazonPayments/de/lpa/js/Widgets.js',
             $oBestitAmazonPay4OxidClient->getAmazonProperty('sAmazonLoginWidgetUrl', false)
+        );
+        self::assertEquals(
+            'https://payments.amazon.de/jr/your-account/orders?language=',
+            $oBestitAmazonPay4OxidClient->getAmazonProperty('sAmazonPayChangeLink', true)
         );
     }
 
@@ -496,15 +501,20 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
-     * @param string $sFunctionUnderTest
-     * @param array  $aParameters
-     * @param array  $aResponses
+     * @param string                                         $sFunctionUnderTest
+     * @param array                                          $aParameters
+     * @param array                                          $aResponses
+     * @param Client|PHPUnit_Framework_MockObject_MockObject $oClient
      *
      * @return Client|PHPUnit_Framework_MockObject_MockObject
      */
-    private function _getOrderRequestClientMock($sFunctionUnderTest, array $aParameters, array $aResponses)
-    {
-        $oClient = $this->_getAmazonClientMock();
+    private function _getOrderRequestClientMock(
+        $sFunctionUnderTest,
+        array $aParameters,
+        array $aResponses,
+        $oClient = null
+    ) {
+        $oClient = ($oClient === null) ? $this->_getAmazonClientMock() : $oClient;
         $oMethod = $oClient->expects($this->exactly(count($aResponses)))
             ->method($sFunctionUnderTest)
             ->will(call_user_func_array(array($this, 'onConsecutiveCalls'), $aResponses));
@@ -1091,8 +1101,21 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             )
         );
 
+        $oClient = $this->_getOrderRequestClientMock(
+            'closeOrderReference',
+            array(
+                array(),
+                array()
+            ),
+            array(
+                $this->_getAmazonResponseParserMock(),
+                $this->_getAmazonResponseParserMock()
+            ),
+            $oClient
+        );
+
         $oLanguage = $this->_getLanguageMock();
-        $oLanguage->expects($this->exactly(3))
+        $oLanguage->expects($this->exactly(5))
             ->method('translateString')
             ->with('BESTITAMAZONPAY_ORDER_NO')
             ->will($this->returnValue('orderNumber'));
@@ -1137,11 +1160,13 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 array('oxcurrency'),
                 array('bestitamazonorderreferenceid'),
                 array('oxordernr'),
+                array('bestitamazonorderreferenceid'),
                 array('bestitamazonauthorizationid'),
                 array('oxtotalordersum'),
                 array('oxcurrency'),
                 array('bestitamazonorderreferenceid'),
-                array('oxordernr')
+                array('oxordernr'),
+                array('bestitamazonorderreferenceid')
             )
         );
 
