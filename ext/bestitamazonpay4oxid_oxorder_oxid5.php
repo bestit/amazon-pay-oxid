@@ -359,7 +359,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
      *
      * @return int
      */
-    protected function _parentFinalizeOrder(oxBasket $oBasket, oxUser $oUser, $blRecalculatingOrder)
+    protected function _parentFinalizeOrder(oxBasket $oBasket, $oUser, $blRecalculatingOrder = false)
     {
         return parent::finalizeOrder($oBasket, $oUser, $blRecalculatingOrder);
     }
