@@ -545,9 +545,9 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      * @return stdClass
      * @throws Exception
      */
-    public function closeOrderReference($oOrder = null, $aRequestParameters = array())
+    public function closeOrderReference($oOrder = null, $aRequestParameters = array(), $blUpdateOrderStatus = true)
     {
-        return $this->_callOrderRequest(
+        $oData = $this->_callOrderRequest(
             'closeOrderReference',
             $oOrder,
             $aRequestParameters,
@@ -555,6 +555,16 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             $blProcessable,
             'AMZ-Order-Closed'
         );
+
+        //Update Order info
+        if ($blUpdateOrderStatus === true && $blProcessable === true) {
+            $oOrder->assign(array(
+                'oxtransstatus' => 'AMZ-Order-Closed'
+            ));
+            $oOrder->save();
+        }
+
+        return $oData;
     }
 
     /**
@@ -652,10 +662,10 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                     /** @var bestitAmazonPay4Oxid_oxEmail $oEmail */
                     $oEmail = $this->getObjectFactory()->createOxidObject('oxEmail');
                     $oEmail->sendAmazonRejectedPaymentEmail($oOrder);
-                    $this->closeOrderReference($oOrder);
+                    $this->closeOrderReference($oOrder, array(), false);
                     break;
                 default:
-                    $this->closeOrderReference($oOrder);
+                    $this->closeOrderReference($oOrder, array(), false);
             }
         }
 
@@ -748,7 +758,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         //Update Order info
         if ($blProcessable === true && isset($oData->CaptureResult->CaptureDetails)) {
             $this->setCaptureState($oOrder, $oData->CaptureResult->CaptureDetails);
-            $this->closeOrderReference($oOrder);
+            $this->closeOrderReference($oOrder, array(), false);
         }
 
         return $oData;
