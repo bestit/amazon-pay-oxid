@@ -183,8 +183,10 @@ $(document).ready(function() {
             $(submitButton).css("display", "none");
             $(submitButton).after('<span class="amazonLoadingImage"></span>');
 
-            //Check if session is still alive and we still have user logged in
-            if (typeof amazon !== 'undefined') {
+            // Check if session is still alive and we still have user logged in
+            // Check for div with id "readOnlyWalletWidgetDiv" because this will only be available on amazon orders
+            // see modules/bestit/amazonpay4oxid/application/blocks/bestitamazonpay4oxid_order_payment.tpl
+            if ($('#readOnlyWalletWidgetDiv').length > 0 && typeof amazon !== 'undefined') {
                 var options = {
                     scope: 'payments:widget',
                     popup: true,
