@@ -52,7 +52,12 @@ if [[ ${OXID_VERSION} == 5 ]]; then
 
     cp ${CURRENT_DIR}/test_config.yml ${SHOP_DIR}
 elif [[ ${OXID_VERSION} == 6 ]]; then
-    git clone --branch b-6.x https://github.com/OXID-eSales/oxideshop_ce.git
+    git clone https://github.com/OXID-eSales/oxideshop_ce.git
+
+    # Switching to OXID 6.2.1 because OXID 6.3.x requires newer PHPUnit than we can handle with both OXID 5 and 6 support
+    cd ${SHOP_DIR}
+    git checkout tags/v6.2.1 -b amazon_test
+    cd ${TEMP_DIR}
 
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
