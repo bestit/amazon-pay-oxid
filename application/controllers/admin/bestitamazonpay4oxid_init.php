@@ -348,8 +348,8 @@ class bestitAmazonPay4Oxid_init
         $aVersions = (array)self::_getConfig()->getConfigParam('aModuleVersions');
 
         $aPossibleModuleNames = array(
-            'jagAmazonPayment4Oxid',
-            'bestitAmazonPay4Oxid'
+            'bestitAmazonPay4Oxid',
+            'jagAmazonPayment4Oxid'
         );
 
         foreach ($aPossibleModuleNames as $sPossibleModuleName) {
