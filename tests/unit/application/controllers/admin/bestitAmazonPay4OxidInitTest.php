@@ -2,7 +2,6 @@
 
 require_once dirname(__FILE__).'/../../../bestitAmazon4OxidUnitTestCase.php';
 
-use PHPUnit_Extensions_Constraint_StringMatchIgnoreWhitespace as MatchIgnoreWhitespace;
 use org\bovigo\vfs\vfsStream;
 
 /**

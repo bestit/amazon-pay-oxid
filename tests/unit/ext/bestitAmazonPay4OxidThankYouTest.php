@@ -16,7 +16,16 @@ class bestitAmazonPay4OxidThankYouTest extends bestitAmazon4OxidUnitTestCase
      */
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
-        $oBestitAmazonPay4OxidThankYou = new bestitAmazonPay4Oxid_thankyou();
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_thankyou $oBestitAmazonPay4OxidThankYou */
+        $oBestitAmazonPay4OxidThankYou = $this->getMock(
+            'bestitAmazonPay4Oxid_thankyou',
+            array('_parentInit')
+        );
+
+        $oBestitAmazonPay4OxidThankYou->expects($this->any())
+            ->method('_parentInit')
+            ->will($this->returnValue(null));
+
         self::setValue($oBestitAmazonPay4OxidThankYou, '_oContainer', $oContainer);
 
         return $oBestitAmazonPay4OxidThankYou;
@@ -48,6 +57,7 @@ class bestitAmazonPay4OxidThankYouTest extends bestitAmazon4OxidUnitTestCase
     /**
      * @group unit
      * @covers ::init()
+     * @covers ::_parentInit()
      * @throws ReflectionException
      * @throws oxSystemComponentException
      */

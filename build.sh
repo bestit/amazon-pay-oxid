@@ -52,12 +52,7 @@ if [[ ${OXID_VERSION} == 5 ]]; then
 
     cp ${CURRENT_DIR}/test_config.yml ${SHOP_DIR}
 elif [[ ${OXID_VERSION} == 6 ]]; then
-    git clone https://github.com/OXID-eSales/oxideshop_ce.git
-
-    # Switching to OXID 6.2.1 because OXID 6.3.x requires newer PHPUnit than we can handle with both OXID 5 and 6 support
-    cd ${SHOP_DIR}
-    git checkout tags/v6.2.1 -b amazon_test
-    cd ${TEMP_DIR}
+    git clone --branch b-6.x https://github.com/OXID-eSales/oxideshop_ce.git
 
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
@@ -86,6 +81,9 @@ composer install -d ${MODULE_BASE_DIR} --ignore-platform-reqs
 echo "=== Setup unit tests and run them ==="
 TEST_SUITE="${MODULE_BASE_DIR}/tests/"
 cd ${MODULE_BASE_DIR}/tests/
+
+# push oxid version to env variable
+export OXID_VERSION=${OXID_VERSION}
 
 if [[ ${OXID_VERSION} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
