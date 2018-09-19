@@ -53,7 +53,7 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
      */
     public function init()
     {
-        parent::init();
+        $this->_parentInit();
 
         $this->_getContainer()->getBasketUtil()->restoreQuickCheckoutBasket();
     }
@@ -69,6 +69,14 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
     {
         $this->_getContainer()->getModule()->cleanAmazonPay();
         return parent::render();
+    }
+
+    /**
+     * @return void
+     */
+    protected function _parentInit()
+    {
+        parent::init();
     }
 }
 
