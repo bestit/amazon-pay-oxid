@@ -39,7 +39,6 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
      * @group  unit
      * @covers ::parseAmazonAddress()
      * @covers ::_parseAddressFields()
-     * @covers ::_parseSingleAddress()
      * @throws oxConnectionException
      * @throws ReflectionException
      */
@@ -49,6 +48,22 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
         $oConfig->expects($this->exactly(17))
             ->method('isUtf')
             ->will($this->onConsecutiveCalls(true, true, true, true, false));
+
+        $oConfig->expects($this->any())
+            ->method('getConfigParam')
+            ->with($this->logicalOr(
+                $this->equalTo('aAmazonReverseOrderCountries'),
+                $this->equalTo('aAmazonStreetNoStreetCountries')
+            ))
+            ->will($this->returnCallback(
+                function($sParameter) {
+                    if ($sParameter === 'aAmazonReverseOrderCountries') {
+                        return array('DE', 'AT', 'FR');
+                    } elseif ($sParameter === 'aAmazonStreetNoStreetCountries') {
+                        return array('FR');
+                    }
+                }
+            ));
 
         $oDatabase = $this->_getDatabaseMock();
         $oDatabase->expects($this->exactly(5))
@@ -168,6 +183,69 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             ),
             $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
         );
+    }
+
+    /**
+     * @covers ::_parseSingleAddress()
+     * @throws ReflectionException
+     */
+    public function test_parseSingleAddress()
+    {
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->any())
+            ->method('getConfigParam')
+            ->with('aAmazonStreetNoStreetCountries')
+            ->will($this->returnValue(array('FR')));
+
+        $oBestitAmazonPay4OxidAddressUtil = $this->_getObject(
+            $oConfig,
+            $this->_getDatabaseMock(),
+            $this->_getLanguageMock()
+        );
+
+        // Test german address
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet 1', 'DE')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => '1'
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
+
+        // Test german address with add info
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet 1 addinfo', 'DE')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => '1',
+            'AddInfo' => 'addinfo'
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number'],
+            'AddInfo' => $aTestResult['AddInfo']
+        ));
+
+        // Test FR address
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('1 Teststreet', 'FR')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => '1'
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
     }
 
     /**
