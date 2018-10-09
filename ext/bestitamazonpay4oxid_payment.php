@@ -99,7 +99,11 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             'oxcity' => $aParsedData['City'],
             'oxstateid' => $aParsedData['StateOrRegion'],
             'oxcountryid' => $aParsedData['CountryId'],
-            'oxzip' => $aParsedData['PostalCode']
+            'oxzip' => $aParsedData['PostalCode'],
+            'oxstreet' => $aParsedData['Street'],
+            'oxstreetnr' => $aParsedData['StreetNr'],
+            'oxaddinfo' => $aParsedData['AddInfo'],
+            'oxcompany' => $aParsedData['CompanyName'],
         );
 
         //If user is not logged, create new user and login it
@@ -138,11 +142,7 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             //If our logged in user is the one that was created by us before update details from Amazon WS
             //(Can be selected another user from Amazon Address widget)
             if ($sUserAmazonOrderReferenceId === $sAmazonOrderReferenceId) {
-                $oUser->assign(array(
-                    'oxcity' => $aParsedData['City'],
-                    'oxcountryid' => $aParsedData['CountryId'],
-                    'oxzip' => $aParsedData['PostalCode']
-                ));
+                $oUser->assign($aDataMap);
                 $oUser->save();
             } else {
                 //If we have logged in within Amazon Login for the first time, and user have not updated billing address
@@ -152,11 +152,7 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
                     $oUser->assign(array_merge(
                         $aDataMap,
                         array(
-                            'oxcompany' => $aParsedData['CompanyName'],
                             'oxfon' => $aParsedData['Phone'],
-                            'oxstreet' => $aParsedData['Street'],
-                            'oxstreetnr' => $aParsedData['StreetNr'],
-                            'oxaddinfo' => $aParsedData['AddInfo']
                         )
                     ));
                     $oUser->save();

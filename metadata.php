@@ -390,7 +390,21 @@ $aModule = array(
             'type' => 'bool',
             'value' => 'true',
             'position' => '10'
-        )
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'aAmazonReverseOrderCountries',
+            'type' => 'arr',
+            'value' => array('DE', 'AT', 'FR'),
+            'position' => '11'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidConfiguration',
+            'name' => 'aAmazonStreetNoStreetCountries',
+            'type' => 'arr',
+            'value' => array('FR', 'GB'),
+            'position' => '12'
+        ),
     ),
     'events' => array(
         'onActivate' => 'bestitAmazonPay4Oxid_init::onActivate',

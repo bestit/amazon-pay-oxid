@@ -30,12 +30,22 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
      * Returns parsed Street name and Street number in array
      *
      * @param string $sString Full address
+     * @param string $sIsoCountryCode ISO2 code of country of address
      *
      * @return string
      */
-    protected function _parseSingleAddress($sString)
+    protected function _parseSingleAddress($sString, $sIsoCountryCode = null)
     {
-        preg_match('/\s*([^\d]*[^\d\s])\s*(\d[^\s]*)\s*(.*)/', $sString, $aResult);
+        // Array of iso2 codes of countries that have address format <street_no> <street>
+        $aStreetNoStreetCountries = $this->getConfig()->getConfigParam('aAmazonStreetNoStreetCountries');
+
+        if (in_array($sIsoCountryCode, $aStreetNoStreetCountries)) {
+            // matches streetname/streetnumber like "streetnumber streetname"
+            preg_match('/\s*(?P<Number>\d[^\s]*)\s*(?P<Name>[^\d]*[^\d\s])/', $sString, $aResult);
+        } else {
+            // default: matches streetname/streetnumber like "streetname streetnumber"
+            preg_match('/\s*(?P<Name>[^\d]*[^\d\s])\s*(?P<Number>\d[^\s]*)\s*(?P<AddInfo>.*)/', $sString, $aResult);
+        }
 
         return $aResult;
     }
@@ -55,7 +65,9 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
             3 => is_string($oAmazonData->AddressLine3) ? trim($oAmazonData->AddressLine3) : ''
         );
 
-        $aReverseOrderCountries = array('DE', 'AT');
+        // Array of iso2 codes of countries that have another addressline order
+        $aReverseOrderCountries = $this->getConfig()->getConfigParam('aAmazonReverseOrderCountries');
+
         $aMap = array_flip($aReverseOrderCountries);
         $aCheckOrder = isset($aMap[$oAmazonData->CountryCode]) === true ? array (2, 1) : array(1, 2);
         $sStreet = '';
@@ -78,10 +90,10 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
 
         $aResult['CompanyName'] = $sCompany;
 
-        $aAddress = $this->_parseSingleAddress($sStreet);
-        $aResult['Street'] = isset($aAddress[1]) === true ? $aAddress[1] : '';
-        $aResult['StreetNr'] = isset($aAddress[2]) === true ? $aAddress[2] : '';
-        $aResult['AddInfo'] = isset($aAddress[3]) === true ? $aAddress[3] : '';
+        $aAddress = $this->_parseSingleAddress($sStreet, $oAmazonData->CountryCode);
+        $aResult['Street'] = isset($aAddress['Name']) === true ? $aAddress['Name'] : '';
+        $aResult['StreetNr'] = isset($aAddress['Number']) === true ? $aAddress['Number'] : '';
+        $aResult['AddInfo'] = isset($aAddress['AddInfo']) === true ? $aAddress['AddInfo'] : '';
     }
 
     /**
