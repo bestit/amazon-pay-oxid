@@ -268,7 +268,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $aSecondSqlRows = explode(';', $sSecondSqlFile);
         $aSecondSqlRows = array_map('trim', $aSecondSqlRows);
 
-        $oDatabase->expects($this->exactly(50))
+        $oDatabase->expects($this->exactly(52))
             ->method('execute')
             ->withConsecutive(
                 array(new MatchIgnoreWhitespace(
@@ -298,6 +298,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[13])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[14])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[15])),
+                array(new MatchIgnoreWhitespace($aSecondSqlRows[16])),
                 array(new MatchIgnoreWhitespace(
                     "DELETE
                     FROM `oxconfig`
@@ -333,6 +334,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[13])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[14])),
                 array(new MatchIgnoreWhitespace($aSecondSqlRows[15])),
+                array(new MatchIgnoreWhitespace($aSecondSqlRows[16])),
                 array(new MatchIgnoreWhitespace(
                     "DELETE 
                     FROM `oxconfig` 
