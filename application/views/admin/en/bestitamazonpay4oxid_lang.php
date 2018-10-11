@@ -94,6 +94,8 @@ $aLang = array(
     'SHOP_MODULE_blBestitAmazonPay4OxidEnableMultiCurrency'                          => 'Activate multi-currency functionality',
     'SHOP_MODULE_blShowAmazonPayButtonAtDetails'                                     => 'Show Amazon Pay button on the details page',
     'SHOP_MODULE_blShowAmazonPayButtonAtCartPopup'                                   => 'Show Amazon Pay button on the cart popup',
+    'SHOP_MODULE_aAmazonReverseOrderCountries'                                       => 'ISO2 code of the countries where the AddressLineX returned from Amazon are reversed (AddressLine1 == company, AddressLine2 == street)',
+    'SHOP_MODULE_aAmazonStreetNoStreetCountries'                                     => 'ISO2 Code of the countries that have reversed street and house numbers',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLanguages'  => 'Language Settings',
     'SHOP_MODULE_aAmazonLanguages'                      => "Language mapping ('Oxid language abbreviation' => 'Amazon language value')",
