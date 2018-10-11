@@ -13,7 +13,7 @@
                         [{if $addToCart}]
                             window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]'
                                 + 'bestitAmazonPayIsAmazonPay=1&amazonOrderReferenceId=' + amazonOrderReferenceId
-                                + '&' + $('#payWithAmazonDiv').parents('form:first').serialize();
+                                + '&' + $('#payWithAmazonButton[{$sButtonId}]').parents('form:first').serialize();
                         [{else}]
                             window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]'
                                 + 'cl=user&amazonOrderReferenceId=' + amazonOrderReferenceId;
@@ -80,7 +80,7 @@
                                     + 'bestitAmazonPayIsAmazonPay=1'
                                     + '&amazonOrderReferenceId=' + amazonOrderReferenceId
                                     + '&access_token=' + addressConsentToken
-                                    + '&' + $('#payWithAmazonDiv').parents('form:first').serialize();
+                                    + '&' + $('#payWithAmazonButton[{$sButtonId}]').parents('form:first').serialize();
                             [{else}]
                                 var newLocation = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]'
                                     + 'cl=user&fnc=amazonLogin&redirectCl=user'

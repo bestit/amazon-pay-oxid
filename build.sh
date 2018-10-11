@@ -82,6 +82,9 @@ echo "=== Setup unit tests and run them ==="
 TEST_SUITE="${MODULE_BASE_DIR}/tests/"
 cd ${MODULE_BASE_DIR}/tests/
 
+# push oxid version to env variable
+export OXID_VERSION=${OXID_VERSION}
+
 if [[ ${OXID_VERSION} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
 elif [[ ${OXID_VERSION} == 6 ]]; then

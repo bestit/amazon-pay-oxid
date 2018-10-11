@@ -2,7 +2,6 @@
 
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
-use PHPUnit_Extensions_Constraint_StringMatchIgnoreWhitespace as MatchIgnoreWhitespace;
 
 /**
  * Class bestitAmazonPay4OxDeliverySetListTest
@@ -178,9 +177,16 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
             ->method('assign')
             ->withConsecutive(
                 array(array(
+                    'oxfname' => 'FirstNameValue',
+                    'oxlname' => 'LastNameValue',
                     'oxcity' => 'CityValue',
+                    'oxstateid' => 'StateOrRegionValue',
                     'oxcountryid' => 'CountryIdValue',
-                    'oxzip' => 'PostalCodeValue'
+                    'oxzip' => 'PostalCodeValue',
+                    'oxcompany' => 'CompanyNameValue',
+                    'oxstreet' => 'StreetValue',
+                    'oxstreetnr' => 'StreetNrValue',
+                    'oxaddinfo' => 'AddInfoValue'
                 )),
                 array(array(
                     'oxfname' => 'FirstNameValue',
@@ -264,7 +270,11 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
                 'oxregister' => 0,
                 'oxshopid' => 123,
                 'oxactive' => 1,
-                'oxusername' => 'orderReferenceId@amazon.com'
+                'oxusername' => 'orderReferenceId@amazon.com',
+                'oxstreet' => 'StreetValue',
+                'oxstreetnr' => 'StreetNrValue',
+                'oxaddinfo' => 'AddInfoValue',
+                'oxcompany' => 'CompanyNameValue'
             ));
 
         $oNewUser->expects($this->once())
@@ -290,7 +300,11 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
                 'oxstateid' => 'StateOrRegionValue',
                 'oxcountryid' => 'CountryIdValue',
                 'oxzip' => 'PostalCodeValue',
-                'oxuserid' => 'userId'
+                'oxuserid' => 'userId',
+                'oxstreet' => 'StreetValue',
+                'oxstreetnr' => 'StreetNrValue',
+                'oxaddinfo' => 'AddInfoValue',
+                'oxcompany' => 'CompanyNameValue'
             ));
 
         $oAddress->expects($this->once())

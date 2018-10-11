@@ -94,6 +94,8 @@ $aLang = array(
     'SHOP_MODULE_blBestitAmazonPay4OxidEnableMultiCurrency'                          => 'Fremdwährungen aktivieren',
     'SHOP_MODULE_blShowAmazonPayButtonAtDetails'                                     => 'Amazon Pay-Button auf Produktdetailseite anzeigen',
     'SHOP_MODULE_blShowAmazonPayButtonAtCartPopup'                                   => 'Amazon Pay-Button im Warenkorb Popup anzeigen',
+    'SHOP_MODULE_aAmazonReverseOrderCountries'                                       => 'ISO2 Code der Länder, bei denen die AddressLineX Rückgaben von Amazon vertauscht sind (AddressLine1 == Firma, AddressLine2 == Straße)',
+    'SHOP_MODULE_aAmazonStreetNoStreetCountries'                                     => 'ISO2 Code der Länder, die Straße und Hausnummer vertauscht haben',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLanguages'  => 'Sprach Einstellungen',
     'SHOP_MODULE_aAmazonLanguages'                      => "Sprach Einstellungen ('Oxid Sprachk&uuml;rzel' => 'Amazon Sprachwert')",

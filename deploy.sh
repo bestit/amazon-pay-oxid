@@ -14,7 +14,7 @@ elif [[ -n ${TRAVIS_BRANCH+x} ]]; then
 fi
 
 # Install needed packages
-composer update --no-dev
+composer install --no-dev --ignore-platform-reqs
 
 # Create temp dir and copy source
 mkdir -p "${TEMP_DIR}${BASE_DIR}"

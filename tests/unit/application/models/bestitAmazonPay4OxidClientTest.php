@@ -2,7 +2,6 @@
 
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
-use PHPUnit_Extensions_Constraint_StringMatchIgnoreWhitespace as MatchIgnoreWhitespace;
 use AmazonPay\Client;
 use AmazonPay\ResponseParser;
 
@@ -551,12 +550,18 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
-     * @param string $sFunctionUnderTest
-     * @param string $sAmazonStatus
+     * @group unit
+     * @covers ::cancelOrderReference()
+     * @covers ::_callOrderRequest()
+     * @covers ::_mapOrderToRequestParameters()
+     * @covers ::_setOrderTransactionErrorStatus()
      * @throws ReflectionException
      */
-    private function _cancelCloseOrderTestBase($sFunctionUnderTest, $sAmazonStatus)
+    public function testCancelOrderReference()
     {
+        $sFunctionUnderTest = 'cancelOrderReference';
+        $sAmazonStatus = 'AMZ-Order-Canceled';
+
         $oClient = $this->_getOrderRequestClientMock(
             $sFunctionUnderTest,
             array(
@@ -607,19 +612,6 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
 
     /**
      * @group unit
-     * @covers ::cancelOrderReference()
-     * @covers ::_callOrderRequest()
-     * @covers ::_mapOrderToRequestParameters()
-     * @covers ::_setOrderTransactionErrorStatus()
-     * @throws ReflectionException
-     */
-    public function testCancelOrderReference()
-    {
-        $this->_cancelCloseOrderTestBase('cancelOrderReference', 'AMZ-Order-Canceled');
-    }
-
-    /**
-     * @group unit
      * @covers ::closeOrderReference()
      * @covers ::_callOrderRequest()
      * @covers ::_mapOrderToRequestParameters()
@@ -631,7 +623,65 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testCloseOrderReference()
     {
-        $this->_cancelCloseOrderTestBase('closeOrderReference', 'AMZ-Order-Closed');
+        $sFunctionUnderTest = 'closeOrderReference';
+        $sAmazonStatus = 'AMZ-Order-Closed';
+
+        $oClient = $this->_getOrderRequestClientMock(
+            $sFunctionUnderTest,
+            array(
+                array(array('extra' => 'extraValue')),
+                array(array('amazon_order_reference_id' => 'bestitamazonorderreferenceidValue', 'extra' => 'extraValue')),
+                array(array('amazon_order_reference_id' => 'bestitamazonorderreferenceidValue', 'extra' => 'extraValue')),
+                array(array('amazon_order_reference_id' => 'bestitamazonorderreferenceidValue', 'extra' => 'extraValue'))
+            ),
+            array(
+                $this->_getAmazonResponseParserMock(),
+                $this->_getAmazonResponseParserMock(array('Error' => array('Code' => 'errorCode'))),
+                $this->_getAmazonResponseParserMock(),
+                $this->_getAmazonResponseParserMock()
+            )
+        );
+
+        $oBestitAmazonPay4OxidClient = $this->_getObject(
+            $oClient,
+            $this->_getConfigMock(),
+            $this->_getDatabaseMock(),
+            $this->_getLanguageMock(),
+            $this->_getSessionMock(),
+            $this->_getUtilsDateMock(),
+            $this->_getObjectFactoryMock()
+        );
+
+        $oOrder = $this->_getOrderRequestOrderMock(
+            array(
+                // assign on error
+                array(array('oxtransstatus' => $sAmazonStatus)),
+                // assign on close with order update
+                array(array('oxtransstatus' => 'AMZ-Order-Closed'))
+            ),
+            array(
+                array('bestitamazonorderreferenceid'),
+                array('bestitamazonorderreferenceid'),
+                array('bestitamazonorderreferenceid')
+            )
+        );
+
+        self::assertEquals(
+            $this->_getResponseObject(),
+            $oBestitAmazonPay4OxidClient->{$sFunctionUnderTest}(null, array('extra' => 'extraValue'), false)
+        );
+        self::assertEquals(
+            $this->_getResponseObject(array('Error' => array('Code' => 'errorCode'))),
+            $oBestitAmazonPay4OxidClient->{$sFunctionUnderTest}($oOrder, array('extra' => 'extraValue'), false)
+        );
+        self::assertEquals(
+            $this->_getResponseObject(),
+            $oBestitAmazonPay4OxidClient->{$sFunctionUnderTest}($oOrder, array('extra' => 'extraValue'), false)
+        );
+        self::assertEquals(
+            $this->_getResponseObject(),
+            $oBestitAmazonPay4OxidClient->{$sFunctionUnderTest}($oOrder, array('extra' => 'extraValue'), true)
+        );
     }
 
     /**
