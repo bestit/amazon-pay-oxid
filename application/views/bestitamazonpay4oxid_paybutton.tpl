@@ -25,7 +25,7 @@
                 }).bind('payWithAmazonButton[{$sButtonId}]');
             });
         [{/capture}]
-        [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
+        [{oxscript add=$smarty.capture.sBestitAmazonScript}]
         <div class="amazonContentGroup">
             [{if $showOrText}]
                 <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
