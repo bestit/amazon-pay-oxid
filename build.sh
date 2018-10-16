@@ -39,7 +39,7 @@ cd ${TEMP_DIR}
 # Setup shop
 echo "=== Setup shop ==="
 if [[ ${OXID_VERSION} == 5 ]]; then
-    git clone https://github.com/OXID-eSales/oxideshop_ce.git --branch b-5.3-ce
+    git clone --branch b-5.3-ce --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
     composer install -n -d ${SHOP_DIR} --ignore-platform-reqs
     sed -i 's|<dbHost_ce>|'${DB_HOST}'|; s|<dbName_ce>|oxidehop_ce|; s|<dbUser_ce>|'${DB_USER}'|; s|<dbPwd_ce>|'${DB_PASS}'|; s|<sShopURL_ce>|http://127.0.0.1|; s|<sShopDir_ce>|'${SHOP_DIR}'|; s|<sCompileDir_ce>|'${SHOP_DIR}'/tmp|; s|<iUtfMode>|0|; s|$this->iDebug = 0|$this->iDebug = 1|; s|mysql|mysqli|' ${SHOP_DIR}/config.inc.php
     wget "https://raw.githubusercontent.com/OXID-eSales/oxideshop_demodata_ce/b-5.3/src/demodata.sql" -P oxideshop_ce/source/setup/sql/
@@ -51,8 +51,8 @@ if [[ ${OXID_VERSION} == 5 ]]; then
     cp -R flow/out/flow ../../out/
 
     cp ${CURRENT_DIR}/test_config.yml ${SHOP_DIR}
-elif [[ ${OXID_VERSION} == 6 ]]; then
-    git clone --branch b-6.x https://github.com/OXID-eSales/oxideshop_ce.git
+else
+    git clone --branch b-${OXID_VERSION}.x --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
 
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
@@ -82,12 +82,9 @@ echo "=== Setup unit tests and run them ==="
 TEST_SUITE="${MODULE_BASE_DIR}/tests/"
 cd ${MODULE_BASE_DIR}/tests/
 
-# push oxid version to env variable
-export OXID_VERSION=${OXID_VERSION}
-
 if [[ ${OXID_VERSION} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
-elif [[ ${OXID_VERSION} == 6 ]]; then
+else
     apt-get -y install sudo # oxid needs sudo -.-
     ${BASE_DIR}/vendor/bin/runtests
 fi

@@ -76,4 +76,6 @@ echo "Uploading package... "
 
 # Construct url
 GH_ASSET="https://uploads.github.com/repos/${GH_OWNER}/${GH_REPO_NAME}/releases/${GH_ID}/assets?name=$(basename ${PACKAGE})"
-curl -o /dev/null --data-binary @"${PACKAGE}" -H "Authorization: token ${GH_API_TOKEN}" -H "Content-Type: application/octet-stream" ${GH_ASSET}
+curl --data-binary @"${PACKAGE}" -H "Authorization: token ${GH_API_TOKEN}" -H "Content-Type: application/octet-stream" ${GH_ASSET} > /dev/null
+
+echo "Done"
