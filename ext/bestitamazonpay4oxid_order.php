@@ -85,7 +85,11 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                 'oxcity' => $aParsedData['City'],
                 'oxstateid' => $aParsedData['StateOrRegion'],
                 'oxcountryid' => $aParsedData['CountryId'],
-                'oxzip' => $aParsedData['PostalCode']
+                'oxzip' => $aParsedData['PostalCode'],
+                'oxstreet' => $aParsedData['Street'],
+                'oxstreetnr' => $aParsedData['StreetNr'],
+                'oxaddinfo' => $aParsedData['AddInfo'],
+                'oxcompany' => $aParsedData['CompanyName']
             );
         }
 

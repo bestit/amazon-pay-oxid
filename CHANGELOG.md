@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 ### Added
 - This changelog file with documentation of changes since version 3.1.0
 
+### Fixed
+- Button "Use Amazon billing address" now copies street and streetnumber
+
 ## [3.2.1] - 2018-10-16
 ### Fixed
 - Fixed unit tests to work in different phpunit versions
