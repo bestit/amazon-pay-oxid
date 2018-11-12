@@ -40,7 +40,7 @@ TEMP_DIR='/tmp/module_build'
 VENDOR_DIR='/copy_this/modules/bestit'
 BASE_DIR="${VENDOR_DIR}/amazonpay4oxid"
 ARCHIVE_NAME="bestitamazonpay4oxid"
-MODULE_VERSION=$(cat ./metadata.php | sed -n "s/.*\$aModule\['version'\] = '\([0-9]\+\.[0-9]\+\.[0-9]\+\)';.*/\1/p")
+MODULE_VERSION=$(cat ./metadata.php | sed -n "s/.*'version' => '\([0-9]\+\.[0-9]\+\.[0-9]\+\)',.*/\1/p")
 ARCHIVE_NAME="bestitamazonpay4oxid-oxid5-${MODULE_VERSION}"
 
 # Install needed dependencies
@@ -78,4 +78,4 @@ echo "Uploading package... "
 GH_ASSET="https://uploads.github.com/repos/${GH_OWNER}/${GH_REPO_NAME}/releases/${GH_ID}/assets?name=$(basename ${PACKAGE})"
 curl --data-binary @"${PACKAGE}" -H "Authorization: token ${GH_API_TOKEN}" -H "Content-Type: application/octet-stream" ${GH_ASSET} > /dev/null
 
-echo "Done"
+echo "Done!"
