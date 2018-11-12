@@ -92,6 +92,8 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue(array(
                 'FirstName' => 'FirstNameValue',
                 'LastName' => 'LastNameValue',
+                'Street' => 'StreetValue',
+                'StreetNr' => 'StreetNrValue',
                 'City' => 'CityValue',
                 'StateOrRegion' => 'StateOrRegionValue',
                 'CountryId' => 'CountryIdValue',
@@ -116,10 +118,14 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
             ->with(array(
                 'oxfname' => 'FirstNameValue',
                 'oxlname' => 'LastNameValue',
+                'oxstreet' => 'StreetValue',
+                'oxstreetnr' => 'StreetNrValue',
                 'oxcity' => 'CityValue',
                 'oxstateid' => 'StateOrRegionValue',
                 'oxcountryid' => 'CountryIdValue',
-                'oxzip' => 'PostalCodeValue'
+                'oxzip' => 'PostalCodeValue',
+                'oxaddinfo' => null,
+                'oxcompany' => null,
             ));
 
         $oUser->expects($this->once())

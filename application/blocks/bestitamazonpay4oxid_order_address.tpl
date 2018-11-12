@@ -13,6 +13,7 @@
                 <h4>[{oxmultilang ident="BESTITAMAZONPAY_BILLING_ADDRESS_CURRENT"}]</h4>
                 [{$oUser->oxuser__oxfname->value}]<br>
                 [{$oUser->oxuser__oxlname->value}]<br>
+                [{$oUser->oxuser__oxstreet->value}] [{$oUser->oxuser__oxstreetnr->value}]<br>
                 [{$oUser->oxuser__oxzip->value}] [{$oUser->oxuser__oxcity->value}]<br>
                 [{assign var="sCountryNameUser" value=$oView->getCountryName($oUser->oxuser__oxcountryid->value)}]
                 [{if $sCountryNameUser !== ''}]
@@ -23,6 +24,7 @@
                 <h4>[{oxmultilang ident="BESTITAMAZONPAY_BILLING_ADDRESS_NEW"}]</h4>
                 [{$aAmazonBillingAddress.oxfname}]<br>
                 [{$aAmazonBillingAddress.oxlname}]<br>
+                [{$aAmazonBillingAddress.oxstreet}] [{$aAmazonBillingAddress.oxstreetnr}]<br>
                 [{$aAmazonBillingAddress.oxzip}] [{$aAmazonBillingAddress.oxcity}]<br>
                 [{assign var="sCountryName" value=$oView->getCountryName($aAmazonBillingAddress.oxcountryid)}]
                 [{if $sCountryName !== ''}]
