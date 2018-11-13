@@ -3,7 +3,7 @@
     [{if $oViewConf->getAmazonPayIsActive() && !$oViewConf->getAmazonLoginIsActive() && !$smarty.session.amazonOrderReferenceId}]
         [{assign var="sButtonId" value=$oViewConf->getUniqueButtonId()}]
         [{include file="bestitamazonpay4oxid_src.tpl"}]
-        [{capture name="sBestitAmazonScript"}]
+        [{capture name="sBestitAmazonPayScript"}]
             $(document).ready(function () {
                 var amazonOrderReferenceId;
                 new OffAmazonPayments.Widgets.Button ({
@@ -25,7 +25,7 @@
                 }).bind('payWithAmazonButton[{$sButtonId}]');
             });
         [{/capture}]
-        [{oxscript add=$smarty.capture.sBestitAmazonLoginScript}]
+        [{oxscript add=$smarty.capture.sBestitAmazonPayScript}]
         <div class="amazonContentGroup">
             [{if $showOrText}]
                 <span class="amazonPayPreOr">[{oxmultilang ident="BESTITAMAZONPAY_PAY_OR"}]</span>
