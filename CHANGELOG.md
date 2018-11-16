@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 ### Fixed
 - Button "Use Amazon billing address" now copies street and streetnumber ([OXAP-147](https://bestit.atlassian.net/browse/OXAP-147))
 - Fixed Amazon Pay Button without active option "Login With Amazon" ([OXAP-148](https://bestit.atlassian.net/browse/OXAP-148))
+- Display Amazon Pay actions on admin for old paymemt id (jagamazon) ([OXAP-161](https://bestit.atlassian.net/browse/OXAP-161))
 
 ## [3.2.1] - 2018-10-16
 ### Fixed

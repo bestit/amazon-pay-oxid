@@ -210,7 +210,7 @@
         [{/if}]
         </td>
         <td width="50%" valign="top" class="edittext">
-            [{if $paymentType && $paymentType->oxuserpayments__oxpaymentsid->value == 'bestitamazon'}]
+            [{if $paymentType && ($paymentType->oxuserpayments__oxpaymentsid->value == 'bestitamazon' || $paymentType->oxuserpayments__oxpaymentsid->value == 'jagamazon')}]
                 <table style="border:1px solid #A9A9A9;padding:5px;">
                     <tr><td colspan="2"><b>[{oxmultilang ident="BESTIT_AMAZONOPAYMENTSTATUS"}]:</b></td></tr>
                     <tr><td>[{oxmultilang ident="ORDER_OVERVIEW_INTSTATUS"}]:</td><td>[{$edit->oxorder__oxtransstatus->value}]</td></tr>
