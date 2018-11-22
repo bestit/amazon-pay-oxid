@@ -246,6 +246,34 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             'Name' => $aTestResult['Name'],
             'Number' => $aTestResult['Number']
         ));
+
+        // Test FR address without streetnumber
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet', 'FR')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => ''
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
+
+        // Test address format "street streetnumber" without streetnumber
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet', 'DE')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => ''
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
     }
 
     /**
