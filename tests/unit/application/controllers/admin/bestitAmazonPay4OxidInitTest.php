@@ -5,7 +5,9 @@ require_once dirname(__FILE__).'/../../../bestitAmazon4OxidUnitTestCase.php';
 use org\bovigo\vfs\vfsStream;
 
 /**
- * Class bestitAmazonPay4OxidInitTest
+ * Unit test for class bestitAmazonPay4Oxid_init
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4Oxid_init
  */
 class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase

@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Class bestitAmazonPay4Oxid_Module_Config
+ * Extension for OXID module_config controller
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonPay4Oxid_module_config extends bestitAmazonPay4Oxid_module_config_parent
 {

@@ -4,7 +4,9 @@ require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 
 /**
- * Class bestitAmazonPay4OxidLoginClientTest
+ * Unit test for class bestitAmazonPay4OxidLoginClient
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4OxidLoginClient
  */
 class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase

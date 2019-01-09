@@ -6,7 +6,9 @@ use AmazonPay\IpnHandler;
 use Monolog\Logger;
 
 /**
- * Class bestitAmazon4OxidUnitTestCase
+ * Abstract class oxUnitTestCase to provide some functions needed on module unit tests
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
 {

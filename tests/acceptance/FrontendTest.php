@@ -5,7 +5,9 @@ if (class_exists('oxAcceptanceTestCase') === false) {
 }
 
 /**
- * Class FrontendTest
+ * Test for frontend integration
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class FrontendTest extends oxAcceptanceTestCase
 {

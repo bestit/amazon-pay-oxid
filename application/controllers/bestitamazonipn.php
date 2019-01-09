@@ -1,25 +1,4 @@
 <?php
-/**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonipn.php
- *
- * The bestitamazonipn class file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
- */
 
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
@@ -30,7 +9,9 @@ if (file_exists($sVendorAutoloader) === true) {
 use Monolog\Logger;
 
 /**
- * Class bestitAmazonIpn
+ * Controller for IPN handling
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonIpn extends oxUBase
 {

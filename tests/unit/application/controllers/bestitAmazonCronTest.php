@@ -3,7 +3,9 @@
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 /**
- * Class bestitAmazonCronTest
+ * Unit test for class bestitAmazonCron
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonCron
  */
 class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
