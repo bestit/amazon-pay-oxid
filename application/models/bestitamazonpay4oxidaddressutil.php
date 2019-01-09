@@ -22,7 +22,7 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
 
         if (in_array($sIsoCountryCode, $aStreetNoStreetCountries)) {
             // matches streetname/streetnumber like "streetnumber streetname"
-            preg_match('/\s*(?P<Number>\d[^\s]*)*\s*(?P<Name>[^\d]*[^\d\s])/', $sString, $aResult);
+            preg_match('/\s*(?P<Number>\d[^\s]*)*\s*(?P<Name>[^\d]*[^\d\s])\s*(?P<AddInfo>.*)/', $sString, $aResult);
         } else {
             // default: matches streetname/streetnumber like "streetname streetnumber"
             preg_match('/\s*(?P<Name>[^\d]*[^\d\s])\s*((?P<Number>\d[^\s]*)\s*(?P<AddInfo>.*))*/', $sString, $aResult);
