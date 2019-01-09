@@ -1,28 +1,9 @@
 <?php
-/**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonpay4oxidaddressutil.php
- *
- * The bestitAmazonPay4OxidAddressUtil class file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
- */
 
 /**
- * Class bestitAmazonPay4OxidAddressUtil
+ * Model to handle address parsing
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
 {

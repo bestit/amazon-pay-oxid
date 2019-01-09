@@ -1,27 +1,10 @@
 <?php
 
 /**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
+ * Metadata file for module
  *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * metadata.php
- *
- * The metadata file.
- *
- * PHP versions 5
- *
- * @category  bestitamazonpay4oxid
- * @package   bestitamazonpay4oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   SVN: $Id$
- * @link      http://www.bestit-online.de
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
-
 
 $sMetadataVersion = '1.1';
 

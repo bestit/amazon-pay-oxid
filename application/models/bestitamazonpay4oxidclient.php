@@ -1,25 +1,4 @@
 <?php
-/**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonpay4oxidclient.php
- *
- * The bestitAmazonPay4OxidClient class file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
- */
 
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
@@ -33,7 +12,9 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 /**
- * Class bestitAmazonPay4OxidModel
+ * Client model for Amazon Pay transactions
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 {
