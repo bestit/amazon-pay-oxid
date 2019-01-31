@@ -41,13 +41,6 @@ $aLang = array(
     'SHOP_MODULE_sAmazonLocale_DE'                          => 'DE',
     'SHOP_MODULE_sAmazonLocale_UK'                          => 'UK',
     'SHOP_MODULE_sAmazonLocale_US'                          => 'US',
-    'SHOP_MODULE_sAmazonLocale_CUSTOM'                      => 'Custom (Please enter details below)',
-    'SHOP_MODULE_sAmazonEndpointUrlCUSTOM'                  => 'Custom Endpoint URL',
-    'SHOP_MODULE_sAmazonEndpointUrlCUSTOMSandbox'           => 'Custom Endpoint URL (Sandbox)',
-    'SHOP_MODULE_sAmazonWidgetUrlCUSTOM'                    => 'Custom Widget URL',
-    'SHOP_MODULE_sAmazonWidgetUrlCUSTOMSandbox'             => 'Custom Widget URL (Sandbox)',
-    'SHOP_MODULE_sAmazonButtonUrlCUSTOM'                    => 'Custom Button URL',
-    'SHOP_MODULE_sAmazonButtonUrlCUSTOMSandbox'             => 'Custom Button URL (Sandbox)',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration'   => 'Configuration',
     'SHOP_MODULE_sAmazonMode'                               => 'Authorize Mode',

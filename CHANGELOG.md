@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
   - Make sure to set up required fields correctly to allow street without streetnumber e.g. remove oxuser__oxstreetnr and oxaddress__oxstreetnr from "Mandatory fields in User Registration Form" in OXID Backend -> Master Settings -> Core Settings -> Tab: Settings -> Other Settings
 ### Changed
 - Changed License to the MIT License ([OXAP-172](https://bestit.atlassian.net/browse/OXAP-172))
+### Removed
+- Removed settings for customization of amazon locale settings ([OXAP-119](https://bestit.atlassian.net/browse/OXAP-119))
 
 ## [3.2.2] - 2018-11-21
 ### Added

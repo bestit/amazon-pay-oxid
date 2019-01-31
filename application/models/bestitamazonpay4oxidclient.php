@@ -70,7 +70,6 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     protected $_sAmazonPayChangeLinkDE = 'https://payments.amazon.de/jr/your-account/orders?language=';
     protected $_sAmazonPayChangeLinkUK = 'https://payments.amazon.co.uk/jr/your-account/orders?language=';
     protected $_sAmazonPayChangeLinkUS = 'https://payments.amazon.com/jr/your-account/orders?language=';
-    protected $_sAmazonPayChangeLinkCUSTOM = 'https://payments.amazon.com/jr/your-account/orders?language=';
 
     /**
      * @var bestitAmazonPay4OxidClient
