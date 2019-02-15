@@ -238,49 +238,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'DE',
             'position' => '1',
-            'constrains' => 'DE|UK|US|CUSTOM'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonEndpointUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '2'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonEndpointUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '3'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonWidgetUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '4'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonWidgetUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '5'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonButtonUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '6'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonButtonUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '7'
+            'constrains' => 'DE|UK|US'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLanguages',
