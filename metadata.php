@@ -222,7 +222,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'LwA-Gold',
             'position' => '3',
-            'constrains' => 'LwA-LightGray|LwA-DarkGray|LwA-Gold|Login-LightGray|Login-DarkGray|Login-Gold'
+            'constraints' => 'LwA-LightGray|LwA-DarkGray|LwA-Gold|Login-LightGray|Login-DarkGray|Login-Gold'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',
@@ -230,7 +230,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'PwA-Gold',
             'position' => '4',
-            'constrains' => 'PwA-LightGray|PwA-DarkGray|PwA-Gold|Pay-LightGray|Pay-DarkGray|Pay-Gold'
+            'constraints' => 'PwA-LightGray|PwA-DarkGray|PwA-Gold|Pay-LightGray|Pay-DarkGray|Pay-Gold'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLocalization',
@@ -238,7 +238,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'DE',
             'position' => '1',
-            'constrains' => 'DE|UK|US'
+            'constraints' => 'DE|UK|US'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLanguages',
@@ -253,7 +253,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'OPTIMIZED_FLOW',
             'position' => '1',
-            'constrains' => 'OPTIMIZED_FLOW|BASIC_FLOW'
+            'constraints' => 'OPTIMIZED_FLOW|BASIC_FLOW'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -261,7 +261,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'IPN',
             'position' => '2',
-            'constrains' => 'IPN|CRON'
+            'constraints' => 'IPN|CRON'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -269,7 +269,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'SHIPPED',
             'position' => '3',
-            'constrains' => 'SHIPPED|DIRECT'
+            'constraints' => 'SHIPPED|DIRECT'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -291,7 +291,7 @@ $aModule = array(
             'type' => 'select',
             'value' => '',
             'position' => '6',
-            'constrains' => '
+            'constraints' => '
                 |SetOrderReferenceDetailsPaymentMethodNotAllowed
                 |CloseOrderReferenceAmazonClosed
                 |AuthorizeInvalidPaymentMethod
