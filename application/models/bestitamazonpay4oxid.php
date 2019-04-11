@@ -146,6 +146,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $this->getSession()->deleteVariable('sAmazonSyncResponseState');
         $this->getSession()->deleteVariable('sAmazonSyncResponseAuthorizationId');
         $this->getSession()->deleteVariable('blAmazonSyncChangePayment');
+        $this->getSession()->deleteVariable('sAmazonBasketHash');
 
         //General cleanup of user accounts that has been created for orders and wos not used
         $this->cleanUpUnusedAccounts();

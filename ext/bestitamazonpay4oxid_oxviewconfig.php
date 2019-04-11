@@ -247,5 +247,26 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
 
         return $oCurrency !== null ? $oCurrency->name : '';
     }
+
+    /**
+     * Returns the session token.
+     *
+     * @return string
+     * @throws oxSystemComponentException
+     */
+    public function getSessionToken()
+    {
+        return $this->_getContainer()->getSession()->getSessionChallengeToken();
+    }
+
+    /**
+     * @return string
+     *
+     * @throws oxSystemComponentException
+     */
+    public function getBasketHash()
+    {
+        return $this->_getContainer()->getSession()->getVariable('sAmazonBasketHash');
+    }
 }
 

@@ -28,6 +28,8 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
     }
 
     /**
+     * Validates the basket.
+     *
      * @param oxBasket $oBasket
      */
     protected function _validateBasket($oBasket)
@@ -63,5 +65,22 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
             //Reset old basket
             $oSession->setBasket($oBasket);
         }
+    }
+
+    /**
+     * Generates the basket hash.
+     *
+     * @param string          $sAmazonOrderReferenceId
+     * @param oxBasket|\OxidEsales\Eshop\Application\Model\Basket $oBasket
+     *
+     * @return string
+     *
+     * @throws oxArticleException
+     * @throws oxArticleInputException
+     * @throws oxNoArticleException
+     */
+    public function getBasketHash($sAmazonOrderReferenceId, $oBasket)
+    {
+        return ''; // TODO Will be done in OXAP-199
     }
 }

@@ -112,6 +112,11 @@ $aModule = array(
             'file' => 'application/blocks/bestitamazonpay4oxid_order_payment.tpl'
         ),
         array(
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_btn_confirm_bottom', // flow + azure
+            'file' => 'application/blocks/bestitamazonpay4oxid_order_confirm_button.tpl'
+        ),
+        array(
             'template' => 'layout/footer.tpl',
             'block' => 'footer_main', // flow + azure
             'file' => 'application/blocks/bestitamazonpay4oxid_loginbutton.tpl'
