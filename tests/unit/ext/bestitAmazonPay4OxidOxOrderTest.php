@@ -84,10 +84,52 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         // Config
         $oConfig = $this->_getConfigMock();
 
-        $oConfig->expects($this->exactly(10))
+        $oConfig->expects($this->exactly(19))
             ->method('getRequestParameter')
-            ->with('cl')
-            ->will($this->returnValue('order'));
+            ->withConsecutive(
+                array('cl'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash'),
+                array('cl'),
+                array('amazonBasketHash')
+            )
+            ->will($this->onConsecutiveCalls(
+                'order',
+                'order',
+                null,
+                'order',
+                null,
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash',
+                'order',
+                'basketHash'
+            ));
 
         $oConfig->expects($this->exactly(7))
             ->method('getShopSecureHomeUrl')
@@ -139,12 +181,14 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         // Session
         $oSession = $this->_getSessionMock();
 
-        $oSession->expects($this->exactly(13))
+        $oSession->expects($this->exactly(15))
             ->method('getVariable')
             ->withConsecutive(
                 array('amazonOrderReferenceId'),
                 array('amazonOrderReferenceId'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
                 array('amazonOrderReferenceId'),
                 array('amazonOrderReferenceId'),
@@ -159,7 +203,9 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->onConsecutiveCalls(
                 null,
                 'orderReferenceId',
+                null,
                 'orderReferenceId',
+                'basketHash',
                 'orderReferenceId',
                 'orderReferenceId',
                 'orderReferenceId',
@@ -190,20 +236,6 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 
         // Client
         $oClient = $this->_getClientMock();
-
-        $oClient->expects($this->exactly(9))
-            ->method('confirmOrderReference')
-            ->will($this->onConsecutiveCalls(
-                $this->_getResponseObject(array('Error' => 'someError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError')),
-                $this->_getResponseObject(array('someData' => 'withNoError'))
-            ));
 
         $aOrderReferenceOpen = array(
             'GetOrderReferenceDetailsResult' => array(
@@ -311,7 +343,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 ))
             ));
 
-        $oContainer->expects($this->exactly(25))
+        $oContainer->expects($this->exactly(16))
             ->method('getClient')
             ->will($this->returnValue($oClient));
 
@@ -375,7 +407,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 
         // ObjectFactory
         $oObjectFactory = $this->_getObjectFactoryMock();
-        
+
         $oAddress = $this->getMock('oxAddress', array(), array(), '', false);
         $oAddress->expects($this->exactly(2))
             ->method('load')
@@ -383,7 +415,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 array('firstAddressId'),
                 array('deliveryId')
             );
-        
+
         $oAddress->expects($this->exactly(2))
             ->method('assign')
             ->withConsecutive(
@@ -492,7 +524,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         $oPrice->expects($this->exactly(7))
             ->method('getBruttoPrice')
             ->will($this->returnValue(11.1));
-        
+
         $oBasket->expects($this->exactly(7))
             ->method('getPrice')
             ->will($this->returnValue($oPrice));
@@ -529,6 +561,17 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         $oUser->expects($this->once())
             ->method('getUserAddresses')
             ->will($this->returnValue(array($oFirstAddress)));
+
+        $oBasketUtil = $this->_getBasketUtilMock();
+
+        $oBasketUtil->expects($this->exactly(9))
+            ->method('getBasketHash')
+            ->with('orderReferenceId', $oBasket)
+            ->will($this->returnValue('basketHash'));
+
+        $oContainer->expects($this->exactly(9))
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
 
         $blIsAmazonOrder = null;
         $blAuthorizeAsync = null;
@@ -652,7 +695,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
     public function testPerformAmazonActions()
     {
         $oContainer = $this->_getContainerMock();
-        
+
         // Session
         $oSession = $this->_getSessionMock();
 

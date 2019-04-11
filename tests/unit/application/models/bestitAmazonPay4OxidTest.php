@@ -344,21 +344,24 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             ->with('amazonOrderReferenceId')
             ->will($this->returnValue('1'));
 
-        $oSession->expects($this->exactly(12))
+        $oSession->expects($this->exactly(15))
             ->method('deleteVariable')
             ->withConsecutive(
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
                 array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
                 array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
-                array('blAmazonSyncChangePayment')
+                array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash')
             );
 
         $oCreatedUser = $this->_getUserMock();

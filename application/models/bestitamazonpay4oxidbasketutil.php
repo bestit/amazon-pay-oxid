@@ -81,6 +81,18 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
      */
     public function getBasketHash($sAmazonOrderReferenceId, $oBasket)
     {
-        return ''; // TODO Will be done in OXAP-199
+        $aBasket = array(
+            'amazonOrderReferenceId' => $sAmazonOrderReferenceId,
+            'totalSum' => $oBasket->getBruttoSum(),
+            'contents' => array()
+        );
+
+        /** @var oxBasketItem $oBasketItem */
+        foreach ($oBasket->getContents() as $oBasketItem) {
+            $sId = $oBasketItem->getArticle()->getId();
+            $aBasket['contents'][$sId] = $oBasketItem->getAmount();
+        }
+
+        return md5(json_encode($aBasket));
     }
 }

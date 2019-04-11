@@ -7,10 +7,16 @@
  */
 class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
 {
+
     /**
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * @var null|string
+     */
+    protected $_sJsonData = null;
 
     /**
      * Returns the active user object.
@@ -122,10 +128,10 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     {
         $sTemplate = parent::render();
         $oPayment = $this->getPayment();
+        $oConfig = $this->_getContainer()->getConfig();
 
         //payment is set and not oxempty if amazon selected?
         if ($oPayment !== false) {
-            $oConfig = $this->_getContainer()->getConfig();
             $sPaymentId = (string)$this->getPayment()->getId();
             $sAmazonOrderReferenceId = (string)$this->_getContainer()
                 ->getSession()->getVariable('amazonOrderReferenceId');
@@ -188,6 +194,66 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             }
         }
 
+        $sBasketHash = $oConfig->getRequestParameter('amazonBasketHash');
+
+        if ($sBasketHash) {
+            $this->_getContainer()->getSession()->setVariable('sAmazonBasketHash', $sBasketHash);
+        }
+
+        if ($this->_sJsonData !== null) {
+            echo $this->_sJsonData;
+            $sTemplate = '';
+        }
+
         return $sTemplate;
+    }
+
+    /**
+     * @return void
+     * @throws oxSystemComponentException
+     * @throws Exception
+     */
+    public function confirmAmazonOrderReference()
+    {
+        $success = false;
+        $oContainer = $this->_getContainer();
+        $oConfig = $oContainer->getConfig();
+        $oSession = $oContainer->getSession();
+        $sSecureUrl = $oConfig->getShopSecureHomeUrl();
+        $sFailureUrl = $sSecureUrl . 'cl=user&fnc=cleanAmazonPay';
+
+        if ($oSession->checkSessionChallenge()) {
+            $oBasket = $oSession->getBasket();
+            $blIsAmazonOrder = $oBasket->getPaymentId() === 'bestitamazon'
+                && $oConfig->getRequestParameter('cl') === 'order';
+
+            //Situation when amazonOrderReferenceId was wiped out somehow, do cleanup and redirect
+            if ($blIsAmazonOrder === true) {
+                $sAmazonOrderReferenceId = (string)$oSession->getVariable('amazonOrderReferenceId');
+
+                if ($sAmazonOrderReferenceId !== '') {
+                    $sSuccessUrl = $sSecureUrl . html_entity_decode($oConfig->getRequestParameter('formData'))
+                        . '&amazonBasketHash=' . $oContainer->getBasketUtil()->getBasketHash(
+                            $sAmazonOrderReferenceId,
+                            $oBasket
+                        );
+
+                    //Confirm Order Reference and Manage user data
+                    $oData = $oContainer->getClient()->confirmOrderReference(array(
+                        'success_url' => $sSuccessUrl,
+                        'failure_url' => $sFailureUrl
+                    ));
+
+                    if ($oData && !$oData->Error) {
+                        $success = true;
+                    }
+                }
+            }
+        }
+
+        $this->_sJsonData = json_encode(array(
+           'success' => $success,
+           'redirectUrl' => $sFailureUrl
+        ));
     }
 }

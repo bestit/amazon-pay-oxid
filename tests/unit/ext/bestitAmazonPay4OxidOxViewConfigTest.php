@@ -485,4 +485,57 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals('', $oBestitAmazonPay4OxidOxViewConfig->getBasketCurrency());
         self::assertEquals('currency', $oBestitAmazonPay4OxidOxViewConfig->getBasketCurrency());
     }
+
+    /**
+     * @group unit
+     * @covers ::getBasketCurrency()
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function testGetSessionToken()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->exactly(2))
+            ->method('getSessionChallengeToken')
+            ->will($this->onConsecutiveCalls(null, 'token'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->_getObject($oContainer);
+
+        self::assertEquals(null, $oBestitAmazonPay4OxidOxViewConfig->getSessionToken());
+        self::assertEquals('token', $oBestitAmazonPay4OxidOxViewConfig->getSessionToken());
+    }
+
+    /**
+     * @group unit
+     * @covers ::getBasketHash()
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function testGetBasketHash()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->exactly(2))
+            ->method('getVariable')
+            ->with('sAmazonBasketHash')
+            ->will($this->onConsecutiveCalls(null, 'hash'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        $oBestitAmazonPay4OxidOxViewConfig = $this->_getObject($oContainer);
+
+        self::assertEquals(null, $oBestitAmazonPay4OxidOxViewConfig->getBasketHash());
+        self::assertEquals('hash', $oBestitAmazonPay4OxidOxViewConfig->getBasketHash());
+    }
 }
