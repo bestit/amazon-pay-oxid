@@ -57,7 +57,7 @@ else
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
     MODULES_PATH=''
-    composer install -n -d ${BASE_DIR} --ignore-platform-reqs
+    composer install -n -d ${BASE_DIR}
     cp ${SHOP_DIR}/config.inc.php.dist ${SHOP_DIR}/config.inc.php
     sed -i 's|<dbHost>|'${DB_HOST}'|; s|<dbName>|oxidehop_ce|; s|<dbUser>|'${DB_USER}'|; s|<dbPwd>|'${DB_PASS}'|; s|<sShopURL>|http://localhost|; s|<sShopDir>|'${SHOP_DIR}'|; s|<sCompileDir>|'${SHOP_DIR}'/tmp|; s|$this->iDebug = 0|$this->iDebug = 1|' ${SHOP_DIR}/config.inc.php
     sed -i "s|\$this->edition = ''|\$this->edition = 'CE'|" ${SHOP_DIR}/config.inc.php
@@ -86,5 +86,6 @@ if [[ ${OXID_VERSION} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
 else
     apt-get -y install sudo # oxid needs sudo -.-
+    unset TRAVIS_ERROR_LEVEL
     ${BASE_DIR}/vendor/bin/runtests
 fi
