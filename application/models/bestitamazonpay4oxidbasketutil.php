@@ -28,6 +28,8 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
     }
 
     /**
+     * Validates the basket.
+     *
      * @param oxBasket $oBasket
      */
     protected function _validateBasket($oBasket)
@@ -63,5 +65,34 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
             //Reset old basket
             $oSession->setBasket($oBasket);
         }
+    }
+
+    /**
+     * Generates the basket hash.
+     *
+     * @param string          $sAmazonOrderReferenceId
+     * @param oxBasket|\OxidEsales\Eshop\Application\Model\Basket $oBasket
+     *
+     * @return string
+     *
+     * @throws oxArticleException
+     * @throws oxArticleInputException
+     * @throws oxNoArticleException
+     */
+    public function getBasketHash($sAmazonOrderReferenceId, $oBasket)
+    {
+        $aBasket = array(
+            'amazonOrderReferenceId' => $sAmazonOrderReferenceId,
+            'totalSum' => $oBasket->getBruttoSum(),
+            'contents' => array()
+        );
+
+        /** @var oxBasketItem $oBasketItem */
+        foreach ($oBasket->getContents() as $oBasketItem) {
+            $sId = $oBasketItem->getArticle()->getId();
+            $aBasket['contents'][$sId] = $oBasketItem->getAmount();
+        }
+
+        return md5(json_encode($aBasket));
     }
 }

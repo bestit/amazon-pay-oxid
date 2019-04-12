@@ -128,4 +128,54 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidBasketUtil->restoreQuickCheckoutBasket();
         $oBestitAmazonPay4OxidBasketUtil->restoreQuickCheckoutBasket();
     }
+
+    /**
+     * @group  unit
+     * @covers ::getBasketHash()
+     * @throws ReflectionException
+     * @throws oxArticleException
+     * @throws oxArticleInputException
+     * @throws oxNoArticleException
+     */
+    public function testGetBasketHash()
+    {
+        $oBasket = $this->_getBasketMock();
+
+        $oBasket->expects($this->once())
+            ->method('getBruttoSum')
+            ->will($this->returnValue(12.34));
+
+        $oBasketItem = $this->getMock('oxBasketItem');
+
+        $oProduct = $this->getMockBuilder('oxArticle')
+            ->disableOriginalConstructor()
+            ->getMock();;
+
+        $oProduct->expects($this->once())
+            ->method('getId')
+            ->will($this->returnValue('productId'));
+
+        $oBasketItem->expects($this->once())
+            ->method('getArticle')
+            ->will($this->returnValue($oProduct));
+
+        $oBasketItem->expects($this->once())
+            ->method('getAmount')
+            ->will($this->returnValue(321));
+
+        $oBasket->expects($this->once())
+            ->method('getContents')
+            ->will($this->returnValue(array($oBasketItem)));
+
+        $oBestitAmazonPay4OxidBasketUtil = $this->_getObject(
+            $this->_getSessionMock(),
+            $this->_getLanguageMock(),
+            $this->_getObjectFactoryMock()
+        );
+
+        self::assertEquals(
+            '382e6274a71c1ab8d5734d158eec4de3',
+            $oBestitAmazonPay4OxidBasketUtil->getBasketHash('amazonReferenceId', $oBasket)
+        );
+    }
 }

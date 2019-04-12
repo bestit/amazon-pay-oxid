@@ -47,7 +47,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
         $aParsedData = $oContainer->getAddressUtil()->parseAmazonAddress(
             $oAmazonData->Destination->PhysicalDestination
         );
-        
+
         $aDefaultMap = array(
             'oxcompany' => $aParsedData['CompanyName'],
             'oxfname' => $aParsedData['FirstName'],
@@ -78,7 +78,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
         if ($sUserWithSuchEmailOxid !== '') {
             //Load existing user from oxid
             $oUser->load($sUserWithSuchEmailOxid);
-            
+
             /** @var oxAddress $oDelAddress */
             $oDelAddress = $oContainer->getObjectFactory()->createOxidObject('oxAddress');
 
@@ -235,10 +235,13 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
                 return false;
             }
 
-            //Confirm Order Reference and Manage user data
-            $oData = $oContainer->getClient()->confirmOrderReference();
+            $sBasketHash = $oContainer->getBasketUtil()->getBasketHash($sAmazonOrderReferenceId, $oBasket);
+            $sCurrentBasketHash = $oConfig->getRequestParameter('amazonBasketHash');
+            $sCurrentBasketHash = $sCurrentBasketHash === null ?
+                $oSession->getVariable('sAmazonBasketHash') :
+                $sCurrentBasketHash;
 
-            if (!$oData || $oData->Error) {
+            if ($sCurrentBasketHash !== $sBasketHash) {
                 $oUtils->redirect($oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay', false);
                 return false;
             }

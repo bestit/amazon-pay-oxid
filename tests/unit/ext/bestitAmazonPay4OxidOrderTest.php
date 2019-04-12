@@ -202,33 +202,41 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
 
         // Config
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(6))
+        $oConfig->expects($this->exactly(10))
             ->method('getRequestParameter')
             ->withConsecutive(
+                array('amazonBasketHash'),
+                array('amazonBasketHash'),
                 array('fnc'),
                 array('action'),
                 array('fnc'),
                 array('action'),
+                array('amazonBasketHash'),
                 array('fnc'),
-                array('action')
+                array('action'),
+                array('amazonBasketHash')
             )
             ->will($this->onConsecutiveCalls(
-                array('someFnc'),
-                array('someAction'),
-                array('someFnc'),
-                array('someAction'),
-                array('someFnc'),
-                array('someAction')
+                null,
+                'someAmazonBasketHash',
+                'someFnc',
+                'someAction',
+                'someFnc',
+                'someAction',
+                'someAmazonBasketHash',
+                'someFnc',
+                'someAction',
+                'someAmazonBasketHash'
             ));
 
         $oConfig->expects($this->exactly(4))
             ->method('getShopSecureHomeUrl')
             ->will($this->returnValue('shopSecureHomeUrl?'));
 
-        $oContainer->expects($this->exactly(6))
+        $oContainer->expects($this->exactly(7))
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
-        
+
         // Session
         $oSession = $this->_getSessionMock();
         $oSession->expects($this->exactly(6))
@@ -243,7 +251,11 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
                 'orderReferenceId'
             ));
 
-        $oContainer->expects($this->exactly(6))
+        $oSession->expects($this->exactly(3))
+            ->method('setVariable')
+            ->with('sAmazonBasketHash', 'someAmazonBasketHash');
+
+        $oContainer->expects($this->exactly(9))
             ->method('getSession')
             ->will($this->returnValue($oSession));
 
@@ -351,13 +363,150 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
             ));
 
         self::setValue($bestitAmazonPay4OxidOrder, '_oPayment', $oPayment);
-        $bestitAmazonPay4OxidOrder->render();
-        $bestitAmazonPay4OxidOrder->render();
+        self::assertEquals('page/checkout/order.tpl', $bestitAmazonPay4OxidOrder->render());
+        self::assertEquals('page/checkout/order.tpl', $bestitAmazonPay4OxidOrder->render());
 
         self::setValue($bestitAmazonPay4OxidOrder, '_oBasket', $oBasket);
-        $bestitAmazonPay4OxidOrder->render();
-        $bestitAmazonPay4OxidOrder->render();
-        $bestitAmazonPay4OxidOrder->render();
-        $bestitAmazonPay4OxidOrder->render();
+        self::assertEquals('page/checkout/order.tpl', $bestitAmazonPay4OxidOrder->render());
+        self::assertEquals('page/checkout/order.tpl', $bestitAmazonPay4OxidOrder->render());
+        self::assertEquals('page/checkout/order.tpl', $bestitAmazonPay4OxidOrder->render());
+
+        self::setValue($bestitAmazonPay4OxidOrder, '_sJsonData' , 'jsonData');
+        self::expectOutputString('jsonData');
+        self::assertEquals('', $bestitAmazonPay4OxidOrder->render());
+    }
+
+    /**
+     * @group unit
+     * @covers ::confirmAmazonOrderReference()
+     * @throws Exception
+     * @throws ReflectionException
+     * @throws oxSystemComponentException
+     */
+    public function testConfirmAmazonOrderReference()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        // Config
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->exactly(6))
+            ->method('getShopSecureHomeUrl')
+            ->will($this->returnValue('shopSecureHomeUrl?'));
+
+        $oConfig->expects($this->exactly(6))
+            ->method('getRequestParameter')
+            ->withConsecutive(
+                array('cl'),
+                array('cl'),
+                array('cl'),
+                array('formData'),
+                array('cl'),
+                array('formData')
+            )
+            ->will($this->onConsecutiveCalls(
+                'some',
+                'order',
+                'order',
+                'formDataOne=1&amp;formDataTwo=2',
+                'order',
+                'formDataOne=1&amp;formDataTwo=2'
+            ));
+
+        $oContainer->expects($this->exactly(6))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        // Session
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->exactly(6))
+            ->method('checkSessionChallenge')
+            ->will($this->onConsecutiveCalls(false, true, true, true, true, true));
+
+        $oBasket = $this->_getBasketMock();
+        $oBasket->expects($this->exactly(5))
+            ->method('getPaymentId')
+            ->will($this->onConsecutiveCalls(
+                'some',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon',
+                'bestitamazon'
+            ));
+
+        $oSession->expects($this->exactly(5))
+            ->method('getBasket')
+            ->will($this->returnValue($oBasket));
+
+        $oSession->expects($this->exactly(3))
+            ->method('getVariable')
+            ->with('amazonOrderReferenceId')
+            ->will($this->onConsecutiveCalls(
+                null,
+                'amazonOrderReferenceId',
+                'amazonOrderReferenceId'
+            ));
+
+        $oContainer->expects($this->exactly(6))
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        // BasketUtil
+        $oBasketUtil = $this->_getBasketUtilMock();
+
+        $oBasketUtil->expects($this->exactly(2))
+            ->method('getBasketHash')
+            ->with('amazonOrderReferenceId', $oBasket)
+            ->will($this->returnValue('basketHash'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getBasketUtil')
+            ->will($this->returnValue($oBasketUtil));
+
+        // Client
+        $oClient = $this->_getClientMock();
+
+        $oClient->expects($this->exactly(2))
+            ->method('confirmOrderReference')
+            ->with(array(
+                'success_url' => 'shopSecureHomeUrl?formDataOne=1&formDataTwo=2&amazonBasketHash=basketHash',
+                'failure_url' => 'shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay'
+            ))
+            ->will($this->onConsecutiveCalls(
+                $this->_getResponseObject(array('Error' => 'someError')),
+                $this->_getResponseObject(array())
+            ));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getClient')
+            ->will($this->returnValue($oClient));
+
+        $bestitAmazonPay4OxidOrder = $this->_getObject($oContainer);
+        $sFailureJson = '{"success":false,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay"}';
+
+        // Invalid session challenge
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals($sFailureJson, '_sJsonData', $bestitAmazonPay4OxidOrder);
+
+        // No amazon order
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals($sFailureJson, '_sJsonData', $bestitAmazonPay4OxidOrder);
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals($sFailureJson, '_sJsonData', $bestitAmazonPay4OxidOrder);
+
+        // Missing Amazon order reference id
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals($sFailureJson, '_sJsonData', $bestitAmazonPay4OxidOrder);
+
+        // Error on client call
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals($sFailureJson, '_sJsonData', $bestitAmazonPay4OxidOrder);
+
+        // Success
+        $bestitAmazonPay4OxidOrder->confirmAmazonOrderReference();
+        self::assertAttributeEquals(
+            '{"success":true,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay"}',
+            '_sJsonData',
+            $bestitAmazonPay4OxidOrder
+        );
     }
 }
