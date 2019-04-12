@@ -58,28 +58,15 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
             'oxzip' => $aParsedData['PostalCode'],
             'oxfon' => $aParsedData['Phone'],
             'oxstreet' => $aParsedData['Street'],
-            'oxstreetnr' => $aParsedData['StreetNr']
+            'oxstreetnr' => $aParsedData['StreetNr'],
+            'oxaddinfo' => $aParsedData['AddInfo']
         );
 
         //Getting Email
         $sEmail = $oAmazonData->Buyer->Email;
-        $sDeliveryAddressId = (string) $oSession->getVariable('deladrid');
 
-        //If we have logged in user already and Amazon address set as shipping
-        if ($sDeliveryAddressId !== '') {
-            /** @var oxAddress $oDelAddress */
-            $oDelAddress = $oContainer->getObjectFactory()->createOxidObject('oxAddress');
-            $oDelAddress->load($sDeliveryAddressId);
-
-            $oDelAddress->assign(array_merge($aDefaultMap, array('oxaddinfo' => $aParsedData['AddInfo'])));
-            $oDelAddress->save();
-
-            return $oUser;
-        }
-
-        // If we don't have user logged in but we have found user account in OXID with same email
-        // that came from Amazon, then add new shipping address and log user in
-        $oDatabase = $this->_getContainer()->getDatabase();
+        // If we find user account in OXID with same email that we got from Amazon then add new shipping address
+        $oDatabase = $oContainer->getDatabase();
 
         $sQuery = "SELECT OXID
             FROM oxuser
@@ -105,7 +92,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
                 if ((string)$oAddress->getFieldData('oxfname') === (string)$aParsedData['FirstName']
                     && (string)$oAddress->getFieldData('oxlname') === (string)$aParsedData['LastName']
                     && (string)$oAddress->getFieldData('oxstreet') === (string)$aParsedData['Street']
-                    && (string)$oAddress->getFieldData('oxstreetnr') === (string)$aParsedData['Street']
+                    && (string)$oAddress->getFieldData('oxstreetnr') === (string)$aParsedData['StreetNr']
                 ) {
                     $oDelAddress->load($oAddress->getId());
                     break;
@@ -117,13 +104,22 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
 
             $oSession->setVariable('blshowshipaddress', 1);
             $oSession->setVariable('deladrid', $sDeliveryAddressId);
+        } else {
+            // If the user is new and not found in OXID update data from Amazon
+            $oUser->assign(array_merge($aDefaultMap, array('oxusername' => $sEmail)));
+            $oUser->save();
 
-            return $oUser;
+            $sDeliveryAddressId = (string) $oSession->getVariable('deladrid');
+
+            // Set Amazon address as shipping
+            if ($sDeliveryAddressId !== '') {
+                /** @var oxAddress $oDelAddress */
+                $oDelAddress = $oContainer->getObjectFactory()->createOxidObject('oxAddress');
+                $oDelAddress->load($sDeliveryAddressId);
+                $oDelAddress->assign($aDefaultMap);
+                $oDelAddress->save();
+            }
         }
-
-        //If the user is new and not found in OXID update data from Amazon and log user in
-        $oUser->assign(array_merge($aDefaultMap, array('oxusername' => $sEmail)));
-        $oUser->save();
 
         return $oUser;
     }

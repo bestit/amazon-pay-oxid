@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 - Changed License to the MIT License ([OXAP-172](https://bestit.atlassian.net/browse/OXAP-172))
 - Changed OXID module settings parameter to correct wording 'constraints' instead of 'constrains' ([OXAP-181](https://bestit.atlassian.net/browse/OXAP-181))
 - Update Amazon Pay SDK to version 3.4.1
+### Fixed
+- Fixed possibility that there will be orders created with ...@amazon.com email addresses and no billing address under certain circumstances ([OXAP-183](https://bestit.atlassian.net/browse/OXAP-183))
 ### Removed
 - Removed settings for customization of amazon locale settings ([OXAP-119](https://bestit.atlassian.net/browse/OXAP-119))
 

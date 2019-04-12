@@ -93,7 +93,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->method('getShopSecureHomeUrl')
             ->will($this->returnValue('shopSecureHomeUrl?'));
 
-        $oConfig->expects($this->exactly(2))
+        $oConfig->expects($this->exactly(3))
             ->method('getShopId')
             ->will($this->returnValue(456));
 
@@ -139,7 +139,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         // Session
         $oSession = $this->_getSessionMock();
 
-        $oSession->expects($this->exactly(14))
+        $oSession->expects($this->exactly(13))
             ->method('getVariable')
             ->withConsecutive(
                 array('amazonOrderReferenceId'),
@@ -151,7 +151,6 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 array('amazonOrderReferenceId'),
                 array('amazonOrderReferenceId'),
                 array('amazonOrderReferenceId'),
-                array('deladrid'),
                 array('amazonOrderReferenceId'),
                 array('deladrid'),
                 array('amazonOrderReferenceId'),
@@ -167,9 +166,8 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 'orderReferenceId',
                 'orderReferenceId',
                 'orderReferenceId',
-                'deliveryId',
                 'orderReferenceId',
-                null,
+                'deliveryId',
                 'orderReferenceId',
                 null
             ));
@@ -180,10 +178,10 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 array('blAmazonSyncChangePayment', 1),
                 array('sAmazonSyncResponseState', 'Open'),
                 array('sAmazonSyncResponseAuthorizationId', 'authorizationId'),
-                array('sAmazonSyncResponseState', 'Open'),
-                array('sAmazonSyncResponseAuthorizationId', 'authorizationId'),
                 array('blshowshipaddress', 1),
-                array('deladrid', 'newAddressId')
+                array('deladrid', 'newAddressId'),
+                array('sAmazonSyncResponseState', 'Open'),
+                array('sAmazonSyncResponseAuthorizationId', 'authorizationId')
             );
 
         $oContainer->expects($this->exactly(21))
@@ -382,8 +380,8 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         $oAddress->expects($this->exactly(2))
             ->method('load')
             ->withConsecutive(
-                array('deliveryId'),
-                array('firstAddressId')
+                array('firstAddressId'),
+                array('deliveryId')
             );
         
         $oAddress->expects($this->exactly(2))
@@ -401,7 +399,8 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                         'oxfon' => 'PhoneValue',
                         'oxstreet' => 'StreetValue',
                         'oxstreetnr' => 'StreetNrValue',
-                        'oxaddinfo' => 'AddInfoValue'
+                        'oxaddinfo' => 'AddInfoValue',
+                        'oxuserid' => 'emailId'
                     )
                 ),
                 array(
@@ -416,7 +415,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                         'oxfon' => 'PhoneValue',
                         'oxstreet' => 'StreetValue',
                         'oxstreetnr' => 'StreetNrValue',
-                        'oxuserid' => 'emailId'
+                        'oxaddinfo' => 'AddInfoValue'
                     )
                 )
             );
@@ -437,7 +436,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         // Database
         $oDatabase = $this->_getDatabaseMock();
 
-        $oDatabase->expects($this->exactly(2))
+        $oDatabase->expects($this->exactly(3))
             ->method('getOne')
             ->with(new MatchIgnoreWhitespace(
                 "SELECT OXID
@@ -447,9 +446,11 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ))
             ->will($this->onConsecutiveCalls('emailId', ''));
 
-        $oDatabase->expects($this->exactly(4))
+        $oDatabase->expects($this->exactly(6))
             ->method('quote')
             ->withConsecutive(
+                array('BuyerEmail'),
+                array(456),
                 array('BuyerEmail'),
                 array(456),
                 array('BuyerEmail'),
@@ -459,7 +460,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 return "'{$sValue}'";
             }));
 
-        $oContainer->expects($this->exactly(2))
+        $oContainer->expects($this->exactly(3))
             ->method('getDatabase')
             ->will($this->returnValue($oDatabase));
 
@@ -518,7 +519,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
                 'FirstNameValue',
                 'LastNameValue',
                 'StreetValue',
-                'StreetValue'
+                'StreetNrValue'
             ));
 
         $oFirstAddress->expects($this->once())
