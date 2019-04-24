@@ -14,11 +14,6 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     protected $_oContainer = null;
 
     /**
-     * @var null|string
-     */
-    protected $_sJsonData = null;
-
-    /**
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
@@ -117,6 +112,21 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     }
 
     /**
+     * Sets the basket hash.
+     *
+     * @throws oxSystemComponentException
+     */
+    protected function setBasketHash()
+    {
+        $oContainer = $this->_getContainer();
+        $sBasketHash = $oContainer->getConfig()->getRequestParameter('amazonBasketHash');
+
+        if ($sBasketHash) {
+            $oContainer->getSession()->setVariable('sAmazonBasketHash', $sBasketHash);
+        }
+    }
+
+    /**
      * The main render function with additional payment checks.
      *
      * @return mixed
@@ -194,18 +204,24 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             }
         }
 
-        $sBasketHash = $oConfig->getRequestParameter('amazonBasketHash');
-
-        if ($sBasketHash) {
-            $this->_getContainer()->getSession()->setVariable('sAmazonBasketHash', $sBasketHash);
-        }
-
-        if ($this->_sJsonData !== null) {
-            echo $this->_sJsonData;
-            $sTemplate = '';
-        }
+        $this->setBasketHash();
 
         return $sTemplate;
+    }
+
+    /**
+     * Renders the json data.
+     *
+     * @param string $sData The json data.
+     *
+     * @throws oxSystemComponentException
+     */
+    protected function renderJson($sData)
+    {
+        header('Content-Type: application/json');
+        $this->setBasketHash();
+        echo $sData;
+        exit;
     }
 
     /**
@@ -238,7 +254,7 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                             $oBasket
                         );
 
-                    //Confirm Order Reference and Manage user data
+                    //Confirm Order Reference
                     $oData = $oContainer->getClient()->confirmOrderReference(array(
                         'success_url' => $sSuccessUrl,
                         'failure_url' => $sFailureUrl
@@ -251,9 +267,9 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             }
         }
 
-        $this->_sJsonData = json_encode(array(
-           'success' => $success,
-           'redirectUrl' => $sFailureUrl
-        ));
+        $this->renderJson(json_encode(array(
+            'success' => $success,
+            'redirectUrl' => $sFailureUrl
+        )));
     }
 }
