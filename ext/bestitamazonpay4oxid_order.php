@@ -236,7 +236,7 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
         $oConfig = $oContainer->getConfig();
         $oSession = $oContainer->getSession();
         $sSecureUrl = $oConfig->getShopSecureHomeUrl();
-        $sFailureUrl = $sSecureUrl . 'cl=user&fnc=cleanAmazonPay';
+        $sFailureUrl = $sSecureUrl . 'cl=user&fnc=cleanAmazonPay&cancelOrderReference=1';
 
         if ($oSession->checkSessionChallenge()) {
             $oBasket = $oSession->getBasket();
