@@ -448,7 +448,7 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
             ->method('confirmOrderReference')
             ->with(array(
                 'success_url' => 'shopSecureHomeUrl?formDataOne=1&formDataTwo=2&amazonBasketHash=basketHash',
-                'failure_url' => 'shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay'
+                'failure_url' => 'shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay&cancelOrderReference=1'
             ))
             ->will($this->onConsecutiveCalls(
                 $this->_getResponseObject(array('Error' => 'someError')),
@@ -463,7 +463,7 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
         $bestitAmazonPay4OxidOrder = $this->getMock('bestitAmazonPay4Oxid_order', array('renderJson'));
         self::setValue($bestitAmazonPay4OxidOrder, '_oContainer', $oContainer);
 
-        $sFailureJson = '{"success":false,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay"}';
+        $sFailureJson = '{"success":false,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay&cancelOrderReference=1"}';
 
         $bestitAmazonPay4OxidOrder->expects($this->exactly(6))
             ->method('renderJson')
@@ -473,7 +473,7 @@ class bestitAmazonPay4OxidOrderTest extends bestitAmazon4OxidUnitTestCase
                 array($sFailureJson),
                 array($sFailureJson),
                 array($sFailureJson),
-                array('{"success":true,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay"}')
+                array('{"success":true,"redirectUrl":"shopSecureHomeUrl?cl=user&fnc=cleanAmazonPay&cancelOrderReference=1"}')
             );
 
         // Invalid session challenge
