@@ -226,7 +226,7 @@ class bestitAmazonPay4Oxid_init
     {
         $sSql = "SELECT COUNT(OXID)
             FROM oxpayments
-            WHERE OXID IN ('jagamazon', 'bestitamazon')";
+            WHERE oxid = 'bestitamazon'";
 
         //Insert payment records to DB
         $iRes = self::_getDatabase()->getOne($sSql);
