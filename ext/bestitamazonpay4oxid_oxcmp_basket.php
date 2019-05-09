@@ -31,6 +31,26 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     }
 
     /**
+     *
+     *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function processAmazonCallback()
+    {
+        $oContainer = $this->_getContainer();
+        $oConfig = $oContainer->getConfig();
+
+        if ((string) $oConfig->getRequestParameter('AuthenticationStatus') === 'Abandoned') {
+            $oContainer->getSession()->setVariable('blAmazonSyncChangePayment', 1);
+            $oContainer->getUtils()->redirect($oConfig->getShopSecureHomeUrl().'cl=order&action=changePayment', false);
+            return;
+        }
+
+        $this->cleanAmazonPay();
+    }
+
+    /**
      * Cleans Amazon pay as the selected one, including all related variables and values
      *
      * @param bool $cancelOrderReference
