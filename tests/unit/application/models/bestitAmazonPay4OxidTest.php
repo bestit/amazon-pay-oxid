@@ -4,7 +4,9 @@ require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 
 /**
- * Class bestitAmazonPay4OxidTest
+ * Unit test for class bestitAmazonPay4Oxid
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4Oxid
  */
 class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
@@ -342,21 +344,24 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             ->with('amazonOrderReferenceId')
             ->will($this->returnValue('1'));
 
-        $oSession->expects($this->exactly(12))
+        $oSession->expects($this->exactly(15))
             ->method('deleteVariable')
             ->withConsecutive(
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
                 array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
                 array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash'),
                 array('amazonOrderReferenceId'),
                 array('sAmazonSyncResponseState'),
                 array('sAmazonSyncResponseAuthorizationId'),
-                array('blAmazonSyncChangePayment')
+                array('blAmazonSyncChangePayment'),
+                array('sAmazonBasketHash')
             );
 
         $oCreatedUser = $this->_getUserMock();

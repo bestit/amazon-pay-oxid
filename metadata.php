@@ -1,27 +1,10 @@
 <?php
 
 /**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
+ * Metadata file for module
  *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * metadata.php
- *
- * The metadata file.
- *
- * PHP versions 5
- *
- * @category  bestitamazonpay4oxid
- * @package   bestitamazonpay4oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   SVN: $Id$
- * @link      http://www.bestit-online.de
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
-
 
 $sMetadataVersion = '1.1';
 
@@ -53,7 +36,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.2.2',
+    'version' => '3.3.0',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -127,6 +110,11 @@ $aModule = array(
             'template' => 'page/checkout/order.tpl',
             'block' => 'shippingAndPayment', // flow + azure
             'file' => 'application/blocks/bestitamazonpay4oxid_order_payment.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_btn_confirm_bottom', // flow + azure
+            'file' => 'application/blocks/bestitamazonpay4oxid_order_confirm_button.tpl'
         ),
         array(
             'template' => 'layout/footer.tpl',
@@ -239,7 +227,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'LwA-Gold',
             'position' => '3',
-            'constrains' => 'LwA-LightGray|LwA-DarkGray|LwA-Gold|Login-LightGray|Login-DarkGray|Login-Gold'
+            'constraints' => 'LwA-LightGray|LwA-DarkGray|LwA-Gold|Login-LightGray|Login-DarkGray|Login-Gold'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',
@@ -247,7 +235,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'PwA-Gold',
             'position' => '4',
-            'constrains' => 'PwA-LightGray|PwA-DarkGray|PwA-Gold|Pay-LightGray|Pay-DarkGray|Pay-Gold'
+            'constraints' => 'PwA-LightGray|PwA-DarkGray|PwA-Gold|Pay-LightGray|Pay-DarkGray|Pay-Gold'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLocalization',
@@ -255,49 +243,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'DE',
             'position' => '1',
-            'constrains' => 'DE|UK|US|CUSTOM'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonEndpointUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '2'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonEndpointUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '3'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonWidgetUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '4'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonWidgetUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '5'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonButtonUrlCUSTOM',
-            'type' => 'str',
-            'value' => '',
-            'position' => '6'
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLocalization',
-            'name' => 'sAmazonButtonUrlCUSTOMSandbox',
-            'type' => 'str',
-            'value' => '',
-            'position' => '7'
+            'constraints' => 'DE|UK|US'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLanguages',
@@ -312,7 +258,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'OPTIMIZED_FLOW',
             'position' => '1',
-            'constrains' => 'OPTIMIZED_FLOW|BASIC_FLOW'
+            'constraints' => 'OPTIMIZED_FLOW|BASIC_FLOW'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -320,7 +266,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'IPN',
             'position' => '2',
-            'constrains' => 'IPN|CRON'
+            'constraints' => 'IPN|CRON'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -328,7 +274,7 @@ $aModule = array(
             'type' => 'select',
             'value' => 'SHIPPED',
             'position' => '3',
-            'constrains' => 'SHIPPED|DIRECT'
+            'constraints' => 'SHIPPED|DIRECT'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
@@ -350,7 +296,7 @@ $aModule = array(
             'type' => 'select',
             'value' => '',
             'position' => '6',
-            'constrains' => '
+            'constraints' => '
                 |SetOrderReferenceDetailsPaymentMethodNotAllowed
                 |CloseOrderReferenceAmazonClosed
                 |AuthorizeInvalidPaymentMethod

@@ -1,24 +1,9 @@
 <?php
+
 /**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
+ * Backend language entries for DE
  *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonpay4oxid_lang.php
- *
- * The bestitamazonpay4oxid_lang file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 
 $sLangName  = "Deutsch";
@@ -56,13 +41,6 @@ $aLang = array(
     'SHOP_MODULE_sAmazonLocale_DE'                         => 'DE',
     'SHOP_MODULE_sAmazonLocale_UK'                         => 'UK',
     'SHOP_MODULE_sAmazonLocale_US'                         => 'US',
-    'SHOP_MODULE_sAmazonLocale_CUSTOM'                     => 'Benutzerdefiniert (Bitte untenstehende Felder ausfüllen)',
-    'SHOP_MODULE_sAmazonEndpointUrlCUSTOM'                 => 'Benutzerdefinierte Endpoint-URL',
-    'SHOP_MODULE_sAmazonEndpointUrlCUSTOMSandbox'          => 'Benutzerdefinierte Endpoint-URL (Sandbox)',
-    'SHOP_MODULE_sAmazonWidgetUrlCUSTOM'                   => 'Benutzerdefinierte Widget-URL',
-    'SHOP_MODULE_sAmazonWidgetUrlCUSTOMSandbox'            => 'Benutzerdefinierte Widget-URL (Sandbox)',
-    'SHOP_MODULE_sAmazonButtonUrlCUSTOM'                   => 'Benutzerdefinierte Button-URL',
-    'SHOP_MODULE_sAmazonButtonUrlCUSTOMSandbox'            => 'Benutzerdefinierte Button-URL (Sandbox)',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidConfiguration'  => 'Konfiguration',
     'SHOP_MODULE_sAmazonMode'                              => 'Autorisierungsmodus',

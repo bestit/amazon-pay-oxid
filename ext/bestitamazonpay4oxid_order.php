@@ -1,31 +1,13 @@
 <?php
-/**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonpay4oxid_order.php
- *
- * The bestitAmazonPay4Oxid_order class file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
- */
 
 /**
- * Class bestitAmazonPay4Oxid_order
+ * Extension for OXID order controller
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
 {
+
     /**
      * @var null|bestitAmazonPay4OxidContainer
      */
@@ -130,6 +112,21 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     }
 
     /**
+     * Sets the basket hash.
+     *
+     * @throws oxSystemComponentException
+     */
+    protected function setBasketHash()
+    {
+        $oContainer = $this->_getContainer();
+        $sBasketHash = $oContainer->getConfig()->getRequestParameter('amazonBasketHash');
+
+        if ($sBasketHash) {
+            $oContainer->getSession()->setVariable('sAmazonBasketHash', $sBasketHash);
+        }
+    }
+
+    /**
      * The main render function with additional payment checks.
      *
      * @return mixed
@@ -141,10 +138,10 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     {
         $sTemplate = parent::render();
         $oPayment = $this->getPayment();
+        $oConfig = $this->_getContainer()->getConfig();
 
         //payment is set and not oxempty if amazon selected?
         if ($oPayment !== false) {
-            $oConfig = $this->_getContainer()->getConfig();
             $sPaymentId = (string)$this->getPayment()->getId();
             $sAmazonOrderReferenceId = (string)$this->_getContainer()
                 ->getSession()->getVariable('amazonOrderReferenceId');
@@ -207,6 +204,72 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             }
         }
 
+        $this->setBasketHash();
+
         return $sTemplate;
+    }
+
+    /**
+     * Renders the json data.
+     *
+     * @param string $sData The json data.
+     *
+     * @throws oxSystemComponentException
+     */
+    protected function renderJson($sData)
+    {
+        header('Content-Type: application/json');
+        $this->setBasketHash();
+        echo $sData;
+        exit;
+    }
+
+    /**
+     * @return void
+     * @throws oxSystemComponentException
+     * @throws Exception
+     */
+    public function confirmAmazonOrderReference()
+    {
+        $success = false;
+        $oContainer = $this->_getContainer();
+        $oConfig = $oContainer->getConfig();
+        $oSession = $oContainer->getSession();
+        $sSecureUrl = $oConfig->getShopSecureHomeUrl();
+        $sFailureUrl = $sSecureUrl . 'cl=user&fnc=processAmazonCallback&cancelOrderReference=1';
+
+        if ($oSession->checkSessionChallenge()) {
+            $oBasket = $oSession->getBasket();
+            $blIsAmazonOrder = $oBasket->getPaymentId() === 'bestitamazon'
+                && $oConfig->getRequestParameter('cl') === 'order';
+
+            //Situation when amazonOrderReferenceId was wiped out somehow, do cleanup and redirect
+            if ($blIsAmazonOrder === true) {
+                $sAmazonOrderReferenceId = (string)$oSession->getVariable('amazonOrderReferenceId');
+
+                if ($sAmazonOrderReferenceId !== '') {
+                    $sSuccessUrl = $sSecureUrl . html_entity_decode($oConfig->getRequestParameter('formData'))
+                        . '&amazonBasketHash=' . $oContainer->getBasketUtil()->getBasketHash(
+                            $sAmazonOrderReferenceId,
+                            $oBasket
+                        );
+
+                    //Confirm Order Reference
+                    $oData = $oContainer->getClient()->confirmOrderReference(array(
+                        'success_url' => $sSuccessUrl,
+                        'failure_url' => $sFailureUrl
+                    ));
+
+                    if ($oData && !$oData->Error) {
+                        $success = true;
+                    }
+                }
+            }
+        }
+
+        $this->renderJson(json_encode(array(
+            'success' => $success,
+            'redirectUrl' => $sFailureUrl
+        )));
     }
 }

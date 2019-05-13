@@ -4,7 +4,7 @@
   "type": "oxideshop-module",
   "keywords": ["oxid", "modules", "eShop"],
   "homepage": "https://www.bestit-online.de",
-  "version": "3.2.2",
+  "version": "3.3.0",
   "license": [
     "GPL-3.0-only",
     "proprietary"
@@ -23,7 +23,7 @@
     "lib-openssl": ">=1.0.1",
     "ext-curl": "*",
     "ext-openssl": "*",
-    "amzn/amazon-pay-sdk-php": "~3.2.0",
+    "amzn/amazon-pay-sdk-php": "~3.4.1",
     "monolog/monolog": "^1.23"
   },
   "autoload": {

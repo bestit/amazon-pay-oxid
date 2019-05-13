@@ -3,7 +3,9 @@
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 /**
- * Class bestitAmazonPay4OxidTest
+ * Unit test for class bestitAmazonPay4OxidAddressUtil
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4OxidAddressUtil
  */
 class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
@@ -242,6 +244,34 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals(array(
             'Name' => 'Teststreet',
             'Number' => '1'
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
+
+        // Test FR address without streetnumber
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet', 'FR')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => ''
+        ), array(
+            'Name' => $aTestResult['Name'],
+            'Number' => $aTestResult['Number']
+        ));
+
+        // Test address format "street streetnumber" without streetnumber
+        $aTestResult = $this->callMethod(
+            $oBestitAmazonPay4OxidAddressUtil,
+            '_parseSingleAddress',
+            array('Teststreet', 'DE')
+        );
+        self::assertEquals(array(
+            'Name' => 'Teststreet',
+            'Number' => ''
         ), array(
             'Name' => $aTestResult['Name'],
             'Number' => $aTestResult['Number']

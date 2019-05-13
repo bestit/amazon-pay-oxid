@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.3.0] - 2019-05-13
+### Added
+- Addresses without street numbers will now get parsed, too ([OXAP-155](https://bestit.atlassian.net/browse/OXAP-155))
+  - Make sure to set up required fields correctly to allow street without streetnumber e.g. remove oxuser__oxstreetnr and oxaddress__oxstreetnr from "Mandatory fields in User Registration Form" in OXID Backend -> Master Settings -> Core Settings -> Tab: Settings -> Other Settings
+- Add PSD2 support ([OXAP-187](https://bestit.atlassian.net/browse/OXAP-187), [OXAP-192](https://bestit.atlassian.net/browse/OXAP-192), [OXAP-199](https://bestit.atlassian.net/browse/OXAP-199), [OXAP-200](https://bestit.atlassian.net/browse/OXAP-200), [OXAP-201](https://bestit.atlassian.net/browse/OXAP-201), [OXAP-202](https://bestit.atlassian.net/browse/OXAP-202))
+### Changed
+- Changed License to the MIT License ([OXAP-172](https://bestit.atlassian.net/browse/OXAP-172))
+- Changed OXID module settings parameter to correct wording 'constraints' instead of 'constrains' ([OXAP-181](https://bestit.atlassian.net/browse/OXAP-181))
+- Update Amazon Pay SDK to version 3.4.1 ([OXAP-190](https://bestit.atlassian.net/browse/OXAP-190))
+### Fixed
+- Fixed possibility that there will be orders created with ...@amazon.com email addresses and no billing address under certain circumstances ([OXAP-183](https://bestit.atlassian.net/browse/OXAP-183))
+### Removed
+- Removed settings for customization of amazon locale settings ([OXAP-119](https://bestit.atlassian.net/browse/OXAP-119))
+
 ## [3.2.2] - 2018-11-21
 ### Added
 - This changelog file with documentation of changes since version 3.1.0
@@ -69,6 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 - Line endings of files bestitamazonpay4oxidipnhandler.php and bestitamazonpay4oxidloginclient.php
 - Module settings will now be saved even if you deactivate and activate the module again
 
+[3.3.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.2...3.3.0
 [3.2.2]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.1...3.2.2
 [3.2.1]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.1.4...3.2.0

@@ -1,28 +1,9 @@
 <?php
-/**
- * This Software is the property of best it GmbH & Co. KG and is protected
- * by copyright law - it is NOT Freeware.
- *
- * Any unauthorized use of this software without a valid license is
- * a violation of the license agreement and will be prosecuted by
- * civil and criminal law.
- *
- * bestitamazonpay4oxid_oxcmp_basket.php
- *
- * The bestitAmazonPay4Oxid_oxcmp_basket class file.
- *
- * PHP versions 5
- *
- * @category  bestitAmazonPay4Oxid
- * @package   bestitAmazonPay4Oxid
- * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
- * @copyright 2017 best it GmbH & Co. KG
- * @version   GIT: $Id$
- * @link      http://www.bestit-online.de
- */
 
 /**
- * Class bestitAmazonPay4Oxid_oxcmp_basket
+ * Extension for OXID oxcmp_basket component
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
 class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_basket_parent
 {
@@ -50,6 +31,26 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     }
 
     /**
+     *
+     *
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function processAmazonCallback()
+    {
+        $oContainer = $this->_getContainer();
+        $oConfig = $oContainer->getConfig();
+
+        if ((string) $oConfig->getRequestParameter('AuthenticationStatus') === 'Abandoned') {
+            $oContainer->getSession()->setVariable('blAmazonSyncChangePayment', 1);
+            $oContainer->getUtils()->redirect($oConfig->getShopSecureHomeUrl().'cl=order&action=changePayment', false);
+            return;
+        }
+
+        $this->cleanAmazonPay();
+    }
+
+    /**
      * Cleans Amazon pay as the selected one, including all related variables and values
      *
      * @param bool $cancelOrderReference
@@ -60,7 +61,9 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      */
     public function cleanAmazonPay($cancelOrderReference = false)
     {
-        if ($cancelOrderReference === true) {
+        $oConfig = $this->_getContainer()->getConfig();
+
+        if ($cancelOrderReference === true || (bool) $oConfig->getRequestParameter('cancelOrderReference')) {
             $this->_getContainer()->getClient()->cancelOrderReference(
                 null,
                 array('amazon_order_reference_id' => $this->_getContainer()
@@ -72,7 +75,6 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
 
         //Clean all related variables with user data and amazon reference id
         $this->_getContainer()->getModule()->cleanAmazonPay();
-        $oConfig = $this->_getContainer()->getConfig();
 
         $sErrorCode = (string)$oConfig->getRequestParameter('bestitAmazonPay4OxidErrorCode');
         $sErrorMessage = (string)$oConfig->getRequestParameter('error');

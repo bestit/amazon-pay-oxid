@@ -5,7 +5,9 @@ require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 use Monolog\Logger;
 
 /**
- * Class bestitAmazonPay4OxidIpnHandlerTest
+ * Unit test for class bestitAmazonPay4OxidIpnHandler
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4OxidIpnHandler
  */
 class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase

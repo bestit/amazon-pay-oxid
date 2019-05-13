@@ -3,7 +3,9 @@
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
 /**
- * Class bestitAmazonPay4OxidOxCmpBasketTest
+ * Unit test for class bestitAmazonPay4Oxid_oxcmp_basket
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4Oxid_oxcmp_basket
  */
 class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
@@ -43,6 +45,69 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
             'bestitAmazonPay4OxidContainer',
             self::callMethod($oBestitAmazonPay4OxidOxCmpBasket, '_getContainer')
         );
+    }
+
+    /**
+     * @group unit
+     * @covers ::processAmazonCallback()
+     * @throws ReflectionException
+     * @throws oxConnectionException
+     * @throws oxSystemComponentException
+     */
+    public function testProcessAmazonCallback()
+    {
+        $oContainer = $this->_getContainerMock();
+
+        $oConfig = $this->_getConfigMock();
+        $oConfig->expects($this->exactly(2))
+            ->method('getRequestParameter')
+            ->with('AuthenticationStatus')
+            ->will($this->onConsecutiveCalls(
+                'Abandoned',
+                'some'
+            ));
+
+        $oConfig->expects($this->once())
+            ->method('getShopSecureHomeUrl')
+            ->will($this->returnValue('shopSecureHomeUrl?'));
+
+        $oContainer->expects($this->exactly(2))
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        // Session
+        $oSession = $this->_getSessionMock();
+        $oSession->expects($this->once())
+            ->method('setVariable')
+            ->with('blAmazonSyncChangePayment', 1);
+
+        $oContainer->expects($this->once())
+            ->method('getSession')
+            ->will($this->returnValue($oSession));
+
+        // Utils
+        $oUtils = $this->_getUtilsMock();
+        $oUtils->expects($this->once())
+            ->method('redirect')
+            ->with('shopSecureHomeUrl?cl=order&action=changePayment', false);
+
+        $oContainer->expects($this->once())
+            ->method('getUtils')
+            ->will($this->returnValue($oUtils));
+
+        $oBestitAmazonPay4OxidOxCmpBasket = $this->getMock(
+            'bestitAmazonPay4Oxid_oxcmp_basket',
+            array('cleanAmazonPay')
+        );
+
+        self::setValue($oBestitAmazonPay4OxidOxCmpBasket, '_oContainer', $oContainer);
+
+        /** @var PHPUnit_Framework_MockObject_MockObject|bestitAmazonPay4Oxid_oxcmp_basket $oBestitAmazonPay4OxidOxCmpBasket */
+        $oBestitAmazonPay4OxidOxCmpBasket->expects($this->once())
+            ->method('cleanAmazonPay');
+
+        $oBestitAmazonPay4OxidOxCmpBasket->processAmazonCallback();
+        $oBestitAmazonPay4OxidOxCmpBasket->processAmazonCallback();
     }
 
     /**

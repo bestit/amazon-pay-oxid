@@ -6,7 +6,9 @@ use AmazonPay\Client;
 use AmazonPay\ResponseParser;
 
 /**
- * Class bestitAmazonPay4OxidClientTest
+ * Unit test for class bestitAmazonPay4OxidClient
+ *
+ * @author best it GmbH & Co. KG <info@bestit-online.de>
  * @coversDefaultClass bestitAmazonPay4OxidClient
  */
 class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
