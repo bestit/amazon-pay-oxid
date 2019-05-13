@@ -83,7 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 - Line endings of files bestitamazonpay4oxidipnhandler.php and bestitamazonpay4oxidloginclient.php
 - Module settings will now be saved even if you deactivate and activate the module again
 
-[Unreleased]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.2...HEAD
+[3.3.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.2...3.3.0
 [3.2.2]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.1...3.2.2
 [3.2.1]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.0...3.2.1
 [3.2.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.1.4...3.2.0
