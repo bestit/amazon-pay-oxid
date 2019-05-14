@@ -118,6 +118,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
         //If basket items price = 0
         if ((string)$oConfig->getRequestParameter('cl') !== 'details'
+            && (string)$oConfig->getRequestParameter('cl') !== 'oxwarticledetails'
             && (int)$this->getSession()->getBasket()->getPrice()->getBruttoPrice() === 0
         ) {
             return $this->_blActive = false;
