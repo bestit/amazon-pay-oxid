@@ -256,7 +256,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         $oPrice = $this->_getPriceMock();
         $oPrice->expects($this->exactly(2))
             ->method('getBruttoPrice')
-            ->will($this->onConsecutiveCalls(0, 1));
+            ->will($this->onConsecutiveCalls(0, 0.3));
 
         $oBasket->expects($this->exactly(2))
             ->method('getPrice')
