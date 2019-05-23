@@ -1,9 +1,28 @@
 <?php
+/**
+ * This Software is the property of best it GmbH & Co. KG and is protected
+ * by copyright law - it is NOT Freeware.
+ *
+ * Any unauthorized use of this software without a valid license is
+ * a violation of the license agreement and will be prosecuted by
+ * civil and criminal law.
+ *
+ * bestitamazonpay4oxid_init.php
+ *
+ * The bestitAmazonPay4Oxid_init class file.
+ *
+ * PHP versions 5
+ *
+ * @category  bestitAmazonPay4Oxid
+ * @package   bestitAmazonPay4Oxid
+ * @author    best it GmbH & Co. KG - Alexander Schneider <schneider@bestit-online.de>
+ * @copyright 2017 best it GmbH & Co. KG
+ * @version   GIT: $Id$
+ * @link      http://www.bestit-online.de
+ */
 
 /**
- * Module activation and deactivation tasks
- *
- * @author best it GmbH & Co. KG <info@bestit-online.de>
+ * Class bestitAmazonPay4Oxid_init
  */
 class bestitAmazonPay4Oxid_init
 {
@@ -329,8 +348,8 @@ class bestitAmazonPay4Oxid_init
         $aVersions = (array)self::_getConfig()->getConfigParam('aModuleVersions');
 
         $aPossibleModuleNames = array(
-            'jagAmazonPayment4Oxid',
-            'bestitAmazonPay4Oxid'
+            'bestitAmazonPay4Oxid',
+            'jagAmazonPayment4Oxid'
         );
 
         foreach ($aPossibleModuleNames as $sPossibleModuleName) {

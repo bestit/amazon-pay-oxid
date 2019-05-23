@@ -19,7 +19,7 @@
 
 /*OLD OXID does not have .hidden class in CSS*/
 #payment .hidden{
-    //display:none;
+    display:none;
 }
 
 #payment #payWithAmazonDiv {
