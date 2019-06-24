@@ -54,6 +54,11 @@ if [[ ${OXID_VERSION} == 5 ]]; then
 else
     git clone --branch b-${OXID_VERSION}.x --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
 
+    if [[ ${OXID_VERSION} == 6.0 ]]; then
+        echo "=== Replace coding-standards-wrapper dev-master with release v1.0.0 ==="
+        composer require oxid-esales/coding-standards-wrapper:^v1.0.0 --dev --no-update -d ${BASE_DIR}
+    fi
+
     SHOP_PATH='source'
     SHOP_TESTS_PATH='tests'
     MODULES_PATH=''
