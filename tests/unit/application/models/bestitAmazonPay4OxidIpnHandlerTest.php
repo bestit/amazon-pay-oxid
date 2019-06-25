@@ -31,6 +31,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
         Logger $oLogger
     ) {
         $oBestitAmazonPay4OxidIpnHandler = new bestitAmazonPay4OxidIpnHandler();
+        $oBestitAmazonPay4OxidIpnHandler->setLogger($oLogger);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oClientObject', $oClient);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oIpnLogger', $oLogger);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oConfigObject', $oConfig);
@@ -47,6 +48,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidIpnHandler = new bestitAmazonPay4OxidIpnHandler();
+        $oBestitAmazonPay4OxidIpnHandler->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidIpnHandler', $oBestitAmazonPay4OxidIpnHandler);
         self::assertInstanceOf('bestitAmazonPay4OxidIpnHandler', bestitAmazonPay4OxidIpnHandler::getInstance());
     }
