@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID oxEmail model
  *
@@ -11,6 +13,21 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_oxEmail constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -26,14 +43,14 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
 
         return $this->_oContainer;
     }
-    
+
     /**
      * Mail template
      *
      * @var string
      */
     protected $_sInvalidPaymentEmailTemplate = "bestitamazonpay4oxid_invalidpayment.tpl";
-    
+
     /**
      * Mail template
      *
@@ -96,6 +113,11 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
 
         $this->setRecipient($oOrder->getFieldData('oxbillemail'), $sFullName);
         $this->setReplyTo($oShop->getFieldData('oxorderemail'), $oShop->getFieldData('oxname'));
+
+        $this->_oLogger->debug(
+            'Send amazon pay mail',
+            array('template' => $sTemplate, 'subject' => $sSubject)
+        );
 
         return $this->send();
     }

@@ -4,6 +4,7 @@ use AmazonPay\Client;
 use AmazonPay\ResponseParser;
 use AmazonPay\IpnHandler;
 use Monolog\Logger;
+use Psr\Log\NullLogger;
 
 /**
  * Abstract class oxUnitTestCase to provide some functions needed on module unit tests
@@ -133,7 +134,12 @@ abstract class bestitAmazon4OxidUnitTestCase extends oxUnitTestCase
      */
     protected function _getContainerMock()
     {
-        return $this->getMock('bestitAmazonPay4OxidContainer');
+        $container = $this->getMock('bestitAmazonPay4OxidContainer');
+        $container
+            ->method('getLogger')
+            ->willReturn(new NullLogger());
+
+        return $container;
     }
 
     /**

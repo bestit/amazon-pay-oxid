@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 
@@ -39,6 +41,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
         bestitAmazonPay4OxidObjectFactory $objectFactory
     ) {
         $oBestitAmazonPay4OxidLoginClient = new bestitAmazonPay4OxidLoginClient();
+        $oBestitAmazonPay4OxidLoginClient->setLogger(new NullLogger());
         self::setValue($oBestitAmazonPay4OxidLoginClient, '_oActiveUserObject', $oUser);
         self::setValue($oBestitAmazonPay4OxidLoginClient, '_oClientObject', $oClient);
         self::setValue($oBestitAmazonPay4OxidLoginClient, '_oModuleObject', $oModule);
@@ -61,6 +64,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidLoginClient = new bestitAmazonPay4OxidLoginClient();
+        $oBestitAmazonPay4OxidLoginClient->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidLoginClient', $oBestitAmazonPay4OxidLoginClient);
         self::assertInstanceOf('bestitAmazonPay4OxidLoginClient', bestitAmazonPay4OxidLoginClient::getInstance());
     }
@@ -73,12 +77,15 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     public function testIsActive()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(9))
+        $oConfig->expects($this->exactly(12))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blAmazonLoginActive'),
+                array('sAmazonLoginClientId'),
+                array('sAmazonSellerId'),
                 array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
+                array('sAmazonSellerId'),
                 array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
                 array('sAmazonSellerId'),
@@ -88,8 +95,11 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
             )
             ->will($this->onConsecutiveCalls(
                 false,
+                'clientId',
+                'sellerId',
                 true,
                 '',
+                'sellerId',
                 true,
                 'clientId',
                 '',
