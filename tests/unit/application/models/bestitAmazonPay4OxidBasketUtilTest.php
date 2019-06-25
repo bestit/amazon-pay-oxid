@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 /**
@@ -24,6 +26,7 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
         bestitAmazonPay4OxidObjectFactory $oObjectFactory
     ) {
         $oBestitAmazonPay4OxidBasketUtil = new bestitAmazonPay4OxidBasketUtil();
+        $oBestitAmazonPay4OxidBasketUtil->setLogger(new NullLogger());
         self::setValue($oBestitAmazonPay4OxidBasketUtil, '_oSessionObject', $oSession);
         self::setValue($oBestitAmazonPay4OxidBasketUtil, '_oLanguageObject', $oLanguage);
         self::setValue($oBestitAmazonPay4OxidBasketUtil, '_oObjectFactory', $oObjectFactory);
@@ -37,6 +40,7 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidBasketUtil = new bestitAmazonPay4OxidBasketUtil();
+        $oBestitAmazonPay4OxidBasketUtil->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidBasketUtil', $oBestitAmazonPay4OxidBasketUtil);
     }
 
@@ -77,6 +81,7 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
             $this->_getLanguageMock(),
             $oObjectFactory
         );
+        $oBestitAmazonPay4OxidBasketUtil->setLogger(new NullLogger());
 
         $oBestitAmazonPay4OxidBasketUtil->setQuickCheckoutBasket();
     }
@@ -124,6 +129,7 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
             $oLanguage,
             $oObjectFactory
         );
+        $oBestitAmazonPay4OxidBasketUtil->setLogger(new NullLogger());
 
         $oBestitAmazonPay4OxidBasketUtil->restoreQuickCheckoutBasket();
         $oBestitAmazonPay4OxidBasketUtil->restoreQuickCheckoutBasket();
@@ -172,6 +178,7 @@ class bestitAmazonPay4OxidBasketUtilTest extends bestitAmazon4OxidUnitTestCase
             $this->_getLanguageMock(),
             $this->_getObjectFactoryMock()
         );
+        $oBestitAmazonPay4OxidBasketUtil->setLogger(new NullLogger());
 
         self::assertEquals(
             '382e6274a71c1ab8d5734d158eec4de3',

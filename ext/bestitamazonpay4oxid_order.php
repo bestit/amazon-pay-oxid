@@ -36,6 +36,11 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
      */
     protected function _setErrorAndRedirect($sError, $sRedirectUrl)
     {
+        $this->_getContainer()->getLogger()->debug(
+            'Redirect customer',
+            array('error' => $sError, 'redirectUrl' => $sRedirectUrl)
+        );
+
         /** @var oxUserException $oEx */
         $oEx = $this->_getContainer()->getObjectFactory()->createOxidObject('oxUserException');
         $oEx->setMessage($sError);
@@ -60,6 +65,11 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             $aParsedData = $this->_getContainer()
                 ->getAddressUtil()
                 ->parseAmazonAddress($oDetails->BillingAddress->PhysicalAddress);
+
+            $this->_getContainer()->getLogger()->debug(
+                'Amazon billing address fetched',
+                array('fetchedAddress' => $aParsedData)
+            );
 
             return array(
                 'oxfname' => $aParsedData['FirstName'],
@@ -104,10 +114,19 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     {
         $billingAddress = $this->getAmazonBillingAddress();
 
+        $this->_getContainer()->getLogger()->debug(
+            'Check if user should be updated with amazon data',
+            array('emptyBillingAddress' => $billingAddress === null)
+        );
+
         if ($billingAddress !== null) {
             $oUser = $this->getUser();
             $oUser->assign($billingAddress);
             $oUser->save();
+
+            $this->_getContainer()->getLogger()->debug(
+                'Billingaddress for user updated'
+            );
         }
     }
 
@@ -140,11 +159,20 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
         $oPayment = $this->getPayment();
         $oConfig = $this->_getContainer()->getConfig();
 
+        $this->_getContainer()->getLogger()->debug(
+            'Try to render order page'
+        );
+
         //payment is set and not oxempty if amazon selected?
         if ($oPayment !== false) {
             $sPaymentId = (string)$this->getPayment()->getId();
             $sAmazonOrderReferenceId = (string)$this->_getContainer()
                 ->getSession()->getVariable('amazonOrderReferenceId');
+
+            $this->_getContainer()->getLogger()->debug(
+                'Render amazon pay order page',
+                array('paymentId' => $sPaymentId, 'referenceId' => $sAmazonOrderReferenceId)
+            );
 
             if ($sAmazonOrderReferenceId !== '') {
                 if ($sPaymentId === 'oxempty') {
@@ -158,6 +186,10 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                     && (string)$oConfig->getRequestParameter('fnc') !== 'execute'
                     && (string)$oConfig->getRequestParameter('action') !== 'changePayment'
                 ) {
+                    $this->_getContainer()->getLogger()->debug(
+                        'Send Order reference details to Amazon'
+                    );
+
                     //Send Order reference details to Amazon if payment id is bestitamazon and amazonreferenceid exists
                     //Send SetOrderReferenceDetails request
                     $oData = $this->_getContainer()->getClient()->setOrderReferenceDetails($this->getBasket());
@@ -168,6 +200,10 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                     if ($oReferenceDetails !== null
                         && (string)$oReferenceDetails->Constraints->Constraint->ConstraintID === 'PaymentMethodNotAllowed'
                     ) {
+                        $this->_getContainer()->getLogger()->debug(
+                            'Selected payment method in the widget is not allowed for the amazon pay process'
+                        );
+
                         $this->_setErrorAndRedirect(
                             'BESTITAMAZONPAY_CHANGE_PAYMENT',
                             $oConfig->getShopSecureHomeUrl().'cl=payment'
@@ -187,6 +223,11 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
                                 .'&error='.$oData->Error->Message;
                         }
 
+                        $this->_getContainer()->getLogger()->debug(
+                            'Error at sending oro details from amazon, redirect user to error page',
+                            array('redirectParams' => $sAdditionalParameters)
+                        );
+
                         $this->_getContainer()->getUtils()->redirect(
                             $oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay'.$sAdditionalParameters,
                             false
@@ -197,6 +238,11 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             } elseif ($sPaymentId === 'bestitamazon') {
                 // If selected payment was bestitamazon but there's no amazonreferenceid,
                 // redirect back to second step and show message
+
+                $this->_getContainer()->getLogger()->debug(
+                    'No reference id for selected amazon payment payment found'
+                );
+
                 $this->_setErrorAndRedirect(
                     'BESTITAMAZONPAY_CHANGE_PAYMENT',
                     $oConfig->getShopSecureHomeUrl().'cl=basket'
@@ -238,6 +284,10 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
         $oSession = $oContainer->getSession();
         $sSecureUrl = $oConfig->getShopSecureHomeUrl();
         $sFailureUrl = $sSecureUrl . 'cl=user&fnc=processAmazonCallback&cancelOrderReference=1';
+
+        $this->_getContainer()->getLogger()->debug(
+            'Try to confirm amazon payment order reference'
+        );
 
         if ($oSession->checkSessionChallenge()) {
             $oBasket = $oSession->getBasket();

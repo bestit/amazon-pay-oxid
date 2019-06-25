@@ -97,6 +97,11 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
         $this->setRecipient($oOrder->getFieldData('oxbillemail'), $sFullName);
         $this->setReplyTo($oShop->getFieldData('oxorderemail'), $oShop->getFieldData('oxname'));
 
+        $this->_getContainer()->getLogger()->debug(
+            'Send amazon pay mail',
+            array('template' => $sTemplate, 'subject' => $sSubject)
+        );
+
         return $this->send();
     }
 

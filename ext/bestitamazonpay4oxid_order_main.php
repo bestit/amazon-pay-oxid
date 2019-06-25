@@ -40,6 +40,10 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
         if ($oOrder->load($this->getEditObjectId()) === true
             && $oOrder->getFieldData('oxPaymentType') === 'bestitamazon'
         ) {
+            $this->_getContainer()->getLogger()->debug(
+                'Save amazon pay capture for order',
+                array('orderNumber' => $oOrder->getFieldData('oxordernr'))
+            );
             $this->_getContainer()->getClient()->saveCapture($oOrder);
         }
     }

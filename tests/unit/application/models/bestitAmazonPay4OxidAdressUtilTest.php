@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 /**
@@ -21,6 +23,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     private function _getObject(oxConfig $oConfig, DatabaseInterface $oDatabase, oxLang $oLanguage)
     {
         $oBestitAmazonPay4OxidAddressUtil = new bestitAmazonPay4OxidAddressUtil();
+        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
         self::setValue($oBestitAmazonPay4OxidAddressUtil, '_oConfigObject', $oConfig);
         self::setValue($oBestitAmazonPay4OxidAddressUtil, '_oDatabaseObject', $oDatabase);
         self::setValue($oBestitAmazonPay4OxidAddressUtil, '_oLanguageObject', $oLanguage);
@@ -34,6 +37,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidAddressUtil = new bestitAmazonPay4OxidAddressUtil();
+        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidAddressUtil', $oBestitAmazonPay4OxidAddressUtil);
     }
 
@@ -93,6 +97,8 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             $oDatabase,
             $oLanguage
         );
+
+        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
 
         $oAmazonAddress = new stdClass();
         $oAmazonAddress->Name = 'FName MName LName';
@@ -205,6 +211,8 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             $this->_getLanguageMock()
         );
 
+        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
+
         // Test german address
         $aTestResult = $this->callMethod(
             $oBestitAmazonPay4OxidAddressUtil,
@@ -301,6 +309,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             $this->_getDatabaseMock(),
             $oLanguage
         );
+        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
 
         self::assertEquals('string', $oBestitAmazonPay4OxidAddressUtil->encodeString('string'));
         self::assertEquals('EUR', $oBestitAmazonPay4OxidAddressUtil->encodeString('€'));

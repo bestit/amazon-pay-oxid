@@ -43,7 +43,12 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
         $oContainer = $this->_getContainer();
         $oConfig = $oContainer->getConfig();
 
-        if ((string) $oConfig->getRequestParameter('AuthenticationStatus') === 'Abandoned') {
+        $this->_getContainer()->getLogger()->debug(
+            'Process amazon callback',
+            array('status' => $authStatus = (string) $oConfig->getRequestParameter('AuthenticationStatus'))
+        );
+
+        if ($authStatus === 'Abandoned') {
             $oContainer->getSession()->setVariable('blAmazonSyncChangePayment', 1);
             $oContainer->getUtils()->redirect($oConfig->getShopSecureHomeUrl().'cl=order&action=changePayment', false);
             return;
@@ -65,7 +70,12 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     {
         $oConfig = $this->_getContainer()->getConfig();
 
-        if ($cancelOrderReference === true || (bool) $oConfig->getRequestParameter('cancelOrderReference')) {
+        $this->_getContainer()->getLogger()->debug(
+            'Clean amazon pay',
+            array('withCancel' => $cancelOrderReferenceRequest = (bool) $oConfig->getRequestParameter('cancelOrderReference'))
+        );
+
+        if ($cancelOrderReference === true || $cancelOrderReferenceRequest) {
             $this->_getContainer()->getClient()->cancelOrderReference(
                 null,
                 array('amazon_order_reference_id' => $this->_getContainer()

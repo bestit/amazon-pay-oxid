@@ -1,12 +1,21 @@
 <?php
 
+use Monolog\Logger;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+
 /**
  * Container for needed initialized objects
  *
  * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
-class bestitAmazonPay4OxidContainer
+class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
 {
+    /**
+     * Log directory
+     */
+    const LOG_DIR = 'log/bestitamazon/';
+
     /**
      * @var null|oxUser
      */
@@ -88,6 +97,21 @@ class bestitAmazonPay4OxidContainer
     protected $_oBasketUtil = null;
 
     /**
+     * @var null|Logger
+     */
+    protected $_oLogger;
+
+    /**
+     * Sets a logger instance on the object.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->_oLogger = $logger;
+    }
+
+    /**
      * Returns the active user object.
      *
      * @return oxUser|bool
@@ -131,6 +155,26 @@ class bestitAmazonPay4OxidContainer
         }
 
         return $this->_oClientObject;
+    }
+
+    /**
+     * Get the logger
+     *
+     * @param  string $name The name of the logger
+     *
+     * @return Logger
+     */
+    public function getLogger($name = 'AmazonPay')
+    {
+        // Cache the first logger init call, this allows us to use the same logger for the whole request context
+        if ($this->_oLogger === null) {
+            $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
+            $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
+            $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
+            $this->_oLogger = new bestitamazonpay4oxidlogger($sLogFile, $logLevel, $logActive, $name);
+        }
+
+        return $this->_oLogger;
     }
 
     /**

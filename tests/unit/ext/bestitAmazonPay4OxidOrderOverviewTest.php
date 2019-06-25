@@ -63,10 +63,10 @@ class bestitAmazonPay4OxidOrderOverviewTest extends bestitAmazon4OxidUnitTestCas
             ->with(null)
             ->will($this->onConsecutiveCalls(false, true, true));
 
-        $oOrder->expects($this->exactly(2))
+        $oOrder->expects($this->exactly(3))
             ->method('getFieldData')
-            ->with('oxPaymentType')
-            ->will($this->onConsecutiveCalls('some', 'bestitamazon'));
+            ->withConsecutive(array('oxPaymentType'),array('oxPaymentType'), array('oxordernr'))
+            ->will($this->onConsecutiveCalls('some', 'bestitamazon', 'number'));
 
         $oObjectFactory = $this->_getObjectFactoryMock();
         $oObjectFactory->expects($this->exactly(3))

@@ -36,7 +36,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.3.1',
+    'version' => '3.4.0',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -66,6 +66,7 @@ $aModule = array(
         'bestitamazonpay4oxidbasketutil' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidbasketutil.php',
         'bestitamazonpay4oxidclient' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidclient.php',
         'bestitamazonpay4oxidcontainer' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidcontainer.php',
+        'bestitamazonpay4oxidlogger' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidlogger.php',
         'bestitamazonpay4oxidipnhandler' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidipnhandler.php',
         'bestitamazonpay4oxidloginclient' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidloginclient.php',
         'bestitamazonpay4oxidobjectfactory' => 'bestit/amazonpay4oxid/application/models/bestitamazonpay4oxidobjectfactory.php'
@@ -206,6 +207,13 @@ $aModule = array(
             'type' => 'bool',
             'value' => 'true',
             'position' => '5'
+        ),
+        array(
+            'group' => 'bestitAmazonPay4OxidSettings',
+            'name' => 'blAmazonLoggingLevel',
+            'type' => 'select',
+            'value' => 'error',
+            'constraints' => 'debug|error'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',

@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 
@@ -27,6 +29,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         oxSession $oSession, bestitAmazonPay4OxidObjectFactory $oObjectFactory
     ) {
         $oBestitAmazonPay4Oxid = new bestitAmazonPay4Oxid();
+        $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
         self::setValue($oBestitAmazonPay4Oxid, '_oActiveUserObject', $oUser);
         self::setValue($oBestitAmazonPay4Oxid, '_oConfigObject', $oConfig);
         self::setValue($oBestitAmazonPay4Oxid, '_oDatabaseObject', $oDatabase);
@@ -42,6 +45,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4Oxid = new bestitAmazonPay4Oxid();
+        $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4Oxid', $oBestitAmazonPay4Oxid);
     }
 
@@ -115,6 +119,8 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             $oSession,
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
 
         self::assertFalse($oBestitAmazonPay4Oxid->getIsSelectedCurrencyAvailable());
         self::assertFalse($oBestitAmazonPay4Oxid->getIsSelectedCurrencyAvailable());
@@ -275,6 +281,8 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
+
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
         self::assertAttributeEquals(false, '_blActive', $oBestitAmazonPay4Oxid);
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
@@ -385,6 +393,8 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
             $oSession,
             $oObjectFactory
         );
+
+        $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
 
         $oBestitAmazonPay4Oxid->cleanAmazonPay();
         self::setValue($oBestitAmazonPay4Oxid, '_oActiveUserObject', $oUser);

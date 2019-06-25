@@ -75,6 +75,11 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
         $aResult['Street'] = isset($aAddress['Name']) === true ? $aAddress['Name'] : '';
         $aResult['StreetNr'] = isset($aAddress['Number']) === true ? $aAddress['Number'] : '';
         $aResult['AddInfo'] = isset($aAddress['AddInfo']) === true ? $aAddress['AddInfo'] : '';
+
+        $this->getLogger()->debug(
+            'Amazon address parsed',
+            array('result' => $aResult, 'amazonAddress' => $aAmazonAddresses)
+        );
     }
 
     /**

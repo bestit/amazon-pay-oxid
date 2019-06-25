@@ -7,7 +7,6 @@ if (file_exists($sVendorAutoloader) === true) {
 }
 
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 /**
  * Model for IPN handling
@@ -17,19 +16,16 @@ use Monolog\Handler\StreamHandler;
 class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
 {
     /**
-     * Log directory
+     * Name of the ipn logger
+     *
+     * @var string
      */
-    const LOG_DIR = 'log/bestitamazon/';
+    const IPN_LOGGER_NAME = 'AmazonPayIPN';
 
     /**
      * @var bestitAmazonPay4OxidIpnHandler
      */
     private static $_instance = null;
-
-    /**
-     * @var null|Logger
-     */
-    protected $_oLogger = null;
 
     /**
      * Singleton instance
@@ -47,40 +43,17 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
     }
 
     /**
-     * Returns the logger.
-     *
-     * @return Logger
-     * @throws Exception
-     */
-    protected function _getLogger()
-    {
-        if ($this->_oLogger === null) {
-            $this->_oLogger = new Logger('AmazonPayment');
-            $sLogFile = $this->getConfig()->getConfigParam('sShopDir').self::LOG_DIR.'ipn.log';
-            $this->_oLogger->pushHandler(new StreamHandler($sLogFile));
-        }
-
-        return $this->_oLogger;
-    }
-
-    /**
      * Method logs IPN response to text file
      *
      * @param string $sLevel
      * @param string $sMessage
      * @param array  $oIpnMessage
      * @throws Exception
-     *
-     * @return void
      */
     public function logIPNResponse($sLevel, $sMessage, $oIpnMessage = null)
     {
-        if ((bool)$this->getConfig()->getConfigParam('blAmazonLogging') !== true) {
-            return;
-        }
-
         $aContext = ($oIpnMessage !== null) ? array('ipnMessage' => $oIpnMessage) : array();
-        $this->_getLogger()->log($sLevel, $sMessage, $aContext);
+        $this->getLogger(self::IPN_LOGGER_NAME)->log($sLevel, $sMessage, $aContext);
     }
 
     /**
@@ -108,7 +81,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             }
 
             $ipnHandler = $this->getObjectFactory()->createIpnHandler($aHeaders, $sBody);
-            $ipnHandler->setLogger($this->_getLogger());
+            $ipnHandler->setLogger($this->getLogger(self::IPN_LOGGER_NAME));
             return json_decode($ipnHandler->toJson());
         } catch (Exception $oException) {
             $this->logIPNResponse(Logger::ERROR, 'Unable to parse ipn message');
@@ -137,8 +110,11 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
         $oOrder = $this->getObjectFactory()->createOxidObject('oxOrder');
 
         if ($oOrder->load($sOrderId) === true) {
+            $this->getLogger(self::IPN_LOGGER_NAME)->info('Order by id found', array('id' => $sId));
             return $oOrder;
         }
+
+        $this->getLogger(self::IPN_LOGGER_NAME)->info('No order by id found', array('id' => $sId));
 
         return false;
     }
@@ -232,6 +208,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             LIMIT 1";
         $iMatches = (int)$this->getDatabase()->getOne($sSql);
 
+        $this->getLogger(self::IPN_LOGGER_NAME)->debug('Refunds fetched', array('matches' => $iMatches));
+
         //Update Refund info
         if ($iMatches > 0 && isset($oData->RefundDetails->RefundStatus->State)) {
             $this->getClient()->updateRefund(
@@ -257,11 +235,14 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      */
     public function processIPNAction($sBody)
     {
+        $this->getLogger(self::IPN_LOGGER_NAME)->info('Process incoming IPN message');
+
         $oMessage = $this->_getMessage($sBody);
 
         if (isset($oMessage->NotificationData)) {
             $oData = $oMessage->NotificationData;
 
+            $this->getLogger(self::IPN_LOGGER_NAME)->info(sprintf('Handle %s message', $oMessage->NotificationType));
             switch ($oMessage->NotificationType) {
                 case 'OrderReferenceNotification':
                     return $this->_orderReferenceUpdate($oData);
