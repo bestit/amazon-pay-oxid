@@ -20,4 +20,3 @@ class bestitAmazonPay4Oxid_oxSession extends bestitAmazonPay4Oxid_oxSession_pare
         return parent::_getRequireSessionWithParams();
     }
 }
-

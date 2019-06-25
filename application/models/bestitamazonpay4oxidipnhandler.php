@@ -3,7 +3,7 @@
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
 if (file_exists($sVendorAutoloader) === true) {
-    require_once(realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php');
+    include_once realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 }
 
 use Monolog\Logger;
@@ -70,6 +70,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      * @param string $sMessage
      * @param array  $oIpnMessage
      * @throws Exception
+     *
+     * @return void
      */
     public function logIPNResponse($sLevel, $sMessage, $oIpnMessage = null)
     {

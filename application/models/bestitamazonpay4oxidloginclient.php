@@ -100,7 +100,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Check if user with Amazon User Id exists
      *
-     * @param stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return boolean
      * @throws oxConnectionException
@@ -119,7 +119,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Check if user with Email from Amazon exists
      *
-     * @var stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return array
      * @throws oxConnectionException
@@ -137,7 +137,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Create new oxid user with details from Amazon
      *
-     * @var stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return boolean
      * @throws oxSystemComponentException
@@ -177,7 +177,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Delete OXID user by ID
      *
-     * @var string $sId
+     * @param  string $sId The id of the user
      *
      * @return object
      * @throws oxConnectionException

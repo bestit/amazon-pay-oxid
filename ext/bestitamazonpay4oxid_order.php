@@ -225,7 +225,8 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
     }
 
     /**
-     * @return void
+     * Confirm amazon order reference
+     *
      * @throws oxSystemComponentException
      * @throws Exception
      */

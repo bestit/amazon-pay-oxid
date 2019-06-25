@@ -28,5 +28,8 @@
   },
   "autoload": {
     "exclude-from-classmap": ["/vendor/phpunit/", "/vendor/sebastian/"]
+  },
+  "require-dev": {
+    "oxid-esales/coding-standards": "^3.0"
   }
 }

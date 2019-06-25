@@ -3,7 +3,7 @@
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
 if (file_exists($sVendorAutoloader) === true) {
-    require_once(realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php');
+    include_once realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 }
 
 use AmazonPay\Client;
@@ -163,6 +163,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      *
      * @param string $sMethod
      * @param array  $aParams
+     *
+     * @return void
      */
     protected function _addSandboxSimulationParams($sMethod, array &$aParams)
     {
@@ -519,11 +521,12 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon CloseOrderReference method
      *
-     * @param oxOrder $oOrder             OXID Order object
-     * @param array   $aRequestParameters Custom parameters to send
+     * @param oxOrder $oOrder              OXID Order object
+     * @param array   $aRequestParameters  Custom parameters to send
+     * @param bool    $blUpdateOrderStatus Should the oder status be updated?
      *
-     * @return stdClass
      * @throws Exception
+     * @return stdClass
      */
     public function closeOrderReference($oOrder = null, $aRequestParameters = array(), $blUpdateOrderStatus = true)
     {
@@ -794,14 +797,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon Refund method
      *
-     * @param oxOrder $oOrder             OXID Order object
      * @param float   $fPrice             Price to refund
+     * @param oxOrder $oOrder             OXID Order object
      * @param array   $aRequestParameters Custom parameters to send
      *
      * @return stdClass
      * @throws Exception
      */
-    public function refund($oOrder = null, $fPrice, $aRequestParameters = array())
+    public function refund($fPrice, $oOrder = null, $aRequestParameters = array())
     {
         //Refund ID
         if ($oOrder !== null) {
@@ -851,9 +854,10 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Updates the refund status.
      *
-     * @param string $sAmazonRefundId
-     * @param string $sState
-     * @param string $sError
+     * @param string $sAmazonRefundId The amazon refund id
+     * @param string $sState          The state
+     * @param string $sError          The error
+     *
      * @throws oxConnectionException
      */
     public function updateRefund($sAmazonRefundId, $sState, $sError = '')
@@ -871,7 +875,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon GetRefundDetails method
      *
-     * @var string $sAmazonRefundId
+     * @param  string $sAmazonRefundId The amazon refund id
      *
      * @return stdClass
      * @throws Exception

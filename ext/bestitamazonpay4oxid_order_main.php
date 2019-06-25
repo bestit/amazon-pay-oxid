@@ -44,4 +44,3 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
         }
     }
 }
-

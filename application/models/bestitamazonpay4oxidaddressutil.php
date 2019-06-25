@@ -10,7 +10,7 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
     /**
      * Returns parsed Street name and Street number in array
      *
-     * @param string $sString Full address
+     * @param string $sString         Full address
      * @param string $sIsoCountryCode ISO2 code of country of address
      *
      * @return string

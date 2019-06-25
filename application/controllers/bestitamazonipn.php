@@ -3,7 +3,7 @@
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
 if (file_exists($sVendorAutoloader) === true) {
-    require_once(realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php');
+    include_once realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 }
 
 use Monolog\Logger;

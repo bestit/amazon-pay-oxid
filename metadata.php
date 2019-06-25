@@ -8,7 +8,7 @@
 
 $sMetadataVersion = '1.1';
 
-require_once(dirname(__FILE__).'/application/controllers/admin/bestitamazonpay4oxid_init.php');
+require_once dirname(__FILE__).'/application/controllers/admin/bestitamazonpay4oxid_init.php';
 $sCurrentVersion = (isset($blPreventVersionCheck) && $blPreventVersionCheck === true) ?
     null : bestitAmazonPay4Oxid_init::getCurrentVersion();
 

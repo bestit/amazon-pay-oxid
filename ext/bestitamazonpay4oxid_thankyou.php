@@ -53,11 +53,10 @@ class bestitAmazonPay4Oxid_thankyou extends bestitAmazonPay4Oxid_thankyou_parent
     }
 
     /**
-     * @return void
+     * Init the parent
      */
     protected function _parentInit()
     {
         parent::init();
     }
 }
-

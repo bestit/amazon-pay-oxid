@@ -43,6 +43,4 @@ class bestitAmazonPay4Oxid_order_overview extends bestitAmazonPay4Oxid_order_ove
             $this->_getContainer()->getClient()->saveCapture($oOrder);
         }
     }
-
 }
-

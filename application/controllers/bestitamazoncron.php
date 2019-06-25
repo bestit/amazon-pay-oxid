@@ -35,7 +35,7 @@ class bestitAmazonCron extends oxUBase
     /**
      * Adds the text to the message.
      *
-     * @param $sText
+     * @param string $sText The text string
      */
     protected function _addToMessages($sText)
     {
@@ -227,6 +227,8 @@ class bestitAmazonCron extends oxUBase
      * The render function
      * @throws Exception
      * @throws oxSystemComponentException
+     *
+     * @return void
      */
     public function render()
     {
@@ -329,6 +331,8 @@ class bestitAmazonCron extends oxUBase
      * index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&oxid=87feca21ce31c34f0d3dceb8197a2375
      * index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&aParams[AmazonOrderReferenceId]=51fd6a7381e7a0220b0f166fe331e420&aParams[AmazonAuthorizationId]=S02-8774768-9373076-A060413
      * @throws oxSystemComponentException
+     *
+     * @return void
      */
     public function amazonCall()
     {
