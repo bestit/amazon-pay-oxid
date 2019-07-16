@@ -124,10 +124,6 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     {
         $sClass = $this->_getContainer()->getConfig()->getRequestParameter('cl');
 
-        $this->_getContainer()->getLogger()->debug(
-            'Render basket page'
-        );
-
         //If user was let to change payment, don't let him do other shit, just payment selection
         if ($sClass !== 'order'
             && $sClass !== 'thankyou'

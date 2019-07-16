@@ -1,16 +1,16 @@
 <?php
 
-use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Monolog\Processor\MemoryPeakUsageProcessor;
-use Monolog\Processor\UidProcessor;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 /**
  * Container for needed initialized objects
  *
  * @author best it GmbH & Co. KG <info@bestit-online.de>
  */
-class bestitAmazonPay4OxidContainer
+class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
 {
     /**
      * Log directory
@@ -103,6 +103,18 @@ class bestitAmazonPay4OxidContainer
     protected $_oLogger;
 
     /**
+     * Sets a logger instance on the object.
+     *
+     * @param LoggerInterface $logger
+     *
+     * @return void
+     */
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->_oLogger = $logger;
+    }
+
+    /**
      * Returns the active user object.
      *
      * @return oxUser|bool
@@ -150,6 +162,8 @@ class bestitAmazonPay4OxidContainer
 
     /**
      * Get the logger
+     *
+     * @var string $name The name of the logger
      *
      * @return Logger
      */

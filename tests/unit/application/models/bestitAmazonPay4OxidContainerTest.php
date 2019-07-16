@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 /**
@@ -16,6 +18,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidContainer = new bestitAmazonPay4OxidContainer();
+        $oBestitAmazonPay4OxidContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidContainer', $oBestitAmazonPay4OxidContainer);
     }
 
@@ -38,6 +41,8 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue($oUser));
 
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
+
         self::setValue($oContainer, '_oObjectFactory', $oObjectFactory);
 
         self::assertFalse($oContainer->getActiveUser());
@@ -54,6 +59,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetAddressUtil()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidAddressUtil', $oContainer->getAddressUtil());
         self::assertAttributeNotEmpty('_oAddressUtilObject', $oContainer);
     }
@@ -65,6 +71,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetClient()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidClient', $oContainer->getClient());
         self::assertAttributeNotEmpty('_oClientObject', $oContainer);
     }
@@ -76,6 +83,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetConfig()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxConfig', $oContainer->getConfig());
         self::assertAttributeNotEmpty('_oConfigObject', $oContainer);
     }
@@ -88,6 +96,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetDatabase()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('DatabaseInterface', $oContainer->getDatabase());
         self::assertAttributeNotEmpty('_oDatabaseObject', $oContainer);
     }
@@ -99,6 +108,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetIpnHandler()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidIpnHandler', $oContainer->getIpnHandler());
         self::assertAttributeNotEmpty('_oIpnHandlerObject', $oContainer);
     }
@@ -110,6 +120,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetLanguage()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxLang', $oContainer->getLanguage());
         self::assertAttributeNotEmpty('_oLanguageObject', $oContainer);
     }
@@ -121,6 +132,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetLoginClient()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidLoginClient', $oContainer->getLoginClient());
         self::assertAttributeNotEmpty('_oLoginClientObject', $oContainer);
     }
@@ -132,6 +144,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetModule()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4Oxid', $oContainer->getModule());
         self::assertAttributeNotEmpty('_oModuleObject', $oContainer);
     }
@@ -143,6 +156,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetObjectFactory()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidObjectFactory', $oContainer->getObjectFactory());
         self::assertAttributeNotEmpty('_oObjectFactory', $oContainer);
     }
@@ -154,6 +168,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetSession()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxSession', $oContainer->getSession());
         self::assertAttributeNotEmpty('_oSessionObject', $oContainer);
     }
@@ -165,6 +180,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetUtilsDate()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxUtilsDate', $oContainer->getUtilsDate());
         self::assertAttributeNotEmpty('_oUtilsDateObject', $oContainer);
     }
@@ -176,6 +192,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetUtilsServer()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxUtilsServer', $oContainer->getUtilsServer());
         self::assertAttributeNotEmpty('_oUtilsServerObject', $oContainer);
     }
@@ -187,6 +204,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetUtils()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxUtils', $oContainer->getUtils());
         self::assertAttributeNotEmpty('_oUtilsObject', $oContainer);
     }
@@ -198,6 +216,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetUtilsView()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('oxUtilsView', $oContainer->getUtilsView());
         self::assertAttributeNotEmpty('_oUtilsViewObject', $oContainer);
     }
@@ -209,6 +228,7 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     public function testGetBasketUtil()
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
+        $oContainer->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidBasketUtil', $oContainer->getBasketUtil());
         self::assertAttributeNotEmpty('_oBasketUtil', $oContainer);
     }
