@@ -42,6 +42,8 @@ class bestitAmazonIpn extends oxUBase
             $this->_oContainer = oxNew('bestitAmazonPay4OxidContainer');
         }
 
+
+
         return $this->_oContainer;
     }
 

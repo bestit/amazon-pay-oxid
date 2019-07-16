@@ -17,6 +17,8 @@ $aLang = array(
     'SHOP_MODULE_sAmazonAWSAccessKeyId'                     => 'Amazon MWS key',
     'SHOP_MODULE_sAmazonSignature'                          => 'MWS Secret Key',
     'SHOP_MODULE_blAmazonLogging'                           => 'Logging enabled',
+    'SHOP_MODULE_blAmazonLoggingLevel_debug'               => 'Debug',
+    'SHOP_MODULE_blAmazonLoggingLevel_error'               => 'Error',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLoginSettings'        => 'Amazon Login Settings',
     'SHOP_MODULE_blAmazonLoginActive'                             => 'Amazon Login active',

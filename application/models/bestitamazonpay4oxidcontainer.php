@@ -1,5 +1,10 @@
 <?php
 
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
+use Monolog\Processor\MemoryPeakUsageProcessor;
+use Monolog\Processor\UidProcessor;
+
 /**
  * Container for needed initialized objects
  *
@@ -7,6 +12,11 @@
  */
 class bestitAmazonPay4OxidContainer
 {
+    /**
+     * Log directory
+     */
+    const LOG_DIR = 'log/bestitamazon/';
+
     /**
      * @var null|oxUser
      */
@@ -88,6 +98,11 @@ class bestitAmazonPay4OxidContainer
     protected $_oBasketUtil = null;
 
     /**
+     * @var null|Logger
+     */
+    protected $_oLogger;
+
+    /**
      * Returns the active user object.
      *
      * @return oxUser|bool
@@ -131,6 +146,24 @@ class bestitAmazonPay4OxidContainer
         }
 
         return $this->_oClientObject;
+    }
+
+    /**
+     * Get the logger
+     *
+     * @return Logger
+     */
+    public function getLogger($name = 'AmazonPay')
+    {
+        // Cache the first logger init call, this allows us to use the same logger for the whole request context
+        if ($this->_oLogger === null) {
+            $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
+            $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
+            $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
+            $this->_oLogger = new bestitamazonpay4oxidlogger($sLogFile, $logLevel, $logActive, $name);
+        }
+
+        return $this->_oLogger;
     }
 
     /**

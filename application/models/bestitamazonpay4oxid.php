@@ -27,7 +27,11 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $oConfig = $this->getConfig();
         $blEnableMultiCurrency = (bool)$oConfig->getConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency');
 
+        $this->getLogger()->debug('Check if selected currency is available');
+
         if ($blEnableMultiCurrency === true) {
+            $this->getLogger()->debug('Currency enabled');
+
             return true;
         }
 
@@ -44,6 +48,10 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
             //If Locale is DE and currency is not EURO don't allow Amazon checkout process
             if (isset($aMap[$sLocale]) && $aMap[$sLocale] !== $sCurrency) {
+                $this->getLogger()->debug(
+                    'Currency for amazon pay is not available',
+                    array('sLocale' => $sLocale, 'sCurrency' => $sCurrency)
+                );
                 $this->_isSelectedCurrencyAvailable = false;
             }
         }
@@ -59,8 +67,11 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
      */
     public function isActive()
     {
+        $this->getLogger()->debug('Check if amazon is active');
+
         //If check was made once return result
         if ($this->_blActive !== null) {
+            $this->getLogger()->debug('Return cached result', array('result' => $this->_blActive));
             return $this->_blActive;
         }
 
@@ -72,7 +83,9 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
         $blPaymentActive = (bool)$this->getDatabase()->getOne($sSql);
 
+
         if ($blPaymentActive === false) {
+            $this->getLogger()->debug('Payment not active');
             return $this->_blActive = false;
         }
 
@@ -89,6 +102,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $sShippingId = (string)$this->getDatabase()->getOne($sSql);
 
         if ($sShippingId === '') {
+            $this->getLogger()->debug('Assigned shipment method missing or invalid', array('sShippingId' => $sShippingId));
             return $this->_blActive = false;
         }
 
@@ -101,6 +115,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $sShippingCostRelated = (string)$this->getDatabase()->getOne($sSql);
 
         if ($sShippingCostRelated === '') {
+            $this->getLogger()->debug('Assigned shipment cost missing or invalid', array('sShippingCostRelated' => $sShippingCostRelated));
             return $this->_blActive = false;
         }
 
@@ -113,6 +128,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
         //If Amazon SellerId is empty
         if ((string)$oConfig->getConfigParam('sAmazonSellerId') === '') {
+            $this->getLogger()->debug('Amazon seller id is empty');
             return $this->_blActive = false;
         }
 
@@ -123,6 +139,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
             && $sClass !== 'oxwarticledetails'
             && (float)$this->getSession()->getBasket()->getPrice()->getBruttoPrice() === 0.0
         ) {
+            $this->getLogger()->debug('basket brutto price is 0');
             return $this->_blActive = false;
         }
 
@@ -140,8 +157,11 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $oUser = $this->getActiveUser();
         $sAmazonUserName = $this->getSession()->getVariable('amazonOrderReferenceId') . '@amazon.com';
 
+        $this->getLogger()->debug('Clean amazon pay environment for the current user');
+
         if ($oUser !== false && $oUser->getFieldData('oxusername') === $sAmazonUserName) {
             $oUser->delete();
+            $this->getLogger()->debug('Delete user', array('id' => $oUser->getId()));
         }
 
         //Delete several session variables to clean up Amazon data in session
@@ -171,12 +191,15 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
 
         $aData = $this->getDatabase()->getAll($sSql);
 
+        $this->getLogger()->debug('cleanup unused Accounts', array('ids' => array_column($aData, 'oxid')));
+
         foreach ($aData as $aUser) {
             //Delete user from OXID
             $oUser = $this->getObjectFactory()->createOxidObject('oxUser');
 
             if ($oUser->load($aUser['oxid'])) {
                 $oUser->delete();
+                $this->getLogger()->debug('Delete user', array('id' => $oUser->getId()));
             }
         }
     }
