@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-OXID_VERSION=${1}
+OXID_SERIES=${1}
+OXID_VERSION=${2}
 DB_HOST=oxiddb
 DB_USER=root
 DB_PASS=dbpass
@@ -22,7 +23,7 @@ QUERY_INPUT
 echo "=== Start build for OXID ${OXID_VERSION} ==="
 
 CURRENT_DIR=${PWD}
-TEMP_DIR="/tmp/build_${OXID_VERSION}"
+TEMP_DIR="/tmp/build_${OXID_SERIES}"
 BASE_DIR="${TEMP_DIR}/oxideshop_ce"
 SHOP_DIR="${BASE_DIR}/source"
 VENDOR_DIR="${SHOP_DIR}/modules/bestit"
@@ -38,8 +39,8 @@ cd ${TEMP_DIR}
 
 # Setup shop
 echo "=== Setup shop ==="
-if [[ ${OXID_VERSION} == 5 ]]; then
-    git clone --branch b-5.3-ce --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
+if [[ ${OXID_SERIES} == 5 ]]; then
+    git clone --branch ${OXID_VERSION} --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
     composer install -n -d ${SHOP_DIR} --ignore-platform-reqs
     sed -i 's|<dbHost_ce>|'${DB_HOST}'|; s|<dbName_ce>|oxidehop_ce|; s|<dbUser_ce>|'${DB_USER}'|; s|<dbPwd_ce>|'${DB_PASS}'|; s|<sShopURL_ce>|http://127.0.0.1|; s|<sShopDir_ce>|'${SHOP_DIR}'|; s|<sCompileDir_ce>|'${SHOP_DIR}'/tmp|; s|<iUtfMode>|0|; s|$this->iDebug = 0|$this->iDebug = 1|; s|mysql|mysqli|' ${SHOP_DIR}/config.inc.php
     wget "https://raw.githubusercontent.com/OXID-eSales/oxideshop_demodata_ce/b-5.3/src/demodata.sql" -P oxideshop_ce/source/setup/sql/
@@ -52,9 +53,9 @@ if [[ ${OXID_VERSION} == 5 ]]; then
 
     cp ${CURRENT_DIR}/test_config.yml ${SHOP_DIR}
 else
-    git clone --branch b-${OXID_VERSION}.x --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
+    git clone --branch ${OXID_VERSION} --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
 
-    if [[ ${OXID_VERSION} == 6.0 ]]; then
+    if [[ ${OXID_SERIES} == 6* ]]; then
         echo "=== Replace coding-standards-wrapper dev-master with release v1.0.0 ==="
         composer require oxid-esales/coding-standards-wrapper:^v1.0.0 --dev --no-update -d ${BASE_DIR}
     fi
@@ -87,7 +88,7 @@ echo "=== Setup unit tests and run them ==="
 TEST_SUITE="${MODULE_BASE_DIR}/tests/"
 cd ${MODULE_BASE_DIR}/tests/
 
-if [[ ${OXID_VERSION} == 5 ]]; then
+if [[ ${OXID_SERIES} == 5 ]]; then
     ${SHOP_DIR}/vendor/bin/runtests
 else
     apt-get -y install sudo # oxid needs sudo -.-
