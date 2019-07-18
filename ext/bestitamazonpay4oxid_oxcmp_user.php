@@ -45,10 +45,13 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
     }
 
     /**
-     * Amazon login
+     * Execute the Amazon login
+     *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
      * @throws Exception
+     *
+     * @return void
      */
     public function amazonLogin()
     {

@@ -44,4 +44,3 @@ class bestitAmazonPay4Oxid_user extends bestitAmazonPay4Oxid_user_parent
         return parent::render();
     }
 }
-

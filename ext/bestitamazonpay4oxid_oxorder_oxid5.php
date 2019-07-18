@@ -285,6 +285,8 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
      *
      * @throws Exception
      * @throws oxSystemComponentException
+     *
+     * @return void
      */
     protected function _performAmazonActions($blAuthorizeAsync)
     {
@@ -329,7 +331,6 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
 
         //Call Amazon authorize (Dedicated for Async mode)
         $oContainer->getClient()->authorize($this);
-        return;
     }
 
     /**

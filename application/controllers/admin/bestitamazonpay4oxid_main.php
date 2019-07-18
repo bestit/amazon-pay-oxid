@@ -130,7 +130,7 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
             );
 
             if ($fAmazonRefundAmount > 0) {
-                $this->_getContainer()->getClient()->refund($oOrder, $fAmazonRefundAmount);
+                $this->_getContainer()->getClient()->refund($fAmazonRefundAmount, $oOrder);
             } else {
                 $this->_aViewData['bestitrefunderror'] = $this->_getContainer()->getLanguage()
                     ->translateString('BESTITAMAZONPAY_INVALID_REFUND_AMOUNT');

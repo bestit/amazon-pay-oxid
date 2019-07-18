@@ -28,8 +28,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     }
 
     /**
-     * @param $sObjectId
-     * @param $sAmazonOrderReferenceId
+     * Set the amazon reference id
+     *
+     * @param string $sObjectId               The id of the object
+     * @param string $sAmazonOrderReferenceId The amazon reference id
      *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
@@ -44,11 +46,14 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     }
 
     /**
-     * @param $sObjectId
+     * Get the amazon reference id
      *
-     * @return false|string
+     * @param string $sObjectId The id of the object
+     *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
+     *
+     * @return false|string
      */
     protected function _getObjectAmazonReferenceId($sObjectId)
     {
@@ -176,7 +181,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     /**
      * Get's primary user details and logins user if one is not logged in
      * Add's new address if user is logged in.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function setPrimaryAmazonUserData()
     {

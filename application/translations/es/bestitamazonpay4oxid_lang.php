@@ -23,8 +23,8 @@ $aLang = array(
     'BESTITAMAZONPAYLOGIN_ERROR_ACCOUNT_WITH_EMAIL_EXISTS'     => "Ya existe una cuenta asociada a esta dirección de correo electrónico. Por favor, identifíquese primero con la contraseña de su cuenta en la tienda y después con su cuenta de Amazon.",
     'BESTITAMAZONPAYLOGIN_ERROR_invalid_token'                 => "La sesión con Amazon ha caducado. Por favor, identifíquese de nuevo.",
     'BESTITAMAZONPAYLOGIN_PURCHASE_WITH_AMAZON'                => "Compre con su cuenta de Amazon.",
-	
-	'BESTITAMAZONPAY_EMAIL_SUBJECT_INVALID_PAYMENT'            => 'Por favor, actualiza tu información de pago',
+    
+    'BESTITAMAZONPAY_EMAIL_SUBJECT_INVALID_PAYMENT'            => 'Por favor, actualiza tu información de pago',
     'BESTITAMAZONPAY_EMAIL_SUBJECT_REJECTED_PAYMENT'           => 'Tu pago con Amazon Pay ha sido rechazado',
     'BESTITAMAZONPAY_EMAIL_VALUED_CUSUTOMER'                   => 'Saludos',
     'BESTITAMAZONPAY_EMAIL_THANKYOU'                           => 'Muchas gracias por tu pedido en',

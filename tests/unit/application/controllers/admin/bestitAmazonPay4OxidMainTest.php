@@ -388,7 +388,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
 
         $oClient->expects($this->once())
             ->method('refund')
-            ->with($oOrder, 1.2);
+            ->with( 1.2, $oOrder);
 
         $oContainer->expects($this->once())
             ->method('getClient')

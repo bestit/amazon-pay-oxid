@@ -31,10 +31,12 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     }
 
     /**
-     *
+     *  Process the amazon callback
      *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
+     *
+     * @return void
      */
     public function processAmazonCallback()
     {
@@ -129,10 +131,10 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * Parent function wrapper.
      *
      * @param null|string $sProductId
-     * @param null|float $dAmount
-     * @param null|array $aSelectList
-     * @param null|array $aPersistentParameters
-     * @param bool $blOverride
+     * @param null|float  $dAmount
+     * @param null|array  $aSelectList
+     * @param null|array  $aPersistentParameters
+     * @param bool        $blOverride
      *
      * @return mixed
      */
@@ -150,10 +152,10 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * Check if we are using amazon quick checkout.
      *
      * @param null|string $sProductId
-     * @param null|float $dAmount
-     * @param null|array $aSelectList
-     * @param null|array $aPersistentParameters
-     * @param bool $blOverride
+     * @param null|float  $dAmount
+     * @param null|array  $aSelectList
+     * @param null|array  $aPersistentParameters
+     * @param bool        $blOverride
      *
      * @return mixed
      * @throws oxSystemComponentException
@@ -196,4 +198,3 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
         return $sDefaultReturn;
     }
 }
-

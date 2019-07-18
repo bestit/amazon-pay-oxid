@@ -70,7 +70,7 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
     /**
      * Generates the basket hash.
      *
-     * @param string          $sAmazonOrderReferenceId
+     * @param string                                              $sAmazonOrderReferenceId
      * @param oxBasket|\OxidEsales\Eshop\Application\Model\Basket $oBasket
      *
      * @return string

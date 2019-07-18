@@ -396,8 +396,6 @@ class bestitAmazonPay4Oxid_init
 
     /**
      * Clear tmp dir and smarty cache.
-     *
-     * @return void
      */
     public static function clearTmp()
     {

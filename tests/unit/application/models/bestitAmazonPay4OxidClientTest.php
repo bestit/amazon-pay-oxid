@@ -1480,15 +1480,15 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
 
         self::assertEquals(
             $this->_getResponseObject(),
-            $oBestitAmazonPay4OxidClient->refund(null, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, null, array('extra' => 'extraValue'))
         );
         self::assertEquals(
             $this->_getResponseObject(array('Error' => array('Code' => 'errorCode', 'Message' => 'errorMessage'))),
-            $oBestitAmazonPay4OxidClient->refund($oOrder, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, $oOrder, array('extra' => 'extraValue'))
         );
         self::assertEquals(
             $this->_getResponseObject($aRefundResult),
-            $oBestitAmazonPay4OxidClient->refund($oOrder, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, $oOrder, array('extra' => 'extraValue'))
         );
     }
 
