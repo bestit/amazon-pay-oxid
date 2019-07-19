@@ -10,12 +10,14 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker pull "$IMAGE_NAME" || true
+  - docker-compose build
 script:
   - docker-compose up -d
-  - docker-compose exec phpunit /bin/bash -c "composer install && vendor/bin/phpcsoxid --colors"
-  - docker-compose exec phpunit /bin/bash -c "chmod +x ./build.sh && ./build.sh 5 $OXID_5_3_RELEASE && ./build.sh 6.0 $OXID_6_0_RELEASE && ./build.sh 6.1 $OXID_6_1_RELEASE"
+  - docker-compose exec web /bin/bash -c "composer install && vendor/bin/phpcsoxid --colors"
+  - docker-compose exec web /bin/bash -c "chmod +x ./build/files/test.sh && chmod +x ./build/files/build.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 5 $OXID_5_3_RELEASE && /build/files/test.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 6.0 $OXID_6_0_RELEASE && /build/files/test.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 6.1 $OXID_6_1_RELEASE && /build/files/test.sh"
 before_deploy:
   - ssh-keyscan $DEPLOYMENT_SERVER >> $HOME/.ssh/known_hosts
   - (umask  077 ; echo $DEPLOYMENT_SSH_KEY | base64 --decode > /tmp/deploy_rsa)

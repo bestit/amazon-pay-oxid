@@ -1,0 +1,28 @@
+FROM php:7.1-apache
+
+RUN echo "deb http://deb.debian.org/debian stretch main" >> /etc/apt/sources.list
+RUN echo "deb-src http://deb.debian.org/debian stretch main" >> /etc/apt/sources.list
+
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libjpeg-dev git zip unzip libxml2-dev libpng-dev mariadb-client vim sudo wget &&  \
+    rm -rf /var/lib/apt
+
+# configure apache
+RUN /usr/sbin/a2enmod rewrite && /usr/sbin/a2enmod headers && /usr/sbin/a2enmod expires
+COPY ./files/000-default.conf /etc/apache2/sites-available/000-default.conf
+
+# install composer
+RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php \
+  && php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
+  && rm -f composer-setup.php \
+  && chown www-data:www-data /var/www
+
+# Install and enable required php extensions
+RUN pecl install xdebug-2.6.0
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ && docker-php-ext-install mysqli pdo pdo_mysql bcmath soap mbstring dom gd zip intl iconv
+RUN docker-php-ext-enable mysqli pdo pdo_mysql bcmath soap mbstring dom gd xdebug zip intl iconv
+
+# configure xdebug
+RUN echo 'xdebug.remote_port=9000' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.remote_enable=1' >> /usr/local/etc/php/php.ini
+RUN echo 'xdebug.remote_connect_back=1' >> /usr/local/etc/php/php.ini

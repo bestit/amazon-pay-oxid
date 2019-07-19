@@ -1,16 +1,29 @@
 version: '3'
 services:
-  phpunit:
-    image: ${IMAGE_NAME}
+  web:
+    build: build/
+    container_name: web
+    working_dir:  /var/www/amazonpay4oxid
     links:
-      - oxiddb
+      - "mysql:db"
     volumes:
-      - .:/app
-    working_dir: /app
+      - .:/var/www/amazonpay4oxid/
+    ports:
+      - "8100:80"
+    depends_on:
+      - mysql
     environment:
+      APACHE_PORT: 8100
       TRAVIS_ERROR_LEVEL: ${TRAVIS_ERROR_LEVEL}
-  oxiddb:
+      OXID_SERIES: 6.1
+      OXID_VERSION: v6.3.3
+      DB_HOST: db
+      DB_NAME: oxidehop_ce
+      DB_USER: root
+      DB_PASS: dbpass
+  mysql:
     image: mysql:5.6
+    container_name: mysql
     environment:
       MYSQL_DATABASE: oxidehop_ce
       MYSQL_ROOT_PASSWORD: dbpass
