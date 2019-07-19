@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d3a9b7f34a044292a1ed5aefc3f24780",
+    "content-hash": "2e9b5398c774e9359927005f3f67e38d",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -306,6 +306,34 @@
                 "eventmanager"
             ],
             "time": "2018-06-11T11:59:03+00:00"
+        },
+        {
+            "name": "oxid-esales/oxideshop-demodata-ce",
+            "version": "v6.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/OXID-eSales/oxideshop_demodata_ce.git",
+                "reference": "b5091a31424116b1303a75039e9e71aa366e9909"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/OXID-eSales/oxideshop_demodata_ce/zipball/b5091a31424116b1303a75039e9e71aa366e9909",
+                "reference": "b5091a31424116b1303a75039e9e71aa366e9909",
+                "shasum": ""
+            },
+            "type": "oxideshop-demodata",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-only"
+            ],
+            "description": "This is the demodata for OXID eShop CE.",
+            "homepage": "https://www.oxid-esales.com/en/home.html",
+            "keywords": [
+                "OXID",
+                "demodata",
+                "eshop"
+            ],
+            "time": "2019-04-26T08:45:53+00:00"
         },
         {
             "name": "phpmailer/phpmailer",
