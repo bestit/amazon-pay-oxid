@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID order_main controller
  *
@@ -11,6 +13,21 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_order_main constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -40,7 +57,7 @@ class bestitAmazonPay4Oxid_order_main extends bestitAmazonPay4Oxid_order_main_pa
         if ($oOrder->load($this->getEditObjectId()) === true
             && $oOrder->getFieldData('oxPaymentType') === 'bestitamazon'
         ) {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'Save amazon pay capture for order',
                 array('orderNumber' => $oOrder->getFieldData('oxordernr'))
             );

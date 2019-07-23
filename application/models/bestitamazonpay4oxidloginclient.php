@@ -51,7 +51,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
             $this->_isActive = ($loginActive && $clientId && $sellerId);
         }
 
-        $this->getLogger()->debug(
+        $this->_oLogger->debug(
             'Check if amazon pay is active',
             array(
                 'result' => $this->_isActive,
@@ -80,7 +80,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
             && (string)$this->getConfig()->getRequestParameter('cl') !== 'user'
         );
 
-        $this->getLogger()->debug(
+        $this->_oLogger->debug(
             'Check if amazon login button should be shown',
             array('result' => $result)
         );
@@ -103,7 +103,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
             && (string)$this->getSession()->getVariable('amazonOrderReferenceId') === ''
         );
 
-        $this->getLogger()->debug(
+        $this->_oLogger->debug(
             'Check if amazon login button should be shown',
             array('result' => $result)
         );
@@ -211,7 +211,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function deleteUser($sId)
     {
-        $this->getLogger()->debug(
+        $this->_oLogger->debug(
             'Delete oxuser',
             array('oxId' => $sId)
         );
@@ -231,7 +231,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function cleanAmazonPay()
     {
-        $this->getLogger()->debug(
+        $this->_oLogger->debug(
             'Clean amazon pay'
         );
 

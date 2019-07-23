@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID oxDeliverySetList model
  *
@@ -12,6 +14,21 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
      */
     protected $_oContainer = null;
 
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_oxDeliverySetList constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
+    
     /**
      * Returns the active user object.
      *
@@ -76,7 +93,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
         $sClass = $oConfig->getRequestParameter('cl');
         $sAmazonOrderReferenceId = $this->_getContainer()->getSession()->getVariable('amazonOrderReferenceId');
 
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Process delivery set result',
             array('orderReferenceId' => $sAmazonOrderReferenceId)
         );
@@ -84,7 +101,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
         //If Amazon Pay cannot be selected remove it from payments list
         if ($sClass === 'payment') {
             if ($this->_getContainer()->getModule()->isActive() !== true) {
-                $this->_getContainer()->getLogger()->debug(
+                $this->_oLogger->debug(
                     'Amazon pay not active, remove it'
                 );
                 unset($aResult[2]['bestitamazon']);
@@ -99,7 +116,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
                 //If Amazon pay was selected remove other payment options and leave only Amazon pay
                 $aResult[2] = array('bestitamazon' => $aResult[2]['bestitamazon']);
 
-                $this->_getContainer()->getLogger()->debug(
+                $this->_oLogger->debug(
                     'Amazon pay has been selected by button, remove other payment methods'
                 );
 
@@ -121,7 +138,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
                     && $this->_getContainer()->getLoginClient()->showAmazonPayButton() === false)
             )
         ) {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'Payment not selected via button is step 1 or 2 and currency is not available for current local, remove it'
             );
 

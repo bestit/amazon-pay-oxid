@@ -97,9 +97,63 @@ class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
     protected $_oBasketUtil = null;
 
     /**
-     * @var null|Logger
+     * The logger
+     *
+     * @var LoggerInterface
      */
     protected $_oLogger;
+
+    /**
+     * The logger for the ipn
+     *
+     * @var LoggerInterface
+     */
+    protected $_oIpnLogger;
+
+    /**
+     * bestitAmazonPay4OxidContainer constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->createLogger();
+        $this->_oIpnLogger = $this->createLogger('IPN');
+    }
+
+    /**
+     * The getter for _oLogger
+     *
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->_oLogger;
+    }
+
+    /**
+     * The getter for _oIpnLogger
+     *
+     * @return LoggerInterface
+     */
+    public function getIpnLogger()
+    {
+        return $this->_oIpnLogger;
+    }
+
+    /**
+     * Create an specific logger
+     *
+     * @param string $name
+     *
+     * @return bestitamazonpay4oxidlogger
+     */
+    protected function createLogger($name = 'AmazonPay')
+    {
+        $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
+        $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
+        $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
+
+        return new bestitamazonpay4oxidlogger($sLogFile, $logLevel, $logActive, $name);
+    }
 
     /**
      * Sets a logger instance on the object.
@@ -109,6 +163,16 @@ class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
     public function setLogger(LoggerInterface $logger)
     {
         $this->_oLogger = $logger;
+    }
+
+    /**
+     * Sets a logger instance on the object for the ipn.
+     *
+     * @param LoggerInterface $logger
+     */
+    public function setIpnLogger(LoggerInterface $logger)
+    {
+        $this->_oIpnLogger = $logger;
     }
 
     /**
@@ -155,26 +219,6 @@ class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
         }
 
         return $this->_oClientObject;
-    }
-
-    /**
-     * Get the logger
-     *
-     * @param  string $name The name of the logger
-     *
-     * @return Logger
-     */
-    public function getLogger($name = 'AmazonPay')
-    {
-        // Cache the first logger init call, this allows us to use the same logger for the whole request context
-        if ($this->_oLogger === null) {
-            $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
-            $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
-            $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
-            $this->_oLogger = new bestitamazonpay4oxidlogger($sLogFile, $logLevel, $logActive, $name);
-        }
-
-        return $this->_oLogger;
     }
 
     /**

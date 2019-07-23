@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Controller for cronjob tasks
  *
@@ -16,6 +18,23 @@ class bestitAmazonCron extends oxUBase
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_payment constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+        
+        parent::__construct();
+    }
 
     /**
      * Returns the active user object.
@@ -59,7 +78,7 @@ class bestitAmazonCron extends oxUBase
         $aResponses = array();
         $aResult = $this->_getContainer()->getDatabase()->getAll($sQuery);
 
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Fetched orders from db',
             array('orderNumbers' => array_column($aResult, 'OXORDERNR'))
         );
@@ -71,7 +90,7 @@ class bestitAmazonCron extends oxUBase
                 $oData = $this->_getContainer()->getClient()->{$sClientFunction}($oOrder);
                 $aResponses[$aRow['OXORDERNR']] = $oData;
             } else {
-                $this->_getContainer()->getLogger()->debug(
+                $this->_oLogger->debug(
                     'No order for id found',
                     array('id' => $aRow['OXID'])
                 );
@@ -96,7 +115,7 @@ class bestitAmazonCron extends oxUBase
             'getAuthorizationDetails'
         );
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aProcessed))
         );
@@ -108,7 +127,7 @@ class bestitAmazonCron extends oxUBase
                     ->AuthorizationStatus->State;
                 $this->_addToMessages($message = "Authorized Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -128,7 +147,7 @@ class bestitAmazonCron extends oxUBase
             'getOrderReferenceDetails'
         );
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aProcessed))
         );
@@ -140,7 +159,7 @@ class bestitAmazonCron extends oxUBase
                     ->OrderReferenceStatus->State;
                 $this->_addToMessages($message = "Declined Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -160,7 +179,7 @@ class bestitAmazonCron extends oxUBase
             'getOrderReferenceDetails'
         );
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aProcessed))
         );
@@ -172,7 +191,7 @@ class bestitAmazonCron extends oxUBase
                     ->OrderReferenceStatus->State;
                 $this->_addToMessages($message = "Suspended Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -199,7 +218,7 @@ class bestitAmazonCron extends oxUBase
             'capture'
         );
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aProcessed))
         );
@@ -209,7 +228,7 @@ class bestitAmazonCron extends oxUBase
                 $sState = $oData->CaptureResult->CaptureDetails->CaptureStatus->State;
                 $this->_addToMessages($message = "Capture Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -227,7 +246,7 @@ class bestitAmazonCron extends oxUBase
 
         $aResult = $this->_getContainer()->getDatabase()->getAll($sQuery);
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aResult))
         );
@@ -241,7 +260,7 @@ class bestitAmazonCron extends oxUBase
                     ."Status: {$oData->GetRefundDetailsResult->RefundDetails->RefundStatus->State}<br/>"
                 );
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -261,7 +280,7 @@ class bestitAmazonCron extends oxUBase
             'closeOrderReference'
         );
 
-        $this->_getContainer()->getLogger()->info(
+        $this->_oLogger->info(
             'Fetched orders and processed',
             array('orderNumbers' => array_keys($aProcessed))
         );
@@ -270,7 +289,7 @@ class bestitAmazonCron extends oxUBase
             if (isset($oData->CloseOrderReferenceResult, $oData->ResponseMetadata->RequestId)) {
                 $this->_addToMessages($message = "Order #{$sOrderNumber} - Closed<br/>");
 
-                $this->_getContainer()->getLogger()->debug($message);
+                $this->_oLogger->debug($message);
             }
         }
     }
@@ -287,42 +306,42 @@ class bestitAmazonCron extends oxUBase
         //Increase execution time for the script to run without timeouts
         set_time_limit(3600);
 
-        $this->_getContainer()->getLogger()->info('Cronjob started');
+        $this->_oLogger->info('Cronjob started');
 
         //If ERP mode is enabled do nothing, if IPN or CRON authorize unauthorized orders
         if ((bool)$this->_getContainer()->getConfig()->getConfigParam('blAmazonERP') === true) {
             $this->setViewData(array('sError' => 'ERP mode is ON (Module settings)'));
-            $this->_getContainer()->getLogger()->info('ERP mode is ON (Module settings)');
+            $this->_oLogger->info('ERP mode is ON (Module settings)');
         } elseif ((string)$this->_getContainer()->getConfig()->getConfigParam('sAmazonAuthorize') !== 'CRON') {
             $this->setViewData(array('sError' => 'Trigger Authorise via Cronjob mode is turned Off (Module settings)'));
-            $this->_getContainer()->getLogger()->info('Cronjob state: Trigger Authorise via Cronjob mode is turned Off (Module settings)');
+            $this->_oLogger->info('Cronjob state: Trigger Authorise via Cronjob mode is turned Off (Module settings)');
         } else {
-            $this->_getContainer()->getLogger()->info('Cronjob state: started');
-            $this->_getContainer()->getLogger()->info('Update authorized orders');
+            $this->_oLogger->info('Cronjob state: started');
+            $this->_oLogger->info('Update authorized orders');
             //Authorize unauthorized or Authorize-Pending orders
             $this->_updateAuthorizedOrders();
 
-            $this->_getContainer()->getLogger()->info('Update declined orders');
+            $this->_oLogger->info('Update declined orders');
             //Check for declined orders
             $this->_updateDeclinedOrders();
 
-            $this->_getContainer()->getLogger()->info('Update suspended orders');
+            $this->_oLogger->info('Update suspended orders');
             //Check for suspended orders
             $this->_updateSuspendedOrders();
 
-            $this->_getContainer()->getLogger()->info('Capture orders');
+            $this->_oLogger->info('Capture orders');
             //Capture handling
             $this->_captureOrders();
 
-            $this->_getContainer()->getLogger()->info('Update refund stats');
+            $this->_oLogger->info('Update refund stats');
             //Check refund stats
             $this->_updateRefundDetails();
 
-            $this->_getContainer()->getLogger()->info('Close orders');
+            $this->_oLogger->info('Close orders');
             //Check for order which can be closed
             $this->_closeOrders();
 
-            $this->_getContainer()->getLogger()->info('Cronjob finished');
+            $this->_oLogger->info('Cronjob finished');
             $this->_addToMessages('Done');
         }
 
@@ -408,7 +427,7 @@ class bestitAmazonCron extends oxUBase
                 $params = $this->_getParams()
             );
 
-            $this->_getContainer()->getLogger()->info(
+            $this->_oLogger->info(
                 'Execute specific amazon call',
                 array(
                     'operation' => $sOperation,

@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID oxcmp_basket component
  *
@@ -14,6 +16,21 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_oxcmp_basket constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -43,7 +60,7 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
         $oContainer = $this->_getContainer();
         $oConfig = $oContainer->getConfig();
 
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Process amazon callback',
             array('status' => $authStatus = (string) $oConfig->getRequestParameter('AuthenticationStatus'))
         );
@@ -70,7 +87,7 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     {
         $oConfig = $this->_getContainer()->getConfig();
 
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Clean amazon pay',
             array('withCancel' => $cancelOrderReferenceRequest = (bool) $oConfig->getRequestParameter('cancelOrderReference'))
         );

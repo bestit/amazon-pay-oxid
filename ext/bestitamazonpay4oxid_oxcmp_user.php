@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID oxcmp_user component
  *
@@ -11,6 +13,21 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_oxcmp_user constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -37,7 +54,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
      */
     protected function _setErrorAndRedirect($sError, $sRedirectUrl)
     {
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Redirect customer',
             array('error' => $sError, 'redirectUrl' => $sRedirectUrl)
         );
@@ -64,13 +81,13 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
         $oConfig = $this->_getContainer()->getConfig();
         $sAccessToken = (string)$oConfig->getRequestParameter('access_token');
 
-        $this->_getContainer()->getLogger()->debug(
+        $this->_oLogger->debug(
             'Handle amazon login',
             array('hasToken' => !empty($sAccessToken))
         );
 
         if ($sAccessToken === '') {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'No token found, abort'
             );
             return;
@@ -88,7 +105,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
             $sError = ($oUserData->error) ? 'BESTITAMAZONPAYLOGIN_ERROR_'.$oUserData->error
                 : 'BESTITAMAZONPAYLOGIN_ERROR_UNEXPECTED';
 
-            $this->_getContainer()->getLogger()->error(
+            $this->_oLogger->error(
                 'No id in user found',
                 array('error' => $sError)
             );
@@ -115,7 +132,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
 
         //If OXID user with Amazon User id exists login User by Amazon User Id
         if ($sUserId = $oLoginClient->amazonUserIdExists($oUserData)) {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'Oxid user with user id exists, login user by amazon user id',
                 array('amazonUserId' => $sUserId)
             );
@@ -127,7 +144,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
 
         //If OXID user is logged in and he has logged in also with Amazon for the first time
         if ($oUser = $this->_getContainer()->getActiveUser()) {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'oxid user already logged in and new amazon customer detected',
                 array('amazonUserId' => $oUserData->user_id)
             );
@@ -143,7 +160,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
         $aUserData = $oLoginClient->oxidUserExists($oUserData);
 
         if ($aUserData['OXPASSWORD']) {
-            $this->_getContainer()->getLogger()->error(
+            $this->_oLogger->error(
                 'oxid user with email already exists',
                 array('amazonUserId' => $oUserData->user_id)
             );
@@ -161,7 +178,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
         //If OXID user with Amazon user id does not exists and OXID User with email from Amazon does not exists
         //Attempt to create new user and to login it
         if ($sUserId = $oLoginClient->createOxidUser($oUserData)) {
-            $this->_getContainer()->getLogger()->debug(
+            $this->_oLogger->debug(
                 'Attempt to create new user and login',
                 array('oxId' => $sUserId)
             );

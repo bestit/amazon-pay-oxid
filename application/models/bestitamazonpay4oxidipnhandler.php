@@ -16,13 +16,6 @@ use Monolog\Logger;
 class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
 {
     /**
-     * Name of the ipn logger
-     *
-     * @var string
-     */
-    const IPN_LOGGER_NAME = 'AmazonPayIPN';
-
-    /**
      * @var bestitAmazonPay4OxidIpnHandler
      */
     private static $_instance = null;
@@ -53,7 +46,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
     public function logIPNResponse($sLevel, $sMessage, $oIpnMessage = null)
     {
         $aContext = ($oIpnMessage !== null) ? array('ipnMessage' => $oIpnMessage) : array();
-        $this->getLogger(self::IPN_LOGGER_NAME)->log($sLevel, $sMessage, $aContext);
+        $this->_oIpnLogger->log($sLevel, $sMessage, $aContext);
     }
 
     /**
@@ -81,7 +74,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             }
 
             $ipnHandler = $this->getObjectFactory()->createIpnHandler($aHeaders, $sBody);
-            $ipnHandler->setLogger($this->getLogger(self::IPN_LOGGER_NAME));
+            $ipnHandler->setLogger($this->_oIpnLogger);
             return json_decode($ipnHandler->toJson());
         } catch (Exception $oException) {
             $this->logIPNResponse(Logger::ERROR, 'Unable to parse ipn message');
@@ -110,11 +103,11 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
         $oOrder = $this->getObjectFactory()->createOxidObject('oxOrder');
 
         if ($oOrder->load($sOrderId) === true) {
-            $this->getLogger(self::IPN_LOGGER_NAME)->info('Order by id found', array('id' => $sId));
+            $$this->_oIpnLogger->info('Order by id found', array('id' => $sId));
             return $oOrder;
         }
 
-        $this->getLogger(self::IPN_LOGGER_NAME)->info('No order by id found', array('id' => $sId));
+        $this->_oIpnLogger->info('No order by id found', array('id' => $sId));
 
         return false;
     }
@@ -208,7 +201,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             LIMIT 1";
         $iMatches = (int)$this->getDatabase()->getOne($sSql);
 
-        $this->getLogger(self::IPN_LOGGER_NAME)->debug('Refunds fetched', array('matches' => $iMatches));
+        $this->_oIpnLogger->debug('Refunds fetched', array('matches' => $iMatches));
 
         //Update Refund info
         if ($iMatches > 0 && isset($oData->RefundDetails->RefundStatus->State)) {
@@ -235,14 +228,14 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      */
     public function processIPNAction($sBody)
     {
-        $this->getLogger(self::IPN_LOGGER_NAME)->info('Process incoming IPN message');
+        $this->_oIpnLogger->info('Process incoming IPN message');
 
         $oMessage = $this->_getMessage($sBody);
 
         if (isset($oMessage->NotificationData)) {
             $oData = $oMessage->NotificationData;
 
-            $this->getLogger(self::IPN_LOGGER_NAME)->info(sprintf('Handle %s message', $oMessage->NotificationType));
+            $this->_oIpnLogger->info(sprintf('Handle %s message', $oMessage->NotificationType));
             switch ($oMessage->NotificationType) {
                 case 'OrderReferenceNotification':
                     return $this->_orderReferenceUpdate($oData);
