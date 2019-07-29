@@ -1,6 +1,7 @@
 <?php
 
 use \OxidEsales\Eshop\Application\Model\Basket;
+use Psr\Log\LoggerInterface;
 
 /**
  * Extension for OXID oxOrder model
@@ -15,6 +16,13 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
     protected $_oContainer = null;
 
     /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
      * Returns the active user object.
      *
      * @return bestitAmazonPay4OxidContainer
@@ -27,6 +35,20 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
         }
 
         return $this->_oContainer;
+    }
+
+    /**
+     * Get the logger
+     *
+     * @return LoggerInterface
+     */
+    protected function _getLogger()
+    {
+        if ($this->_oLogger=== null) {
+            $this->_oLogger = $this->_getContainer()->getLogger();
+        }
+
+        return $this->_oLogger;
     }
 
     /**
@@ -67,6 +89,11 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
         //Getting Email
         $sEmail = $oAmazonData->Buyer->Email;
 
+        $this->_getLogger()->debug(
+            'Managed full amazon user data',
+            array('email' => $sEmail)
+        );
+
         // If we find user account in OXID with same email that we got from Amazon then add new shipping address
         $oDatabase = $oContainer->getDatabase();
 
@@ -90,12 +117,21 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
              */
             $aUserAddresses = $oUser->getUserAddresses();
 
+            $this->_getLogger()->debug(
+                'Existing user found',
+                array('email' => $sEmail, 'parsedAddress' => $aParsedData)
+            );
+
             foreach ($aUserAddresses as $oAddress) {
                 if ((string)$oAddress->getFieldData('oxfname') === (string)$aParsedData['FirstName']
                     && (string)$oAddress->getFieldData('oxlname') === (string)$aParsedData['LastName']
                     && (string)$oAddress->getFieldData('oxstreet') === (string)$aParsedData['Street']
                     && (string)$oAddress->getFieldData('oxstreetnr') === (string)$aParsedData['StreetNr']
                 ) {
+                    $this->_getLogger()->debug(
+                        'Existing shipping address found, use this address'
+                    );
+
                     $oDelAddress->load($oAddress->getId());
                     break;
                 }
@@ -107,6 +143,11 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
             $oSession->setVariable('blshowshipaddress', 1);
             $oSession->setVariable('deladrid', $sDeliveryAddressId);
         } else {
+            $this->_getLogger()->debug(
+                'new user found, create new user entity',
+                array('mappedData' => $aDefaultMap)
+            );
+
             // If the user is new and not found in OXID update data from Amazon
             $oUser->assign(array_merge($aDefaultMap, array('oxusername' => $sEmail)));
             $oUser->save();
@@ -115,6 +156,9 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
 
             // Set Amazon address as shipping
             if ($sDeliveryAddressId !== '') {
+                $this->_getLogger()->debug(
+                    'Set amazon address as shipping address'
+                );
                 /** @var oxAddress $oDelAddress */
                 $oDelAddress = $oContainer->getObjectFactory()->createOxidObject('oxAddress');
                 $oDelAddress->load($sDeliveryAddressId);
@@ -152,10 +196,18 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
                 .$oContainer->getUtilsDate()->getTime()
         );
 
+        $this->_getLogger()->debug(
+            'Call amazon authorize in sync mode'
+        );
+
         $oData = $oContainer->getClient()->authorize(null, $aParams, true);
 
         //Error handling
         if (!$oData || $oData->Error) {
+            $this->_getLogger()->error(
+                'Redirect after authorize error'
+            );
+
             $oUtils->redirect($oConfig->getShopSecureHomeUrl() . 'cl=user&fnc=cleanAmazonPay', false);
             return false;
         }
@@ -165,9 +217,20 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
         //Response handling
         if ((string)$oAuthorizationStatus->State === 'Declined' || (string)$oAuthorizationStatus->State === 'Closed') {
             //Redirect to order page to re-select the payment
+            $this->_getLogger()->error(
+                'Closed/declined authorization detected',
+                array('reason' => (string)$oAuthorizationStatus->ReasonCode)
+            );
+
             if ($blOptimizedFlow === true && (string)$oAuthorizationStatus->ReasonCode === 'TransactionTimedOut') {
+                $this->_getLogger()->debug(
+                    'optimized flow detected and reason timeout detected'
+                );
                 return false;
             } elseif ((string)$oAuthorizationStatus->ReasonCode === 'InvalidPaymentMethod') {
+                $this->_getLogger()->debug(
+                    'invalid payment method detected, redirect to payment page for re-select payment'
+                );
                 $oSession->setVariable('blAmazonSyncChangePayment', 1);
                 $oUtils->redirect($oConfig->getShopSecureHomeUrl().'cl=order&action=changePayment', false);
                 return false;
@@ -176,6 +239,10 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
             //Cancel ORO in amazon and redirect
             $aParams['amazon_order_reference_id'] = $oSession->getVariable('amazonOrderReferenceId');
             $oContainer->getClient()->cancelOrderReference(null, $aParams);
+
+            $this->_getLogger()->debug(
+                'Cancel order reference and redirect to error page'
+            );
             $oUtils->redirect(
                 $oConfig->getShopSecureHomeUrl()
                     .'cl=user&fnc=cleanAmazonPay&error=BESTITAMAZONPAY_PAYMENT_DECLINED_OR_REJECTED',
@@ -195,7 +262,15 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
                 'sAmazonSyncResponseAuthorizationId',
                 (string)$oData->AuthorizeResult->AuthorizationDetails->AmazonAuthorizationId
             );
+
+            $this->_getLogger()->debug(
+                'Open authorization detected'
+            );
         } else {
+            $this->_getLogger()->debug(
+                'Unexpected behaviour detected, redirect to user page and clean up'
+            );
+
             //Unexpected behaviour
             $oUtils->redirect(
                 $oConfig->getShopSecureHomeUrl() . 'cl=user&fnc=cleanAmazonPay',
@@ -228,11 +303,19 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
         $blIsAmazonOrder = $oBasket->getPaymentId() === 'bestitamazon'
             && $oConfig->getRequestParameter('cl') === 'order';
 
-        //Situation when amazonOrderReferenceId was wiped out somehow, do cleanup and redirect
+        $this->_getLogger()->debug(
+            'Process pre finalize process of the order creation',
+            array('async' => $blAuthorizeAsync, 'isAmazonOrder' => $blIsAmazonOrder)
+        );
+
         if ($blIsAmazonOrder === true) {
             $sAmazonOrderReferenceId = (string)$oSession->getVariable('amazonOrderReferenceId');
 
+            //Situation when amazonOrderReferenceId was wiped out somehow, do cleanup and redirect
             if ($sAmazonOrderReferenceId === '') {
+                $this->_getLogger()->error(
+                    'No reference id found, cleanup and redirect'
+                );
                 $oUtils->redirect($oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay', false);
                 return false;
             }
@@ -244,6 +327,9 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
                 $sCurrentBasketHash;
 
             if ($sCurrentBasketHash !== $sBasketHash) {
+                $this->_getLogger()->error(
+                    'Invalid basket hash detected, cleanup and redirect'
+                );
                 $oUtils->redirect($oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay', false);
                 return false;
             }
@@ -254,6 +340,9 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
                 ->OrderReferenceDetails->OrderReferenceStatus->State;
 
             if ($sStatus !== 'Open') {
+                $this->_getLogger()->error(
+                    'Oro state not open, cleanup and redirect'
+                );
                 $oUtils->redirect($oConfig->getShopSecureHomeUrl().'cl=user&fnc=cleanAmazonPay', false);
                 return false;
             }
@@ -261,8 +350,13 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
             $blOptimizedFlow = (string)$oConfig->getConfigParam('sAmazonMode')
                 === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
 
+            $this->_getLogger()->debug(
+                'Decide if sync authorize should be called',
+                array('erpMode' => $erpMode = (bool)$oConfig->getConfigParam('blAmazonERP'))
+            );
+
             //Call Amazon authorize (Dedicated for Sync mode), don't call if ERP mode is enabled
-            if ((bool)$oConfig->getConfigParam('blAmazonERP') !== true
+            if ($erpMode !== true
                 && $this->_callSyncAmazonAuthorize($oBasket, $sAmazonOrderReferenceId, $blOptimizedFlow) === false
             ) {
                 if ($blOptimizedFlow === true) {
@@ -301,23 +395,40 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
         $this->save();
         $oContainer->getClient()->setOrderAttributes($this);
 
+        $this->_getLogger()->debug(
+            'Perform amazon actions'
+        );
+
         //If ERP mode is enabled do nothing just set oxorder->oxtransstatus to specified value
         if ((bool)$oConfig->getConfigParam('blAmazonERP') === true) {
-            $this->_setFieldData('oxtransstatus', $oConfig->getConfigParam('sAmazonERPModeStatus'));
+            $this->_getLogger()->debug(
+                'ERP mode detected, set order state',
+                array('state' => $erpStatus = $oConfig->getConfigParam('sAmazonERPModeStatus'))
+            );
+            $this->_setFieldData('oxtransstatus', $$erpStatus);
             $this->save();
             return;
         }
 
         //If we had Sync mode enabled don't call Authorize once again
         if ($blAuthorizeAsync === false) {
+            $this->_getLogger()->debug(
+                'Sync mode enabled, dont call authorize again'
+            );
             $sAmazonSyncResponseState = (string)$oSession->getVariable('sAmazonSyncResponseState');
             $sAmazonSyncResponseAuthorizationId = (string)$oSession->getVariable('sAmazonSyncResponseAuthorizationId');
 
             if ($sAmazonSyncResponseState !== '' && $sAmazonSyncResponseAuthorizationId !== '') {
-                $this->assign(array(
+                $this->assign($orderData =  array(
                     'bestitamazonauthorizationid' => $sAmazonSyncResponseAuthorizationId,
                     'oxtransstatus' => 'AMZ-Authorize-'.$sAmazonSyncResponseState
                 ));
+
+                $this->_getLogger()->debug(
+                    'Set order state from session variable',
+                    $orderData
+                );
+
                 $this->save();
             }
 
@@ -325,11 +436,22 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
             if ((string)$oConfig->getConfigParam('sAmazonCapture') === 'DIRECT'
                 && (string)$oSession->getVariable('sAmazonSyncResponseState') === 'Open'
             ) {
+                $this->_getLogger()->debug(
+                    'Capture order by direct capture option'
+                );
                 $oContainer->getClient()->capture($this);
             }
 
+            $this->_getLogger()->debug(
+                'Amazon actions process finished'
+            );
+
             return;
         }
+
+        $this->_getLogger()->debug(
+            'Async mode enabled, call authorize again'
+        );
 
         //Call Amazon authorize (Dedicated for Async mode)
         $oContainer->getClient()->authorize($this);
@@ -369,10 +491,18 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
 
         //If order was successfull perform some Amazon actions
         if ($blIsAmazonOrder === true) {
+            $this->_getLogger()->debug(
+                'Amazon order by oxid created',
+                array('response' => $iRet)
+            );
+
             //If order was successfull update order details with reference ID
             if ($iRet < 2) {
                 $this->_performAmazonActions($blAuthorizeAsync);
             } else {
+                $this->_getLogger()->error(
+                    'Error at order creation detected'
+                );
                 $this->_getContainer()->getClient()->cancelOrderReference($this);
             }
         }

@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
 
@@ -20,6 +22,10 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
         $bestitAmazonPay4OxidPayment = new bestitAmazonPay4Oxid_payment();
+        $oContainer
+            ->method('getLogger')
+            ->willReturn(new NullLogger());
+
         self::setValue($bestitAmazonPay4OxidPayment, '_oContainer', $oContainer);
 
         return $bestitAmazonPay4OxidPayment;
@@ -59,7 +65,7 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
     public function testSetPrimaryAmazonUserData()
     {
         $oContainer = $this->_getContainerMock();
-        
+
         // Utils
         $oUtils = $this->_getUtilsMock();
         $oUtils->expects($this->exactly(5))
@@ -75,7 +81,7 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
         $oContainer->expects($this->exactly(5))
             ->method('getUtils')
             ->will($this->returnValue($oUtils));
-        
+
         // Config
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(5))
@@ -89,7 +95,7 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
         $oContainer->expects($this->exactly(6))
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
-        
+
         // Client
         $aDefaultResponse = array(
             'GetOrderReferenceDetailsResult' => array(
@@ -115,7 +121,7 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
                 )
             )
         );
-        
+
         $oClient = $this->_getClientMock();
         $oClient->expects($this->exactly(5))
             ->method('getOrderReferenceDetails')
@@ -130,7 +136,7 @@ class bestitAmazonPay4OxidPaymentTest extends bestitAmazon4OxidUnitTestCase
         $oContainer->expects($this->exactly(5))
             ->method('getClient')
             ->will($this->returnValue($oClient));
-        
+
         // Session
         $oBasket = $this->_getBasketMock();
         $oBasket->expects($this->exactly(3))

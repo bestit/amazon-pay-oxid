@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
 /**
@@ -19,6 +21,10 @@ class bestitAmazonPay4OxidOrderMainTest extends bestitAmazon4OxidUnitTestCase
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
         $oBestitAmazonPay4OxidOrderMain = new bestitAmazonPay4Oxid_order_main();
+        $oContainer
+            ->method('getLogger')
+            ->willReturn(new NullLogger());
+
         self::setValue($oBestitAmazonPay4OxidOrderMain, '_oContainer', $oContainer);
 
         return $oBestitAmazonPay4OxidOrderMain;
@@ -63,10 +69,10 @@ class bestitAmazonPay4OxidOrderMainTest extends bestitAmazon4OxidUnitTestCase
             ->with(null)
             ->will($this->onConsecutiveCalls(false, true, true));
 
-        $oOrder->expects($this->exactly(2))
+        $oOrder->expects($this->exactly(3))
             ->method('getFieldData')
-            ->with('oxPaymentType')
-            ->will($this->onConsecutiveCalls('some', 'bestitamazon'));
+            ->withConsecutive(array('oxPaymentType'),array('oxPaymentType'), array('oxordernr'))
+            ->will($this->onConsecutiveCalls('some', 'bestitamazon', 'number'));
 
         $oObjectFactory = $this->_getObjectFactoryMock();
         $oObjectFactory->expects($this->exactly(3))

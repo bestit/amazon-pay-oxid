@@ -25,6 +25,7 @@ echo "=== Start build for OXID ${OXID_VERSION} ==="
 CURRENT_DIR=${PWD}
 TEMP_DIR="/tmp/build_${OXID_SERIES}"
 BASE_DIR="${TEMP_DIR}/oxideshop_ce"
+BUILD_DIR="${CURRENT_DIR}/build"
 SHOP_DIR="${BASE_DIR}/source"
 VENDOR_DIR="${SHOP_DIR}/modules/bestit"
 MODULE_BASE_DIR="${VENDOR_DIR}/amazonpay4oxid"
@@ -55,9 +56,10 @@ if [[ ${OXID_SERIES} == 5 ]]; then
 else
     git clone --branch ${OXID_VERSION} --depth 1 https://github.com/OXID-eSales/oxideshop_ce.git
 
-    if [[ ${OXID_SERIES} == 6* ]]; then
-        echo "=== Replace coding-standards-wrapper dev-master with release v1.0.0 ==="
-        composer require oxid-esales/coding-standards-wrapper:^v1.0.0 --dev --no-update -d ${BASE_DIR}
+    CUSTOM_LOCK_FILE=${BUILD_DIR}/shops/composer_${OXID_VERSION}.lock
+    if [[ -f "$CUSTOM_LOCK_FILE" ]]; then
+        echo "=== Copy custom composer lock file ==="
+        cp ${BUILD_DIR}/shops/composer_${OXID_VERSION}.lock ${BASE_DIR}/composer.lock
     fi
 
     SHOP_PATH='source'

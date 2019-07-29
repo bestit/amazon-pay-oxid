@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
 
@@ -41,6 +43,10 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
         $oBestitAmazonPay4OxidOxOrder = $this->_getTestInstance();
+        $oContainer
+            ->method('getLogger')
+            ->willReturn(new NullLogger());
+
         self::setValue($oBestitAmazonPay4OxidOxOrder, '_oContainer', $oContainer);
 
         return $oBestitAmazonPay4OxidOxOrder;

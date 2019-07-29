@@ -16,6 +16,8 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
      */
     public function setQuickCheckoutBasket()
     {
+        $this->getLogger()->debug('Store quick checkout basket');
+
         $oObjectFactory = $this->getObjectFactory();
         $oSession = $this->getSession();
 
@@ -56,6 +58,8 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
         $sBasket = $oSession->getVariable(self::BESTITAMAZONPAY_TEMP_BASKET);
 
         if ($sBasket !== null) {
+            $this->getLogger()->debug('Restore quick checkout basket');
+
             //init oxbasketitem class first #1746
             $this->getObjectFactory()->createOxidObject('oxBasketItem');
 
@@ -64,6 +68,8 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
 
             //Reset old basket
             $oSession->setBasket($oBasket);
+        } else {
+            $this->getLogger()->debug('Can\'t restore quick checkout basket');
         }
     }
 
@@ -93,6 +99,12 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
             $aBasket['contents'][$sId] = $oBasketItem->getAmount();
         }
 
-        return md5(json_encode($aBasket));
+        $hash = md5(json_encode($aBasket));
+        $this->getLogger()->debug(
+            'Generate basket hash',
+            array('basket' => $aBasket, 'hash' => $hash)
+        );
+
+        return $hash;
     }
 }

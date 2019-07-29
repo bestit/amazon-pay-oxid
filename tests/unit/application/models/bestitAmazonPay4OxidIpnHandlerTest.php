@@ -3,6 +3,7 @@
 require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 use Monolog\Logger;
+use Psr\Log\NullLogger;
 
 /**
  * Unit test for class bestitAmazonPay4OxidIpnHandler
@@ -31,10 +32,10 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
     ) {
         $oBestitAmazonPay4OxidIpnHandler = new bestitAmazonPay4OxidIpnHandler();
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oClientObject', $oClient);
+        self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oIpnLogger', $oLogger);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oConfigObject', $oConfig);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oDatabaseObject', $oDatabase);
         self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oObjectFactory', $oObjectFactory);
-        self::setValue($oBestitAmazonPay4OxidIpnHandler, '_oLogger', $oLogger);
 
         return $oBestitAmazonPay4OxidIpnHandler;
     }
@@ -59,15 +60,12 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
     public function testLogIPNResponse()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(3))
-            ->method('getConfigParam')
-            ->with('blAmazonLogging')
-            ->will($this->onConsecutiveCalls(false, true, true));
 
         $oLogger = $this->_getLoggerMock();
-        $oLogger->expects($this->exactly(2))
+        $oLogger->expects($this->exactly(3))
             ->method('log')
             ->withConsecutive(
+                array(Logger::WARNING, 'messageA', array('ipnMessage' => array('a' => 'aV'))),
                 array(Logger::INFO, 'messageB', array('ipnMessage' => array('b' => 'bV'))),
                 array(Logger::ERROR, 'messageC', array('ipnMessage' => array('c' => 'cV')))
             );
@@ -236,6 +234,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue($oOrder));
 
         $oLogger = $this->_getLoggerMock();
+        $oIpnHandler->setLogger($oLogger);
         $oLogger->expects($this->exactly(12))
             ->method('log')
             ->withConsecutive(
