@@ -104,7 +104,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
         );
 
         $this->getLogger()->debug(
-            'Check if amazon login button should be shown',
+            'Check if amazon button should be shown',
             array('result' => $result)
         );
 
