@@ -1,5 +1,11 @@
 <?php
 
+$vendorPath = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
+
+if (file_exists($vendorPath) === true) {
+    include_once $vendorPath;
+}
+
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;

@@ -144,13 +144,13 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
 
-        $oConfig->expects($this->exactly(4))
+        $oConfig->expects($this->exactly(5))
             ->method('isSsl')
-            ->will($this->onConsecutiveCalls(false, true, true, true));
+            ->will($this->onConsecutiveCalls(false, true, true, false, true));
 
-        $oConfig->expects($this->exactly(3))
+        $oConfig->expects($this->exactly(5))
             ->method('getRequestParameter')
-            ->will($this->onConsecutiveCalls('basket', 'user', 'some'));
+            ->will($this->onConsecutiveCalls('basket', 'user', 'some', 'basket', 'some'));
 
         $oLoginClient = $this->_getObject(
             $this->_getUserMock(),
@@ -188,20 +188,20 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     public function testShowAmazonPayButton()
     {
         $oModule = $this->_getModuleMock();
-        $oModule->expects($this->exactly(3))
+        $oModule->expects($this->exactly(5))
             ->method('isActive')
-            ->will($this->onConsecutiveCalls(false, true, true));
+            ->will($this->onConsecutiveCalls(false, false, true, false, true));
 
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(4))
+        $oConfig->expects($this->exactly(5))
             ->method('isSsl')
-            ->will($this->onConsecutiveCalls(false, true, true, true));
+            ->will($this->onConsecutiveCalls(false, true, false, true, true));
 
         $oSession = $this->_getSessionMock();
-        $oSession->expects($this->exactly(2))
+        $oSession->expects($this->exactly(5))
             ->method('getVariable')
             ->with('amazonOrderReferenceId')
-            ->will($this->onConsecutiveCalls('referenceId', null));
+            ->will($this->onConsecutiveCalls('referenceId', null, null, null, null));
 
         $oLoginClient = $this->_getObject(
             $this->_getUserMock(),
