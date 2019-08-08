@@ -46,5 +46,5 @@ Additionally you can change the exposed apache port that is used for the shop. T
 #### Running the tests
 At the moment the test script requires and previously build instance of the oxid shop. 
 ```bash
-$ docker-compose exec web /bin/bash -c "chmod +x ./build/files/test.sh"
+$ docker-compose exec web /bin/bash -c "chmod +x ./build/files/test.sh && ./build/files/test.sh"
 ```
