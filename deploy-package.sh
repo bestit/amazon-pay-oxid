@@ -43,6 +43,11 @@ ARCHIVE_NAME="bestitamazonpay4oxid"
 MODULE_VERSION=$(cat ./metadata.php | sed -n "s/.*'version' => '\([0-9]\+\.[0-9]\+\.[0-9]\+\)',.*/\1/p")
 ARCHIVE_NAME="bestitamazonpay4oxid-oxid5-${MODULE_VERSION}"
 
+if [ -d ${CURRENT_DIR}/vendor ]
+then
+  sudo rm -rf ${CURRENT_DIR}/vendor
+fi
+
 # Install needed dependencies
 composer install --no-dev --ignore-platform-reqs
 
@@ -62,7 +67,9 @@ PACKAGE="${CURRENT_DIR}/${ARCHIVE_NAME}.zip"
 zip -r \
     --exclude=*.git* \
     --exclude=*build.sh \
+    --exclude=*build* \
     --exclude=*deploy-package.sh \
+    --exclude=*docker-compose.yml \
     --exclude=*deploy.sh \
     --exclude=*.travis.yml \
     ${PACKAGE} ./*
