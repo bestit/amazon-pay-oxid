@@ -3,11 +3,11 @@
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
 if (file_exists($sVendorAutoloader) === true) {
-    require_once(realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php');
+    include_once realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 }
 
 use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Psr\Log\LoggerInterface;
 
 /**
  * Model for IPN handling
@@ -17,9 +17,11 @@ use Monolog\Handler\StreamHandler;
 class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
 {
     /**
-     * Log directory
+     * Name of the ipn logger
+     *
+     * @var string
      */
-    const LOG_DIR = 'log/bestitamazon/';
+    const IPN_LOGGER_NAME = 'AmazonPayIPN';
 
     /**
      * @var bestitAmazonPay4OxidIpnHandler
@@ -27,10 +29,19 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
     private static $_instance = null;
 
     /**
-     * @var null|Logger
+     * The logger
+     *
+     * @var LoggerInterface
      */
-    protected $_oLogger = null;
+    protected $_oIpnLogger;
 
+    /**
+     * bestitAmazonCron constructor.
+     */
+    public function __construct()
+    {
+        $this->_oIpnLogger = $this->getLogger('AmazonPayIPN');
+    }
     /**
      * Singleton instance
      *
@@ -47,23 +58,6 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
     }
 
     /**
-     * Returns the logger.
-     *
-     * @return Logger
-     * @throws Exception
-     */
-    protected function _getLogger()
-    {
-        if ($this->_oLogger === null) {
-            $this->_oLogger = new Logger('AmazonPayment');
-            $sLogFile = $this->getConfig()->getConfigParam('sShopDir').self::LOG_DIR.'ipn.log';
-            $this->_oLogger->pushHandler(new StreamHandler($sLogFile));
-        }
-
-        return $this->_oLogger;
-    }
-
-    /**
      * Method logs IPN response to text file
      *
      * @param string $sLevel
@@ -73,12 +67,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      */
     public function logIPNResponse($sLevel, $sMessage, $oIpnMessage = null)
     {
-        if ((bool)$this->getConfig()->getConfigParam('blAmazonLogging') !== true) {
-            return;
-        }
-
         $aContext = ($oIpnMessage !== null) ? array('ipnMessage' => $oIpnMessage) : array();
-        $this->_getLogger()->log($sLevel, $sMessage, $aContext);
+        $this->_oIpnLogger->log($sLevel, $sMessage, $aContext);
     }
 
     /**
@@ -106,7 +96,7 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             }
 
             $ipnHandler = $this->getObjectFactory()->createIpnHandler($aHeaders, $sBody);
-            $ipnHandler->setLogger($this->_getLogger());
+            $ipnHandler->setLogger($this->_oIpnLogger);
             return json_decode($ipnHandler->toJson());
         } catch (Exception $oException) {
             $this->logIPNResponse(Logger::ERROR, 'Unable to parse ipn message');
@@ -135,8 +125,11 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
         $oOrder = $this->getObjectFactory()->createOxidObject('oxOrder');
 
         if ($oOrder->load($sOrderId) === true) {
+            $this->_oIpnLogger->info('Order by id found', array('id' => $sId));
             return $oOrder;
         }
+
+        $this->_oIpnLogger->info('No order by id found', array('id' => $sId));
 
         return false;
     }
@@ -230,6 +223,8 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
             LIMIT 1";
         $iMatches = (int)$this->getDatabase()->getOne($sSql);
 
+        $this->_oIpnLogger->debug('Refunds fetched', array('matches' => $iMatches));
+
         //Update Refund info
         if ($iMatches > 0 && isset($oData->RefundDetails->RefundStatus->State)) {
             $this->getClient()->updateRefund(
@@ -255,11 +250,14 @@ class bestitAmazonPay4OxidIpnHandler extends bestitAmazonPay4OxidContainer
      */
     public function processIPNAction($sBody)
     {
+        $this->_oIpnLogger->info('Process incoming IPN message');
+
         $oMessage = $this->_getMessage($sBody);
 
         if (isset($oMessage->NotificationData)) {
             $oData = $oMessage->NotificationData;
 
+            $this->_oIpnLogger->info(sprintf('Handle %s message', $oMessage->NotificationType));
             switch ($oMessage->NotificationType) {
                 case 'OrderReferenceNotification':
                     return $this->_orderReferenceUpdate($oData);

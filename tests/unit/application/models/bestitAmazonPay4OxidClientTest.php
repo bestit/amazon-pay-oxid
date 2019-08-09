@@ -4,6 +4,7 @@ require_once dirname(__FILE__).'/../../bestitAmazon4OxidUnitTestCase.php';
 
 use AmazonPay\Client;
 use AmazonPay\ResponseParser;
+use Psr\Log\NullLogger;
 
 /**
  * Unit test for class bestitAmazonPay4OxidClient
@@ -35,6 +36,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
         bestitAmazonPay4OxidObjectFactory $objectFactory
     ) {
         $oBestitAmazonPay4OxidClient = new bestitAmazonPay4OxidClient();
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
         self::setValue($oBestitAmazonPay4OxidClient, '_oAmazonClient', $oClient);
         self::setValue($oBestitAmazonPay4OxidClient, '_oConfigObject', $oConfig);
         self::setValue($oBestitAmazonPay4OxidClient, '_oDatabaseObject', $oDatabase);
@@ -102,6 +104,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     public function testCreateInstance()
     {
         $oBestitAmazonPay4OxidClient = new bestitAmazonPay4OxidClient();
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
         self::assertInstanceOf('bestitAmazonPay4OxidClient', $oBestitAmazonPay4OxidClient);
         self::assertInstanceOf('bestitAmazonPay4OxidClient', bestitAmazonPay4OxidClient::getInstance());
     }
@@ -115,7 +118,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     public function testGetAmazonClient()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(7))
+        $oConfig->expects($this->exactly(6))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('sAmazonSellerId'),
@@ -123,8 +126,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 array('sAmazonSignature'),
                 array('sAmazonLoginClientId'),
                 array('sAmazonLocale'),
-                array('blAmazonSandboxActive'),
-                array('sShopDir')
+                array('blAmazonSandboxActive')
             )
             ->will($this->returnValue('value'));
 
@@ -137,6 +139,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertInstanceOf('\AmazonPay\Client', self::callMethod($oBestitAmazonPay4OxidClient, '_getAmazonClient'));
         self::assertInstanceOf('AmazonPay\Client', self::callMethod($oBestitAmazonPay4OxidClient, '_getAmazonClient'));
@@ -174,6 +178,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertNull($oBestitAmazonPay4OxidClient->getAmazonProperty('some'));
         self::assertEquals(
@@ -240,6 +246,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertEquals($this->_getResponseObject(array()), $oBestitAmazonPay4OxidClient->getOrderReferenceDetails());
         self::assertEquals($this->_getResponseObject(array()), $oBestitAmazonPay4OxidClient->getOrderReferenceDetails());
@@ -314,6 +322,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         $oOrder = $this->_getOrderMock();
         $oOrder->expects($this->exactly(11))
@@ -436,6 +446,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         self::assertEquals(
             $this->_getResponseObject(),
             $oBestitAmazonPay4OxidClient->setOrderReferenceDetails(null, array('extra' => 'extraValue'))
@@ -494,6 +506,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertEquals(
             $this->_getResponseObject(),
@@ -588,6 +602,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         $oOrder = $this->_getOrderRequestOrderMock(
             array(
                 array(array('oxtransstatus' => $sAmazonStatus))
@@ -664,7 +680,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             array(
                 array('bestitamazonorderreferenceid'),
                 array('bestitamazonorderreferenceid'),
-                array('bestitamazonorderreferenceid')
+                array('bestitamazonorderreferenceid'),
+                array('oxordernr')
             )
         );
 
@@ -725,6 +742,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         $oOrder = $this->_getOrderRequestOrderMock(
             array(
@@ -807,6 +826,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         $oOrder = $this->_getOrderRequestOrderMock(
             array(
                 array(
@@ -829,6 +850,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
                 array('oxtotalordersum'),
                 array('oxcurrency'),
                 array('bestitamazonorderreferenceid'),
+                array('oxordernr'),
                 array('oxordernr')
             )
         );
@@ -1013,18 +1035,25 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             array(
                 array('bestitamazonauthorizationid'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonauthorizationid'),
                 array('oxtotalordersum'),
                 array('oxcurrency'),
                 array('bestitamazonorderreferenceid'),
                 array('oxordernr'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonorderreferenceid'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonauthorizationid'),
+                array('oxordernr'),
                 array('bestitamazonorderreferenceid')
             )
         );
@@ -1054,6 +1083,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $objectFactory
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertEquals(
             $this->_getResponseObject(),
@@ -1181,6 +1212,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         $oOrder = $this->_getOrderRequestOrderMock(
             array(
@@ -1311,6 +1344,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         $oOrder = $this->_getOrderRequestOrderMock(
             array(
@@ -1459,6 +1494,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         $oOrder = $this->_getOrderRequestOrderMock(
             array(),
             array(
@@ -1480,15 +1517,15 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
 
         self::assertEquals(
             $this->_getResponseObject(),
-            $oBestitAmazonPay4OxidClient->refund(null, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, null, array('extra' => 'extraValue'))
         );
         self::assertEquals(
             $this->_getResponseObject(array('Error' => array('Code' => 'errorCode', 'Message' => 'errorMessage'))),
-            $oBestitAmazonPay4OxidClient->refund($oOrder, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, $oOrder, array('extra' => 'extraValue'))
         );
         self::assertEquals(
             $this->_getResponseObject($aRefundResult),
-            $oBestitAmazonPay4OxidClient->refund($oOrder, 1.0, array('extra' => 'extraValue'))
+            $oBestitAmazonPay4OxidClient->refund(1.0, $oOrder, array('extra' => 'extraValue'))
         );
     }
 
@@ -1563,6 +1600,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         self::assertEquals(
             $this->_getResponseObject(),
             $oBestitAmazonPay4OxidClient->getRefundDetails('refundId')
@@ -1608,6 +1647,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getObjectFactoryMock()
         );
 
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
+
         $oOrder = $this->_getOrderMock();
         $oOrder->expects($this->exactly(2))
             ->method('getFieldData')
@@ -1648,6 +1689,8 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getUtilsDateMock(),
             $this->_getObjectFactoryMock()
         );
+
+        $oBestitAmazonPay4OxidClient->setLogger(new NullLogger());
 
         self::assertEquals('getUserInfoResult', $oBestitAmazonPay4OxidClient->processAmazonLogin('accessToken'));
     }

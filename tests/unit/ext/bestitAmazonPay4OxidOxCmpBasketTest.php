@@ -124,16 +124,18 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
         $oContainer = $this->_getContainerMock();
 
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(9))
+        $oConfig->expects($this->exactly(11))
             ->method('getRequestParameter')
             ->withConsecutive(
                 array('cl'),
                 array('cl'),
                 array('cl'),
                 array('cl'),
+                array('cancelOrderReference'),
                 array('bestitAmazonPay4OxidErrorCode'),
                 array('error'),
                 array('cl'),
+                array('cancelOrderReference'),
                 array('bestitAmazonPay4OxidErrorCode'),
                 array('error')
             )
@@ -142,9 +144,11 @@ class bestitAmazonPay4OxidOxCmpBasketTest extends bestitAmazon4OxidUnitTestCase
                 'thankyou',
                 'some',
                 'some',
+                true,
                 '',
                 '',
                 'some',
+                false,
                 '',
                 'errorValue'
             ));

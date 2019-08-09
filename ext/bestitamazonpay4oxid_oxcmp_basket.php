@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID oxcmp_basket component
  *
@@ -14,6 +16,21 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_oxcmp_basket constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -31,17 +48,24 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     }
 
     /**
-     *
+     *  Process the amazon callback
      *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
+     *
+     * @return void
      */
     public function processAmazonCallback()
     {
         $oContainer = $this->_getContainer();
         $oConfig = $oContainer->getConfig();
 
-        if ((string) $oConfig->getRequestParameter('AuthenticationStatus') === 'Abandoned') {
+        $this->_oLogger->debug(
+            'Process amazon callback',
+            array('status' => $authStatus = (string) $oConfig->getRequestParameter('AuthenticationStatus'))
+        );
+
+        if ($authStatus === 'Abandoned') {
             $oContainer->getSession()->setVariable('blAmazonSyncChangePayment', 1);
             $oContainer->getUtils()->redirect($oConfig->getShopSecureHomeUrl().'cl=order&action=changePayment', false);
             return;
@@ -63,7 +87,12 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
     {
         $oConfig = $this->_getContainer()->getConfig();
 
-        if ($cancelOrderReference === true || (bool) $oConfig->getRequestParameter('cancelOrderReference')) {
+        $this->_oLogger->debug(
+            'Clean amazon pay',
+            array('withCancel' => $cancelOrderReferenceRequest = (bool) $oConfig->getRequestParameter('cancelOrderReference'))
+        );
+
+        if ($cancelOrderReference === true || $cancelOrderReferenceRequest) {
             $this->_getContainer()->getClient()->cancelOrderReference(
                 null,
                 array('amazon_order_reference_id' => $this->_getContainer()
@@ -129,10 +158,10 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * Parent function wrapper.
      *
      * @param null|string $sProductId
-     * @param null|float $dAmount
-     * @param null|array $aSelectList
-     * @param null|array $aPersistentParameters
-     * @param bool $blOverride
+     * @param null|float  $dAmount
+     * @param null|array  $aSelectList
+     * @param null|array  $aPersistentParameters
+     * @param bool        $blOverride
      *
      * @return mixed
      */
@@ -150,10 +179,10 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      * Check if we are using amazon quick checkout.
      *
      * @param null|string $sProductId
-     * @param null|float $dAmount
-     * @param null|array $aSelectList
-     * @param null|array $aPersistentParameters
-     * @param bool $blOverride
+     * @param null|float  $dAmount
+     * @param null|array  $aSelectList
+     * @param null|array  $aPersistentParameters
+     * @param bool        $blOverride
      *
      * @return mixed
      * @throws oxSystemComponentException
@@ -196,4 +225,3 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
         return $sDefaultReturn;
     }
 }
-

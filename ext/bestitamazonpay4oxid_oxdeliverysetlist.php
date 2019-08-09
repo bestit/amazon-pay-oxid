@@ -75,10 +75,19 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
         $oConfig = $this->_getContainer()->getConfig();
         $sClass = $oConfig->getRequestParameter('cl');
         $sAmazonOrderReferenceId = $this->_getContainer()->getSession()->getVariable('amazonOrderReferenceId');
+        $logger = $this->_getContainer()->getLogger();
+
+        $logger->debug(
+            'Process delivery set result',
+            array('orderReferenceId' => $sAmazonOrderReferenceId)
+        );
 
         //If Amazon Pay cannot be selected remove it from payments list
         if ($sClass === 'payment') {
             if ($this->_getContainer()->getModule()->isActive() !== true) {
+                $logger->debug(
+                    'Amazon pay not active, remove it'
+                );
                 unset($aResult[2]['bestitamazon']);
                 return $aResult;
             }
@@ -90,6 +99,10 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
             ) {
                 //If Amazon pay was selected remove other payment options and leave only Amazon pay
                 $aResult[2] = array('bestitamazon' => $aResult[2]['bestitamazon']);
+
+                $logger->debug(
+                    'Amazon pay has been selected by button, remove other payment methods'
+                );
 
                 //If Amazon pay was selected remove shipping options where Amazon pay is not assigned
                 foreach ($aResult[0] as $sKey => $sValue) {
@@ -109,12 +122,16 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
                     && $this->_getContainer()->getLoginClient()->showAmazonPayButton() === false)
             )
         ) {
+            $logger->debug(
+                'Payment not selected via button is step 1 or 2 and currency is not available for current local, remove it'
+            );
+
             unset($aResult[2]['bestitamazon']);
         }
 
         return $aResult;
     }
-    
+
     /**
      * Returns the delivery set data.
      *

@@ -39,14 +39,27 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function isActive()
     {
+        $loginActive = null;
+        $clientId = null;
+        $sellerId = null;
+
         if ($this->_isActive === null) {
+            $loginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
+            $clientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
+            $sellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
             //Checkbox for active Login checked
-            $this->_isActive = (
-                (bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true
-                && (string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== ''
-                && (string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== ''
-            );
+            $this->_isActive = ($loginActive && $clientId && $sellerId);
         }
+
+        $this->getLogger()->debug(
+            'Check if amazon pay is active',
+            array(
+                'result' => $this->_isActive,
+                'loginActive' => $loginActive,
+                'clientId' => $clientId,
+                'sellerId' => $sellerId,
+            )
+        );
 
         return $this->_isActive;
     }
@@ -59,13 +72,28 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function showAmazonLoginButton()
     {
-        return (
-            $this->isActive() === true
-            && (bool)$this->getConfig()->isSsl() === true
-            && $this->getActiveUser() === false
-            && (string)$this->getConfig()->getRequestParameter('cl') !== 'basket'
-            && (string)$this->getConfig()->getRequestParameter('cl') !== 'user'
+        $requestParameter = (string) $this->getConfig()->getRequestParameter('cl');
+        $isActive = $this->isActive() === true;
+        $isSSL = $this->getConfig()->isSsl() === true;
+        $isUserNotActive = $this->getActiveUser() === false;
+        $isNotBasket = $requestParameter !== 'basket';
+        $isNotUser = $requestParameter !== 'user';
+
+        $result = ($isActive && $isSSL && $isUserNotActive && $isNotBasket && $isNotUser);
+
+        $this->getLogger()->debug(
+            'Check if amazon login button should be shown',
+            array(
+                'result' => $result,
+                'isActive' => $isActive,
+                'isSSL' => $isSSL,
+                'isUserNotActive' => $isUserNotActive,
+                'isNotBasket' => $isNotBasket,
+                'isNotUser' => $isNotUser
+            )
         );
+
+        return $result;
     }
 
     /**
@@ -76,12 +104,25 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function showAmazonPayButton()
     {
-        return (
-            $this->isActive() === true
-            && $this->getConfig()->isSsl() === true
-            && $this->getModule()->isActive() === true
-            && (string)$this->getSession()->getVariable('amazonOrderReferenceId') === ''
+        $isActive = $this->isActive() === true;
+        $isSSL = $this->getConfig()->isSsl() === true;
+        $isModuleActive = $this->getModule()->isActive() === true;
+        $hasEmptyReferenceId = (string)$this->getSession()->getVariable('amazonOrderReferenceId') === '';
+
+        $result = ($isActive && $isSSL && $isModuleActive && $hasEmptyReferenceId);
+
+        $this->getLogger()->debug(
+            'Check if amazon button should be shown',
+            array(
+                'result' => $result,
+                'isActive' => $isActive,
+                'isSSL' => $isSSL,
+                'isModuleActive' => $isModuleActive,
+                'hasEmptyReferenceId' => $hasEmptyReferenceId
+            )
         );
+
+        return $result;
     }
 
     /**
@@ -100,7 +141,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Check if user with Amazon User Id exists
      *
-     * @param stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return boolean
      * @throws oxConnectionException
@@ -119,7 +160,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Check if user with Email from Amazon exists
      *
-     * @var stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return array
      * @throws oxConnectionException
@@ -137,7 +178,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Create new oxid user with details from Amazon
      *
-     * @var stdClass $oUserData
+     * @param stdClass $oUserData The oxid user data
      *
      * @return boolean
      * @throws oxSystemComponentException
@@ -177,13 +218,18 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     /**
      * Delete OXID user by ID
      *
-     * @var string $sId
+     * @param  string $sId The id of the user
      *
      * @return object
      * @throws oxConnectionException
      */
     public function deleteUser($sId)
     {
+        $this->getLogger()->debug(
+            'Delete oxuser',
+            array('oxId' => $sId)
+        );
+
         $sSql = "DELETE FROM oxuser
             WHERE OXID = {$this->getDatabase()->quote($sId)}
               AND OXSHOPID = {$this->getDatabase()->quote($this->getConfig()->getShopId())}";
@@ -199,6 +245,10 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function cleanAmazonPay()
     {
+        $this->getLogger()->debug(
+            'Clean amazon pay'
+        );
+
         $this->getUtilsServer()->setOxCookie('amazon_Login_state_cache', '', time() - 3600, '/');
         $this->getSession()->deleteVariable('amazonLoginToken');
         $this->getModule()->cleanAmazonPay();

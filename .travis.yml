@@ -3,18 +3,27 @@ language: php
 services:
   - docker
 env:
-  - TRAVIS_ERROR_LEVEL=22519 # E_ALL & ~E_DEPRECATED & ~E_NOTICE & ~E_STRICT
+  - TRAVIS_ERROR_LEVEL=22519 CACHE_FOLDER=$HOME/docker-images CACHE_FILE=${CACHE_FOLDER}/docker-web.tgz
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 before_script:
-  - docker login -u "$DOCKER_USERNAME" -p "$DOCKER_PASSWORD"
-  - docker pull "$IMAGE_NAME" || true
+  - if [[ -f ${CACHE_FILE} ]]; then
+          docker load -i ${CACHE_FILE};
+      else
+          mkdir -p ${CACHE_FOLDER};
+          docker-compose build;
+          docker save web | gzip -c > ${CACHE_FILE};
+    fi
 script:
   - docker-compose up -d
-  - docker-compose exec phpunit /bin/bash -c "chmod +x ./build.sh && ./build.sh 5 && ./build.sh 6 && ./build.sh 6.0 && ./build.sh 6.1"
+  - docker-compose exec web /bin/bash -c "composer install && vendor/bin/phpcsoxid --colors"
+  - docker-compose exec web /bin/bash -c "chmod +x ./build/files/test.sh && chmod +x ./build/files/build.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 5 $OXID_5_3_RELEASE && ./build/files/test.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 6.0 $OXID_6_0_RELEASE && ./build/files/test.sh"
+  - docker-compose exec web /bin/bash -c "./build/files/build.sh 6.1 $OXID_6_1_RELEASE && ./build/files/test.sh"
 before_deploy:
   - ssh-keyscan $DEPLOYMENT_SERVER >> $HOME/.ssh/known_hosts
   - (umask  077 ; echo $DEPLOYMENT_SSH_KEY | base64 --decode > /tmp/deploy_rsa)
@@ -32,3 +41,8 @@ deploy:
     script: ./deploy-package.sh ${GH_API_KEY} ${TRAVIS_TAG}
     on:
       tags: true
+
+cache:
+  bundler: true
+  directories:
+    - ${CACHE_FOLDER}

@@ -200,7 +200,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
     /**
      * Marks the type as already injected.
      *
-     * @param $sType
+     * @param string $sType The type for the js
      *
      * @throws oxSystemComponentException
      */
@@ -214,7 +214,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
     /**
      * Checks if the code with given type was already injected.
      *
-     * @param $sType
+     * @param string $sType The type for the js
      *
      * @return bool
      * @throws oxSystemComponentException
@@ -269,4 +269,3 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
         return $this->_getContainer()->getSession()->getVariable('sAmazonBasketHash');
     }
 }
-

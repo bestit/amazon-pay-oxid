@@ -3,7 +3,7 @@
 $sVendorAutoloader = realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 
 if (file_exists($sVendorAutoloader) === true) {
-    require_once(realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php');
+    include_once realpath(dirname(__FILE__).'/../../').'/vendor/autoload.php';
 }
 
 use AmazonPay\Client;
@@ -102,23 +102,6 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     }
 
     /**
-     * Returns the logger.
-     *
-     * @return Logger
-     * @throws Exception
-     */
-    protected function _getLogger()
-    {
-        if ($this->_oLogger === null) {
-            $this->_oLogger = new Logger('AmazonPayment');
-            $sLogFile = $this->getConfig()->getConfigParam('sShopDir').self::LOG_DIR.'client.log';
-            $this->_oLogger->pushHandler(new StreamHandler($sLogFile));
-        }
-
-        return $this->_oLogger;
-    }
-
-    /**
      * Returns the amazon api client.
      *
      * @param array $aConfig
@@ -142,7 +125,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 
             $this->_oAmazonClient = new Client($aConfig);
             $this->_oAmazonClient->setSandbox((bool)$this->getConfig()->getConfigParam('blAmazonSandboxActive'));
-            $this->_oAmazonClient->setLogger($this->_getLogger());
+            $this->_oAmazonClient->setLogger($this->getLogger());
         }
 
         return $this->_oAmazonClient;
@@ -163,13 +146,18 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      *
      * @param string $sMethod
      * @param array  $aParams
+     *
+     * @return void
      */
     protected function _addSandboxSimulationParams($sMethod, array &$aParams)
     {
+        $this->getLogger()->debug('Try to add sandbox simulation params to request params', array('method' => $sMethod));
+
         //If Sandbox mode is inactive or Sandbox Simulation is not selected don't add any Simulation Params
         if ((bool) $this->getConfig()->getConfigParam('blAmazonSandboxActive') !== true
             || (bool) $this->getConfig()->getConfigParam('sSandboxSimulation') === false
         ) {
+            $this->getLogger()->debug('Simulation or sandbox not active');
             return;
         }
 
@@ -222,6 +210,10 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         );
 
         if (isset($aMap[$sMethod][$sSandboxSimulation])) {
+            $this->getLogger()->debug(
+                'Simulation params attached',
+                array('simulation' => $aMap[$sMethod][$sSandboxSimulation])
+            );
             $aParams = array_merge($aParams, $aMap[$sMethod][$sSandboxSimulation]);
         }
     }
@@ -265,13 +257,21 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             ->OrderReferenceStatus
             ->State;
 
+        $this->getLogger()->debug('Process order reference', array('state' => $sOrderReferenceStatus));
+
         //Do re-authorization if order was suspended and now it's opened
         if ($sOrderReferenceStatus === 'Open'
             && (string)$oOrder->getFieldData('oxtransstatus') === 'AMZ-Order-Suspended'
         ) {
+            $this->getLogger()->debug('Reauthorize order');
             $this->authorize($oOrder);
         } else {
-            $oOrder->assign(array('oxtransstatus' => 'AMZ-Order-'.$sOrderReferenceStatus));
+            $this->getLogger()->debug(
+                'Set trans status',
+                array('status' => $status = 'AMZ-Order-'. $sOrderReferenceStatus)
+            );
+
+            $oOrder->assign(array('oxtransstatus' => $status));
             $oOrder->save();
         }
     }
@@ -302,6 +302,17 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                 $aRequestParameters['address_consent_token'] = $sLoginToken;
             }
         }
+
+        $this->getLogger()->debug(
+            'Fetch order reference object for order reference',
+            array(
+                'readOnly' => $blReadonly,
+                'reference' =>
+                    isset($aRequestParameters['amazon_order_reference_id'])
+                        ? $aRequestParameters['amazon_order_reference_id']
+                        : $sAmazonOrderReferenceId
+            )
+        );
 
         //Make request
         $aRequestParameters = array_merge($aRequestParameters, $aParams);
@@ -354,6 +365,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             );
         }
 
+        $this->getLogger()->debug('Set order reference details', array('params' => $aRequestParameters));
+
         $this->_addSandboxSimulationParams('setOrderReferenceDetails', $aRequestParameters);
 
         return $this->_convertResponse($this->_getAmazonClient()->setOrderReferenceDetails($aRequestParameters));
@@ -372,6 +385,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         //Set params
         $aRequestParameters['amazon_order_reference_id'] = $this->getSession()->getVariable('amazonOrderReferenceId');
 
+        $this->getLogger()->debug('Confirm order reference', array('reference' => $aRequestParameters['amazon_order_reference_id']));
+
         return $this->_convertResponse($this->_getAmazonClient()->confirmOrderReference($aRequestParameters));
     }
 
@@ -386,10 +401,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      */
     protected function _setOrderTransactionErrorStatus(oxOrder $oOrder, stdClass $oData, $sStatus = null)
     {
+        $this->getLogger()->debug('Try to set transaction order error status', array('sStatus' => $sStatus));
+
         if (isset($oData->Error->Code) && (bool) $oData->Error->Code !== false) {
             if ($sStatus === null) {
                 $sStatus = 'AMZ-Error-'.$oData->Error->Code;
             }
+
+            $this->getLogger()->debug('Persist transaction order error status', array('sStatus' => $sStatus));
 
             $oOrder->assign(array('oxtransstatus' => $sStatus));
             $oOrder->save();
@@ -485,6 +504,12 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 
         //Make request and return result
         $this->_addSandboxSimulationParams($sRequestFunction, $aRequestParameters);
+
+        $this->getLogger()->debug(
+            sprintf('Execute %s amazon api call', $sRequestFunction),
+            array('params' => $aRequestParameters)
+        );
+
         $oData = $this->_convertResponse($this->_getAmazonClient()->{$sRequestFunction}($aRequestParameters));
 
         //Update Order info
@@ -519,11 +544,12 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon CloseOrderReference method
      *
-     * @param oxOrder $oOrder             OXID Order object
-     * @param array   $aRequestParameters Custom parameters to send
+     * @param oxOrder $oOrder              OXID Order object
+     * @param array   $aRequestParameters  Custom parameters to send
+     * @param bool    $blUpdateOrderStatus Should the oder status be updated?
      *
-     * @return stdClass
      * @throws Exception
+     * @return stdClass
      */
     public function closeOrderReference($oOrder = null, $aRequestParameters = array(), $blUpdateOrderStatus = true)
     {
@@ -541,6 +567,11 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             $oOrder->assign(array(
                 'oxtransstatus' => 'AMZ-Order-Closed'
             ));
+
+            $this->getLogger()->debug(
+                'Update order status after close Reference',
+                array('order' => $oOrder->getFieldData('oxordernr'))
+            );
             $oOrder->save();
         }
 
@@ -584,6 +615,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         $aRequestParameters['transaction_timeout'] =
             ($sMode === bestitAmazonPay4OxidClient::BASIC_FLOW || $blForceSync) ? 0 : 1440;
 
+        $this->getLogger()->debug(
+            'Authorize order',
+            array(
+                'timeout' => $aRequestParameters['transaction_timeout'],
+                'mode' => $sMode
+            )
+        );
+
         $oData = $this->_callOrderRequest(
             'authorize',
             $oOrder,
@@ -607,6 +646,12 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                 'bestitamazonauthorizationid' => $oDetails->AmazonAuthorizationId,
                 'oxtransstatus' => 'AMZ-Authorize-'.$oDetails->AuthorizationStatus->State
             ));
+
+            $this->getLogger()->debug(
+                'Update order status after authorize',
+                array('order' => $oOrder->getFieldData('oxordernr'))
+            );
+
             $oOrder->save();
         }
 
@@ -625,13 +670,23 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         $oAuthorizationStatus = $oAuthorizationDetails->AuthorizationStatus;
 
         //Update Order with primary response info
-        $oOrder->assign(array('oxtransstatus' => 'AMZ-Authorize-'.$oAuthorizationStatus->State));
+        $oOrder->assign(array('oxtransstatus' => $status = 'AMZ-Authorize-'.$oAuthorizationStatus->State));
         $oOrder->save();
+
+        $this->getLogger()->debug(
+            'Update order status after authorize with response info',
+            array('status' => $status, 'order' => $oOrder->getFieldData('oxordernr'))
+        );
 
         // Handle Declined response
         if ($oAuthorizationStatus->State === 'Declined'
             && $this->getConfig()->getConfigParam('sAmazonMode') === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW
         ) {
+            $this->getLogger()->debug(
+                'Handle decline after response for optimized flow',
+                array('reason' => $oAuthorizationStatus->ReasonCode)
+            );
+
             switch ($oAuthorizationStatus->ReasonCode) {
                 case "InvalidPaymentMethod":
                     /** @var bestitAmazonPay4Oxid_oxEmail $oEmail */
@@ -699,10 +754,16 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             'oxtransstatus' => 'AMZ-Capture-'.$oCaptureDetails->CaptureStatus->State
         );
 
+        $this->getLogger()->debug(
+            'Try to set capture state',
+            array('state' => $oCaptureDetails->CaptureStatus->State)
+        );
+
         //Update paid date
         if ($oCaptureDetails->CaptureStatus->State === 'Completed'
             && ($blOnlyNotEmpty === false || $oOrder->getFieldData('oxpaid') !== '0000-00-00 00:00:00')
         ) {
+            $this->getLogger()->debug('Set paid date into order');
             $aFields['oxpaid'] = date('Y-m-d H:i:s', $this->getUtilsDate()->getTime());
         }
 
@@ -782,6 +843,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      */
     public function saveCapture($oOrder = null)
     {
+        $this->getLogger()->debug('Try to save capture');
+
         if ((string)$oOrder->getFieldData('bestitAmazonCaptureId') !== '') {
             return $this->getCaptureDetails($oOrder);
         } elseif ((string)$oOrder->getFieldData('bestitAmazonAuthorizationId') !== '') {
@@ -794,14 +857,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon Refund method
      *
-     * @param oxOrder $oOrder             OXID Order object
      * @param float   $fPrice             Price to refund
+     * @param oxOrder $oOrder             OXID Order object
      * @param array   $aRequestParameters Custom parameters to send
      *
      * @return stdClass
      * @throws Exception
      */
-    public function refund($oOrder = null, $fPrice, $aRequestParameters = array())
+    public function refund($fPrice, $oOrder = null, $aRequestParameters = array())
     {
         //Refund ID
         if ($oOrder !== null) {
@@ -812,6 +875,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                 array('amazon_capture_id', 'currency_code', 'refund_reference_id', 'seller_refund_note')
             );
         }
+
+        $this->getLogger()->debug('Refund order', array('price' => $fPrice,'params' => $aRequestParameters));
 
         //Make request
         $this->_addSandboxSimulationParams('refund', $aRequestParameters);
@@ -842,6 +907,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
                   ERROR = {$this->getDatabase()->quote($sError)},
                   TIMESTAMP = NOW()";
 
+            $this->getLogger()->debug('Persist refundData', array('query' => $sQuery));
+
             $this->getDatabase()->execute($sQuery);
         }
 
@@ -851,13 +918,23 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Updates the refund status.
      *
-     * @param string $sAmazonRefundId
-     * @param string $sState
-     * @param string $sError
+     * @param string $sAmazonRefundId The amazon refund id
+     * @param string $sState          The state
+     * @param string $sError          The error
+     *
      * @throws oxConnectionException
      */
     public function updateRefund($sAmazonRefundId, $sState, $sError = '')
     {
+        $this->getLogger()->debug(
+            'Update refundData',
+            array(
+                'id' => $sAmazonRefundId,
+                'state' => $sState,
+                'error' => $sError
+            )
+        );
+
         $sQuery = "
                 UPDATE bestitamazonrefunds SET
                   `STATE` = {$this->getDatabase()->quote($sState)},
@@ -871,7 +948,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     /**
      * Amazon GetRefundDetails method
      *
-     * @var string $sAmazonRefundId
+     * @param  string $sAmazonRefundId The amazon refund id
      *
      * @return stdClass
      * @throws Exception
@@ -883,6 +960,13 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 
         //Make request
         $oData = $this->_convertResponse($this->_getAmazonClient()->getRefundDetails($aRequestParameters));
+
+        $this->getLogger()->debug(
+            'Fetch refundDetails',
+            array(
+                'id' => $sAmazonRefundId,
+            )
+        );
 
         //Update/Insert Refund info
         if ((array)$oData !== array()) {
@@ -918,6 +1002,13 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             array('amazon_order_reference_id', 'seller_order_id')
         );
 
+        $this->getLogger()->debug(
+            'Set order attributes',
+            array(
+                'params' => $aRequestParameters,
+            )
+        );
+
         return $this->_getAmazonClient()->setOrderAttributes($aRequestParameters);
     }
 
@@ -931,6 +1022,8 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      */
     public function processAmazonLogin($sAccessToken)
     {
+        $this->getLogger()->debug('Fetch amazon user info');
+
         return $this->_getAmazonClient()->getUserInfo($sAccessToken);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\NullLogger;
+
 require_once dirname(__FILE__).'/../bestitAmazon4OxidUnitTestCase.php';
 
 
@@ -20,6 +22,10 @@ class bestitAmazonPay4OxidOxDeliverySetListTest extends bestitAmazon4OxidUnitTes
     private function _getObject(bestitAmazonPay4OxidContainer $oContainer)
     {
         $oBestitAmazonPay4OxDeliverySetList = new bestitAmazonPay4Oxid_oxDeliverySetList();
+        $oContainer
+            ->method('getLogger')
+            ->willReturn(new NullLogger());
+
         self::setValue($oBestitAmazonPay4OxDeliverySetList, '_oContainer', $oContainer);
 
         return $oBestitAmazonPay4OxDeliverySetList;

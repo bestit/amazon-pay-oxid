@@ -1,5 +1,7 @@
 <?php
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Extension for OXID payment controller
  *
@@ -11,6 +13,21 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
      * @var null|bestitAmazonPay4OxidContainer
      */
     protected $_oContainer = null;
+
+    /**
+     * The logger
+     *
+     * @var LoggerInterface
+     */
+    protected $_oLogger;
+
+    /**
+     * bestitAmazonPay4Oxid_payment constructor.
+     */
+    public function __construct()
+    {
+        $this->_oLogger = $this->_getContainer()->getLogger();
+    }
 
     /**
      * Returns the active user object.
@@ -28,8 +45,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     }
 
     /**
-     * @param $sObjectId
-     * @param $sAmazonOrderReferenceId
+     * Set the amazon reference id
+     *
+     * @param string $sObjectId               The id of the object
+     * @param string $sAmazonOrderReferenceId The amazon reference id
      *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
@@ -44,11 +63,14 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     }
 
     /**
-     * @param $sObjectId
+     * Get the amazon reference id
      *
-     * @return false|string
+     * @param string $sObjectId The id of the object
+     *
      * @throws oxConnectionException
      * @throws oxSystemComponentException
+     *
+     * @return false|string
      */
     protected function _getObjectAmazonReferenceId($sObjectId)
     {
@@ -72,6 +94,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
         $oUser = $this->_getContainer()->getActiveUser();
         $oSession = $this->_getContainer()->getSession();
 
+        $this->_oLogger->debug(
+            'Manage primary user data'
+        );
+
         //Parse data from Amazon for OXID
         $aParsedData = $this->_getContainer()->getAddressUtil()->parseAmazonAddress($oAmazonData);
         $aDataMap = array(
@@ -89,6 +115,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
 
         //If user is not logged, create new user and login it
         if ($oUser === false) {
+            $this->_oLogger->debug(
+                'User not logged in, create new user and login',
+                array('dataMap' => $aDataMap)
+            );
             $sAmazonOrderReferenceId = $oSession->getVariable('amazonOrderReferenceId');
 
             /** @var oxUser $oUser */
@@ -104,6 +134,9 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             ));
 
             if ($oUser->save() !== false) {
+                $this->_oLogger->debug(
+                    'User created'
+                );
                 $sUserId = $oUser->getId();
 
                 //Set user id to session
@@ -120,12 +153,25 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             $sUserAmazonOrderReferenceId = $this->_getObjectAmazonReferenceId($sUserId);
             $sAmazonOrderReferenceId = $oSession->getVariable('amazonOrderReferenceId');
 
+            $this->_oLogger->debug(
+                'User logged in, use existing user',
+                array('id' => $sUserId)
+            );
+
             //If our logged in user is the one that was created by us before update details from Amazon WS
             //(Can be selected another user from Amazon Address widget)
             if ($sUserAmazonOrderReferenceId === $sAmazonOrderReferenceId) {
+                $this->_oLogger->debug(
+                    'Logged in user is the same as the one that was created by us, update user',
+                    array('dataMap' => $aDataMap)
+                );
                 $oUser->assign($aDataMap);
                 $oUser->save();
             } else {
+                $this->_oLogger->debug(
+                    'Logged in user is a new amazon login and user has not updated billing, update user',
+                    array('dataMap' => $aDataMap)
+                );
                 //If we have logged in within Amazon Login for the first time, and user have not updated billing address
                 if ((string)$oSession->getVariable('amazonLoginToken') !== ''
                     && (string)$oUser->getFieldData('oxstreet') === ''
@@ -157,6 +203,11 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
                     }
                 }
 
+                $this->_oLogger->debug(
+                    'Add new shipping address to user and preselect the address',
+                    array('dataMap' => $aDataMap)
+                );
+
                 //Add new shipping address to user and select it
                 $oDelAddress->assign(array_merge(
                     $aDataMap,
@@ -176,12 +227,19 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
     /**
      * Get's primary user details and logins user if one is not logged in
      * Add's new address if user is logged in.
+     *
      * @throws Exception
+     *
+     * @return void
      */
     public function setPrimaryAmazonUserData()
     {
         $oUtils = $this->_getContainer()->getUtils();
         $sShopSecureHomeUrl = $this->_getContainer()->getConfig()->getShopSecureHomeUrl();
+
+        $this->_oLogger->debug(
+            'Set primary amazon data'
+        );
 
         //Get primary user data from Amazon
         $oData = $this->_getContainer()->getClient()->getOrderReferenceDetails();
@@ -191,6 +249,9 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
         if ($oOrderReferenceDetail === null
             || isset($oOrderReferenceDetail->Destination->PhysicalDestination) === false
         ) {
+            $this->_oLogger->error(
+                'Invalid reference fetched, cleanup and redirect'
+            );
             $oUtils->redirect($sShopSecureHomeUrl.'cl=user&fnc=cleanAmazonPay', false);
             return;
         }
@@ -199,6 +260,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
         $sStatus = (string)$oOrderReferenceDetail->OrderReferenceStatus->State;
 
         if ($sStatus === 'Draft') {
+            $this->_oLogger->debug(
+                'Draft ORO State detected, redirect to payment page'
+            );
+
             //Manage primary user data
             $oAmazonData = $oOrderReferenceDetail->Destination->PhysicalDestination;
             $this->_managePrimaryUserData($oAmazonData);
@@ -210,6 +275,10 @@ class bestitAmazonPay4Oxid_payment extends bestitAmazonPay4Oxid_payment_parent
             $oUtils->redirect($sShopSecureHomeUrl.'cl=payment', false);
             return;
         }
+
+        $this->_oLogger->error(
+            'Other state than "DRAFT" detected, cleanup and redirect'
+        );
 
         $oUtils->redirect($sShopSecureHomeUrl.'cl=user&fnc=cleanAmazonPay', false);
     }

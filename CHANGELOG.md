@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.4.0] - 2019-08-09
+### Added
+- Added local development setup
+- Added structure for an module logging
+- Implemented rudimentary logging for all module functions
+
 ## [3.3.1] - 2019-05-24
 ### Fixed
 - Fix isActive check for basket sums lower than 1 ([#92](https://github.com/bestit/amazon-pay-oxid/issues/92))
