@@ -63,7 +63,7 @@
                             '[{$smarty.session.amazonOrderReferenceId}]',
                             function (confirmationFlow) {
                                 $.ajax({
-                                    url: "/index.php",
+                                    url: "[{$oViewConf->getSslSelfLink()|html_entity_decode}]index.php",
                                     data: {
                                         cl: "order",
                                         fnc: "confirmAmazonOrderReference",
@@ -79,7 +79,7 @@
                                     },
                                     error: function (data) {
                                         confirmationFlow.error();
-                                        window.location = '/index.php?cl=user&fnc=cleanAmazonPay';
+                                        window.location = '[{$oViewConf->getSslSelfLink()|html_entity_decode}]index.php?cl=user&fnc=cleanAmazonPay';
                                     },
                                     timeout: 5000
                                 });
