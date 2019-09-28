@@ -33,18 +33,19 @@ The first time will build the images and this could take some time!
 
 #### Build the instance
 ```bash
-$ docker-compose exec web /bin/bash -c "chmod +x ./build/files/build.sh && ./build/files/build.sh"
+$ docker-compose exec web /bin/bash -c "chmod +x ./scripts/build.sh && ./scripts/build.sh <version> dev"
 ```
-This command will build an local oxid 6 instance with installed demodata and the symlinked module. 
+This command will build an local oxid with the given version (use for example `5.3`, for version lower than 6.0 or `dev-b-6.0-ce`, for version from 6.0 on) instance with installed demodata and the symlinked module. 
 You are now ready to develop or tests your changes. The shop will be accessible via the url http://localhost:8100 and
 the admin will be reachable via http://localhost:8100 or with https under https://localhost:4444 and the credentials admin:admin.
 
-#### Modify the build
-You can change the oxid series and version that will be build by the OXID_SERIES and OXID_VERSION env variables that are defined in the docker-compose.yml file.
-Additionally you can change the exposed apache port that is used for the shop. This change will also be done in the docker-compose.yml file.
-
 #### Running the tests
-At the moment the test script requires and previously build instance of the oxid shop. 
+Just run the following command:
 ```bash
-$ docker-compose exec web /bin/bash -c "chmod +x ./build/files/test.sh && ./build/files/test.sh"
+$ docker-compose exec web /bin/bash -c "chmod +x ./scripts/build.sh && ./scripts/build.sh <version>"
 ```
+This will create a fresh instance and runs the tests. May also want to login to your previous build test instance and run the test there just access the docker container by running the following command.
+```bash
+$ docker-compose exec web bash
+```
+Now you are logged in and are able to run the test from the instance vendor dir `vendor/bin/runtests`.

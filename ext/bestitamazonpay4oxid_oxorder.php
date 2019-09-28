@@ -350,13 +350,15 @@ class bestitAmazonPay4Oxid_oxOrder extends bestitAmazonPay4Oxid_oxOrder_parent
             $blOptimizedFlow = (string)$oConfig->getConfigParam('sAmazonMode')
                 === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
 
+            $blErpMode = (bool)$oConfig->getConfigParam('blAmazonERP');
+
             $this->_getLogger()->debug(
                 'Decide if sync authorize should be called',
-                array('erpMode' => $erpMode = (bool)$oConfig->getConfigParam('blAmazonERP'))
+                array('erpMode' => $blErpMode)
             );
 
             //Call Amazon authorize (Dedicated for Sync mode), don't call if ERP mode is enabled
-            if ($erpMode !== true
+            if ($blErpMode !== true
                 && $this->_callSyncAmazonAuthorize($oBasket, $sAmazonOrderReferenceId, $blOptimizedFlow) === false
             ) {
                 if ($blOptimizedFlow === true) {

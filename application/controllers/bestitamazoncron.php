@@ -58,6 +58,7 @@ class bestitAmazonCron extends oxUBase
      */
     protected function _addToMessages($sText)
     {
+        $this->_oLogger->debug($sText);
         $aViewData = $this->getViewData();
         $aViewData['sMessage'] = isset($aViewData['sMessage']) ? $aViewData['sMessage'].$sText : $sText;
         $this->setViewData($aViewData);
@@ -125,9 +126,7 @@ class bestitAmazonCron extends oxUBase
                 $sState = $oData->GetAuthorizationDetailsResult
                     ->AuthorizationDetails
                     ->AuthorizationStatus->State;
-                $this->_addToMessages($message = "Authorized Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
-
-                $this->_oLogger->debug($message);
+                $this->_addToMessages("Authorized Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
             }
         }
     }
@@ -157,9 +156,7 @@ class bestitAmazonCron extends oxUBase
                 $sState = $oData->GetOrderReferenceDetailsResult
                     ->OrderReferenceDetails
                     ->OrderReferenceStatus->State;
-                $this->_addToMessages($message = "Declined Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
-
-                $this->_oLogger->debug($message);
+                $this->_addToMessages("Declined Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
             }
         }
     }
@@ -189,9 +186,7 @@ class bestitAmazonCron extends oxUBase
                 $sState = $oData->GetOrderReferenceDetailsResult
                     ->OrderReferenceDetails
                     ->OrderReferenceStatus->State;
-                $this->_addToMessages($message = "Suspended Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
-
-                $this->_oLogger->debug($message);
+                $this->_addToMessages("Suspended Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
             }
         }
     }
@@ -226,9 +221,7 @@ class bestitAmazonCron extends oxUBase
         foreach ($aProcessed as $sOrderNumber => $oData) {
             if (isset($oData->CaptureResult->CaptureDetails->CaptureStatus->State)) {
                 $sState = $oData->CaptureResult->CaptureDetails->CaptureStatus->State;
-                $this->_addToMessages($message = "Capture Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
-
-                $this->_oLogger->debug($message);
+                $this->_addToMessages("Capture Order #{$sOrderNumber} - Status updated to: {$sState}<br/>");
             }
         }
     }
@@ -256,11 +249,9 @@ class bestitAmazonCron extends oxUBase
 
             if (isset($oData->GetRefundDetailsResult->RefundDetails->RefundStatus->State)) {
                 $this->_addToMessages(
-                    $message = "Refund ID: {$oData->GetRefundDetailsResult->RefundDetails->RefundReferenceId} - "
+                    "Refund ID: {$oData->GetRefundDetailsResult->RefundDetails->RefundReferenceId} - "
                     ."Status: {$oData->GetRefundDetailsResult->RefundDetails->RefundStatus->State}<br/>"
                 );
-
-                $this->_oLogger->debug($message);
             }
         }
     }
@@ -287,9 +278,7 @@ class bestitAmazonCron extends oxUBase
 
         foreach ($aProcessed as $sOrderNumber => $oData) {
             if (isset($oData->CloseOrderReferenceResult, $oData->ResponseMetadata->RequestId)) {
-                $this->_addToMessages($message = "Order #{$sOrderNumber} - Closed<br/>");
-
-                $this->_oLogger->debug($message);
+                $this->_addToMessages("Order #{$sOrderNumber} - Closed<br/>");
             }
         }
     }
@@ -421,17 +410,16 @@ class bestitAmazonCron extends oxUBase
         $sOperation = $this->_getOperationName();
 
         if ($sOperation !== false) {
-            $oResult = $this->_getContainer()->getClient()->{$sOperation}(
-                $order = $this->_getOrder(),
-                $params = $this->_getParams()
-            );
+            $oOrder = $this->_getOrder();
+            $aParams = $this->_getParams();
+            $oResult = $this->_getContainer()->getClient()->{$sOperation}($oOrder, $aParams);
 
             $this->_oLogger->info(
                 'Execute specific amazon call',
                 array(
                     'operation' => $sOperation,
-                    'oxid' => $order ? $order->getId() : null,
-                    'params' => $params
+                    'oxid' => $oOrder ? $oOrder->getId() : null,
+                    'params' => $aParams
                 )
             );
 

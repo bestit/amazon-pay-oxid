@@ -350,13 +350,15 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
             $blOptimizedFlow = (string)$oConfig->getConfigParam('sAmazonMode')
                 === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
 
+            $blErpMode = (bool)$oConfig->getConfigParam('blAmazonERP');
+
             $this->_getLogger()->debug(
                 'Decide if sync authorize should be called',
-                array('erpMode' => $erpMode = (bool)$oConfig->getConfigParam('blAmazonERP'))
+                array('erpMode' => $blErpMode)
             );
 
             //Call Amazon authorize (Dedicated for Sync mode), don't call if ERP mode is enabled
-            if ($erpMode !== true
+            if ($blErpMode !== true
                 && $this->_callSyncAmazonAuthorize($oBasket, $sAmazonOrderReferenceId, $blOptimizedFlow) === false
             ) {
                 if ($blOptimizedFlow === true) {
@@ -419,14 +421,16 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
             $sAmazonSyncResponseAuthorizationId = (string)$oSession->getVariable('sAmazonSyncResponseAuthorizationId');
 
             if ($sAmazonSyncResponseState !== '' && $sAmazonSyncResponseAuthorizationId !== '') {
-                $this->assign($orderData = array(
+                $aOrderData = array(
                     'bestitamazonauthorizationid' => $sAmazonSyncResponseAuthorizationId,
                     'oxtransstatus' => 'AMZ-Authorize-'.$sAmazonSyncResponseState
-                ));
+                );
+
+                $this->assign($aOrderData);
 
                 $this->_getLogger()->debug(
                     'Set order state from session variable',
-                    $orderData
+                    $aOrderData
                 );
 
                 $this->save();

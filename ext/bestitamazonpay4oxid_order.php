@@ -129,20 +129,21 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
      */
     public function updateUserWithAmazonData()
     {
-        $billingAddress = $this->getAmazonBillingAddress();
+        $aBillingAddress = $this->getAmazonBillingAddress();
 
         $this->_oLogger->debug(
             'Check if user should be updated with amazon data',
-            array('emptyBillingAddress' => $billingAddress === null)
+            array('emptyBillingAddress' => $aBillingAddress === null)
         );
 
-        if ($billingAddress !== null) {
+        if ($aBillingAddress !== null) {
             $oUser = $this->getUser();
-            $oUser->assign($billingAddress);
+            $oUser->assign($aBillingAddress);
             $oUser->save();
 
             $this->_oLogger->debug(
-                'Billingaddress for user updated'
+                'Billingaddress for user updated',
+                array('billingAddress' => $aBillingAddress)
             );
         }
     }
@@ -324,7 +325,7 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
 
                     //Confirm Order Reference
                     $oData = $oContainer->getClient()->confirmOrderReference(array(
-                        'success_url' => $sSuccessUrl,
+                        'success_url' => htmlspecialchars_decode($sSuccessUrl),
                         'failure_url' => $sFailureUrl
                     ));
 

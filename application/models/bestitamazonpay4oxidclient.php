@@ -266,13 +266,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             $this->getLogger()->debug('Reauthorize order');
             $this->authorize($oOrder);
         } else {
+            $sStatus = 'AMZ-Order-'. $sOrderReferenceStatus;
+            $oOrder->assign(array('oxtransstatus' => $sStatus));
+            $oOrder->save();
+
             $this->getLogger()->debug(
                 'Set trans status',
-                array('status' => $status = 'AMZ-Order-'. $sOrderReferenceStatus)
+                array('status' => $sStatus)
             );
-
-            $oOrder->assign(array('oxtransstatus' => $status));
-            $oOrder->save();
         }
     }
 
@@ -668,14 +669,15 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     public function processAuthorization(oxOrder $oOrder, stdClass $oAuthorizationDetails)
     {
         $oAuthorizationStatus = $oAuthorizationDetails->AuthorizationStatus;
+        $sStatus = 'AMZ-Authorize-'.$oAuthorizationStatus->State;
 
         //Update Order with primary response info
-        $oOrder->assign(array('oxtransstatus' => $status = 'AMZ-Authorize-'.$oAuthorizationStatus->State));
+        $oOrder->assign(array('oxtransstatus' => $sStatus));
         $oOrder->save();
 
         $this->getLogger()->debug(
             'Update order status after authorize with response info',
-            array('status' => $status, 'order' => $oOrder->getFieldData('oxordernr'))
+            array('status' => $sStatus, 'order' => $oOrder->getFieldData('oxordernr'))
         );
 
         // Handle Declined response

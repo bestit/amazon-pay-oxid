@@ -11,62 +11,63 @@ use Monolog\Processor\UidProcessor;
  *
  * @author Martin Knoop <info@bestit-online.de>
  */
-class bestitamazonpay4oxidlogger extends Logger
+class bestitAmazonPay4OxidLogger extends Logger
 {
     /**
      * The loglevel that is configured
      *
      * @var int
      */
-    protected $logLevel;
+    protected $iLogLevel;
 
     /**
      * Is the log active
      *
      * @var bool
      */
-    protected $logActive;
+    protected $blLogActive;
 
     /**
      * bestitamazonpay4oxidlogger constructor.
      *
-     * @param string $sLogFile  The logfile
-     * @param string $logLevel
-     * @param bool   $logActive
-     * @param string $name
+     * @param string $sLogFile    The logfile
+     * @param string $sLogLevel
+     * @param bool   $blLogActive
+     * @param string $sName
      */
-    public function __construct($sLogFile, $logLevel, $logActive, $name = 'AmazonPay')
+    public function __construct($sLogFile, $sLogLevel, $blLogActive, $sName = 'AmazonPay')
     {
-        $sLogFile .= strtolower($name . '.log');
-        $handler = new RotatingFileHandler($sLogFile, 14);
+        $sLogFile .= strtolower($sName . '.log');
+        $oHandler = new RotatingFileHandler($sLogFile, 14);
 
-        $handler->pushProcessor(new UidProcessor());
-        $handler->pushProcessor(new MemoryUsageProcessor());
-        $handler->setFormatter($formatter = new LineFormatter());
-        $formatter->includeStacktraces();
+        $oHandler->pushProcessor(new UidProcessor());
+        $oHandler->pushProcessor(new MemoryUsageProcessor());
+        $oFormatter = new LineFormatter();
+        $oHandler->setFormatter($oFormatter);
+        $oFormatter->includeStacktraces();
 
-        parent::__construct($name, array($handler));
+        parent::__construct($sName, array($oHandler));
 
-        $this->logLevel = Logger::ERROR;
-        if (strtolower($logLevel) === 'debug') {
-            $this->logLevel = Logger::DEBUG;
+        $this->iLogLevel = Logger::ERROR;
+        if (strtolower($sLogLevel) === 'debug') {
+            $this->iLogLevel = Logger::DEBUG;
         }
-        $this->logActive = $logActive;
+        $this->blLogActive = $blLogActive;
     }
 
     /**
      * Adds a log record.
      *
-     * @param  int    $level   The logging level
-     * @param  string $message The log message
-     * @param  array  $context The log context
+     * @param  int    $iLevel   The logging level
+     * @param  string $sMessage The log message
+     * @param  array  $aContext The log context
      * @return bool Whether the record has been processed
      */
-    public function addRecord($level, $message, array $context = array())
+    public function addRecord($iLevel, $sMessage, array $aContext = array())
     {
         $result = false;
-        if ($this->logActive && $level >= $this->logLevel) {
-            $result = parent::addRecord($level, $message, $context);
+        if ($this->blLogActive && $iLevel >= $this->iLogLevel) {
+            $result = parent::addRecord($iLevel, $sMessage, $aContext);
         }
 
         return $result;

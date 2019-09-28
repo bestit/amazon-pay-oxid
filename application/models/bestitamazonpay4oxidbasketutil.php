@@ -99,12 +99,12 @@ class bestitAmazonPay4OxidBasketUtil extends bestitAmazonPay4OxidContainer
             $aBasket['contents'][$sId] = $oBasketItem->getAmount();
         }
 
-        $hash = md5(json_encode($aBasket));
+        $sHash = md5(json_encode($aBasket));
         $this->getLogger()->debug(
             'Generate basket hash',
-            array('basket' => $aBasket, 'hash' => $hash)
+            array('basket' => $aBasket, 'hash' => $sHash)
         );
 
-        return $hash;
+        return $sHash;
     }
 }

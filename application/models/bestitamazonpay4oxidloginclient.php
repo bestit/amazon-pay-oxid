@@ -39,25 +39,25 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function isActive()
     {
-        $loginActive = null;
-        $clientId = null;
-        $sellerId = null;
+        $blLoginActive = false;
+        $sClientId = null;
+        $sSellerId = null;
 
         if ($this->_isActive === null) {
-            $loginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
-            $clientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
-            $sellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
+            $blLoginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
+            $sClientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
+            $sSellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
             //Checkbox for active Login checked
-            $this->_isActive = ($loginActive && $clientId && $sellerId);
+            $this->_isActive = ($blLoginActive && $sClientId && $sSellerId);
         }
 
         $this->getLogger()->debug(
             'Check if amazon pay is active',
             array(
                 'result' => $this->_isActive,
-                'loginActive' => $loginActive,
-                'clientId' => $clientId,
-                'sellerId' => $sellerId,
+                'loginActive' => $blLoginActive,
+                'clientId' => $sClientId,
+                'sellerId' => $sSellerId,
             )
         );
 
@@ -72,28 +72,28 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function showAmazonLoginButton()
     {
-        $requestParameter = (string) $this->getConfig()->getRequestParameter('cl');
-        $isActive = $this->isActive() === true;
-        $isSSL = $this->getConfig()->isSsl() === true;
-        $isUserNotActive = $this->getActiveUser() === false;
-        $isNotBasket = $requestParameter !== 'basket';
-        $isNotUser = $requestParameter !== 'user';
+        $sRequestParameter = (string) $this->getConfig()->getRequestParameter('cl');
+        $blIsActive = $this->isActive() === true;
+        $blIsSSL = $this->getConfig()->isSsl() === true;
+        $blIsUserNotActive = $this->getActiveUser() === false;
+        $blIsNotBasket = $sRequestParameter !== 'basket';
+        $blIsNotUser = $sRequestParameter !== 'user';
 
-        $result = ($isActive && $isSSL && $isUserNotActive && $isNotBasket && $isNotUser);
+        $blResult = ($blIsActive && $blIsSSL && $blIsUserNotActive && $blIsNotBasket && $blIsNotUser);
 
         $this->getLogger()->debug(
             'Check if amazon login button should be shown',
             array(
-                'result' => $result,
-                'isActive' => $isActive,
-                'isSSL' => $isSSL,
-                'isUserNotActive' => $isUserNotActive,
-                'isNotBasket' => $isNotBasket,
-                'isNotUser' => $isNotUser
+                'result' => $blResult,
+                'isActive' => $blIsActive,
+                'isSSL' => $blIsSSL,
+                'isUserNotActive' => $blIsUserNotActive,
+                'isNotBasket' => $blIsNotBasket,
+                'isNotUser' => $blIsNotUser
             )
         );
 
-        return $result;
+        return $blResult;
     }
 
     /**
@@ -104,25 +104,25 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      */
     public function showAmazonPayButton()
     {
-        $isActive = $this->isActive() === true;
-        $isSSL = $this->getConfig()->isSsl() === true;
-        $isModuleActive = $this->getModule()->isActive() === true;
-        $hasEmptyReferenceId = (string)$this->getSession()->getVariable('amazonOrderReferenceId') === '';
+        $blIsActive = $this->isActive() === true;
+        $blIsSSL = $this->getConfig()->isSsl() === true;
+        $blIsModuleActive = $this->getModule()->isActive() === true;
+        $blHasEmptyReferenceId = (string)$this->getSession()->getVariable('amazonOrderReferenceId') === '';
 
-        $result = ($isActive && $isSSL && $isModuleActive && $hasEmptyReferenceId);
+        $blResult = ($blIsActive && $blIsSSL && $blIsModuleActive && $blHasEmptyReferenceId);
 
         $this->getLogger()->debug(
             'Check if amazon button should be shown',
             array(
-                'result' => $result,
-                'isActive' => $isActive,
-                'isSSL' => $isSSL,
-                'isModuleActive' => $isModuleActive,
-                'hasEmptyReferenceId' => $hasEmptyReferenceId
+                'result' => $blResult,
+                'isActive' => $blIsActive,
+                'isSSL' => $blIsSSL,
+                'isModuleActive' => $blIsModuleActive,
+                'hasEmptyReferenceId' => $blHasEmptyReferenceId
             )
         );
 
-        return $result;
+        return $blResult;
     }
 
     /**

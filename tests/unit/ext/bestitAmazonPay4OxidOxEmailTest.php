@@ -27,6 +27,17 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidOxEmail, '_oContainer', $oContainer);
 
+        $oSmarty = $this->getMockBuilder(Smarty::class)->getMock();
+        $oSmarty->expects($this->any())
+            ->method('get_template_vars')
+            ->willReturn(array());
+
+        self::setValue(
+            $oBestitAmazonPay4OxidOxEmail,
+            '_oSmarty',
+            $oSmarty
+        );
+
         return $oBestitAmazonPay4OxidOxEmail;
     }
 
