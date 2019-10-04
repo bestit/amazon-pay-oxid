@@ -177,7 +177,7 @@ class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
             $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
             $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
             $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
-            $this->_oLogger = new bestitamazonpay4oxidlogger($sLogFile, $logLevel, $logActive, $name);
+            $this->_oLogger = oxNew('bestitAmazonPay4OxidLogger', $sLogFile, $logLevel, $logActive, $name);
         }
 
         return $this->_oLogger;

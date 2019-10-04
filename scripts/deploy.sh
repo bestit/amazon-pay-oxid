@@ -7,9 +7,8 @@ VENDOR_DIR='/copy_this/modules/bestit'
 BASE_DIR="${VENDOR_DIR}/amazonpay4oxid"
 ARCHIVE_NAME="bestitamazonpay4oxid"
 
-if [ -d ${CURRENT_DIR}/vendor ]
-then
-  sudo rm -rf ${CURRENT_DIR}/vendor
+if [[ -d ${CURRENT_DIR}/vendor ]]; then
+    rm -rf ${CURRENT_DIR}/vendor
 fi
 
 sudo chmod -R 777 ${CURRENT_DIR}

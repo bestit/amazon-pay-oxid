@@ -45,7 +45,7 @@
                     }).bind("readOnlyWalletWidgetDiv");
                 });
             [{/capture}]
-            <div id="amazonPayClean" class="PaymentStep"><a href="[{$oViewConf->getSslSelfLink()}]cl=user&fnc=cleanAmazonPay">[{oxmultilang ident="BESTITAMAZONPAY_SWITCH_BACK_2_STANDARD"}]</a></div
+            <div id="amazonPayClean" class="PaymentStep"><a href="[{$oViewConf->getSslSelfLink()}]cl=user&fnc=cleanAmazonPay">[{oxmultilang ident="BESTITAMAZONPAY_SWITCH_BACK_2_STANDARD"}]</a></div>
         [{else}]
             [{capture name="sBestitAmazonScript"}]
                 $(document).ready(function () {

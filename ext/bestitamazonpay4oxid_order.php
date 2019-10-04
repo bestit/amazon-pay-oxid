@@ -142,7 +142,8 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
             $oUser->save();
 
             $this->_oLogger->debug(
-                'Billingaddress for user updated'
+                'Billingaddress for user updated',
+                array('billingAddress' => $billingAddress)
             );
         }
     }
@@ -324,7 +325,7 @@ class bestitAmazonPay4Oxid_order extends bestitAmazonPay4Oxid_order_parent
 
                     //Confirm Order Reference
                     $oData = $oContainer->getClient()->confirmOrderReference(array(
-                        'success_url' => $sSuccessUrl,
+                        'success_url' => htmlspecialchars_decode($sSuccessUrl),
                         'failure_url' => $sFailureUrl
                     ));
 

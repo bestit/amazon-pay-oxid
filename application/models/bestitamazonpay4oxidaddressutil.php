@@ -92,6 +92,11 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
      */
     public function parseAmazonAddress($oAmazonData)
     {
+        $this->getLogger()->debug(
+            'Amazon raw address',
+            array('amazonAddress' => $oAmazonData)
+        );
+
         //Cast to array
         $aResult = (array)$oAmazonData;
 
