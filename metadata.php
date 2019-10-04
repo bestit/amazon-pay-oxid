@@ -178,35 +178,35 @@ $aModule = array(
             'name' => 'blAmazonSandboxActive',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '1'
+            'position' => 1
         ),
         array(
             'group' => 'bestitAmazonPay4OxidSettings',
             'name' => 'sAmazonSellerId',
             'type' => 'str',
             'value' => '',
-            'position' => '2'
+            'position' => 2
         ),
         array(
             'group' => 'bestitAmazonPay4OxidSettings',
             'name' => 'sAmazonAWSAccessKeyId',
             'type' => 'str',
             'value' => '',
-            'position' => '3'
+            'position' => 3
         ),
         array(
             'group' => 'bestitAmazonPay4OxidSettings',
             'name' => 'sAmazonSignature',
             'type' => 'password',
             'value' => '',
-            'position' => '4'
+            'position' => 4
         ),
         array(
             'group' => 'bestitAmazonPay4OxidSettings',
             'name' => 'blAmazonLogging',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '5'
+            'position' => 5
         ),
         array(
             'group' => 'bestitAmazonPay4OxidSettings',
@@ -220,21 +220,21 @@ $aModule = array(
             'name' => 'blAmazonLoginActive',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '1'
+            'position' => 1
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',
             'name' => 'sAmazonLoginClientId',
             'type' => 'str',
             'value' => '',
-            'position' => '2'
+            'position' => 2
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',
             'name' => 'sAmazonLoginButtonStyle',
             'type' => 'select',
             'value' => 'LwA-Gold',
-            'position' => '3',
+            'position' => 3,
             'constraints' => 'LwA-LightGray|LwA-DarkGray|LwA-Gold|Login-LightGray|Login-DarkGray|Login-Gold'
         ),
         array(
@@ -242,7 +242,7 @@ $aModule = array(
             'name' => 'sAmazonPayButtonStyle',
             'type' => 'select',
             'value' => 'PwA-Gold',
-            'position' => '4',
+            'position' => 4,
             'constraints' => 'PwA-LightGray|PwA-DarkGray|PwA-Gold|Pay-LightGray|Pay-DarkGray|Pay-Gold'
         ),
         array(
@@ -250,7 +250,7 @@ $aModule = array(
             'name' => 'sAmazonLocale',
             'type' => 'select',
             'value' => 'DE',
-            'position' => '1',
+            'position' => 1,
             'constraints' => 'DE|UK|US'
         ),
         array(
@@ -258,14 +258,14 @@ $aModule = array(
             'name' => 'aAmazonLanguages',
             'type' => 'aarr',
             'value' => array('en' => 'en-GB', 'de' => 'de-DE', 'fr' => 'fr-FR', 'it' => 'it-IT', 'es' => 'es-ES'),
-            'position' => '1'
+            'position' => 1
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'sAmazonMode',
             'type' => 'select',
             'value' => 'OPTIMIZED_FLOW',
-            'position' => '1',
+            'position' => 1,
             'constraints' => 'OPTIMIZED_FLOW|BASIC_FLOW'
         ),
         array(
@@ -273,7 +273,7 @@ $aModule = array(
             'name' => 'sAmazonAuthorize',
             'type' => 'select',
             'value' => 'IPN',
-            'position' => '2',
+            'position' => 2,
             'constraints' => 'IPN|CRON'
         ),
         array(
@@ -281,7 +281,7 @@ $aModule = array(
             'name' => 'sAmazonCapture',
             'type' => 'select',
             'value' => 'SHIPPED',
-            'position' => '3',
+            'position' => 3,
             'constraints' => 'SHIPPED|DIRECT'
         ),
         array(
@@ -289,21 +289,21 @@ $aModule = array(
             'name' => 'blAmazonERP',
             'type' => 'bool',
             'value' => 'false',
-            'position' => '4'
+            'position' => 4
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'sAmazonERPModeStatus',
             'type' => 'str',
             'value' => 'AP-Pend',
-            'position' => '5'
+            'position' => 5
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'sSandboxSimulation',
             'type' => 'select',
             'value' => '',
-            'position' => '6',
+            'position' => 6,
             'constraints' => '
                 |SetOrderReferenceDetailsPaymentMethodNotAllowed
                 |CloseOrderReferenceAmazonClosed
@@ -322,42 +322,42 @@ $aModule = array(
             'name' => 'blBestitAmazonPay4OxidEnableMultiCurrency',
             'type' => 'bool',
             'value' => 'false',
-            'position' => '7'
+            'position' => 7
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'blShowAmazonPayButtonInBasketFlyout',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '8'
+            'position' => 8
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'blShowAmazonPayButtonAtDetails',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '9'
+            'position' => 9
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'blShowAmazonPayButtonAtCartPopup',
             'type' => 'bool',
             'value' => 'true',
-            'position' => '10'
+            'position' => 10
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'aAmazonReverseOrderCountries',
             'type' => 'arr',
             'value' => array('DE', 'AT', 'FR'),
-            'position' => '11'
+            'position' => 11
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
             'name' => 'aAmazonStreetNoStreetCountries',
             'type' => 'arr',
             'value' => array('FR', 'GB'),
-            'position' => '12'
+            'position' => 12
         ),
     ),
     'events' => array(

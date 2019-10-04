@@ -11,7 +11,7 @@ use Monolog\Processor\UidProcessor;
  *
  * @author Martin Knoop <info@bestit-online.de>
  */
-class bestitamazonpay4oxidlogger extends Logger
+class bestitAmazonPay4OxidLogger extends Logger
 {
     /**
      * The loglevel that is configured

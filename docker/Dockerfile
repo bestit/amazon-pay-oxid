@@ -5,11 +5,14 @@ RUN echo "deb-src http://deb.debian.org/debian stretch main" >> /etc/apt/sources
 
 # Install required dependencies
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends libjpeg-dev git zip unzip libxml2-dev libpng-dev mariadb-client vim sudo wget &&  \
+    apt-get install -y --no-install-recommends libjpeg-dev git zip unzip libxml2-dev libpng-dev mariadb-client vim sudo wget && \
     rm -rf /var/lib/apt
 
 # Add self signed cert https://letsencrypt.org/docs/certificates-for-localhost/
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/localhost.key -out /etc/ssl/certs/localhost.crt -subj "/C=DE/ST=Velen/L=Velen/O=Security/OU=Development/CN=example.com"
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -keyout /etc/ssl/private/localhost.key \
+    -out /etc/ssl/certs/localhost.crt \
+    -subj "/C=DE/ST=/L=/O=Security/OU=Development/CN=example.com"
 
 # configure apache
 RUN a2enmod rewrite
@@ -28,7 +31,8 @@ RUN php -r 'readfile("https://getcomposer.org/installer");' > composer-setup.php
 
 # Install and enable required php extensions
 RUN pecl install xdebug-2.6.0
-RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ && docker-php-ext-install mysqli pdo pdo_mysql bcmath soap mbstring dom gd zip intl iconv
+RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/local/ && \
+    docker-php-ext-install mysqli pdo pdo_mysql bcmath soap mbstring dom gd zip intl iconv
 RUN docker-php-ext-enable mysqli pdo pdo_mysql bcmath soap mbstring dom gd xdebug zip intl iconv
 
 # configure xdebug

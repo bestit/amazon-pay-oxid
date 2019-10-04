@@ -1,25 +1,25 @@
 version: '3'
 services:
   web:
-    build: build/
+    build: docker/
     image: web
     container_name: web
-    working_dir:  /var/www/amazonpay4oxid
+    working_dir: /var/www/module
     links:
       - "mysql:db"
     volumes:
-      - .:/var/www/amazonpay4oxid/
+      - .:/var/www/module
     ports:
       - "8100:80"
       - "4444:443"
     depends_on:
       - mysql
     environment:
-      APACHE_PORT: 8100
-      APACHE_SSL_PORT: 4444
+      APP_DIR: /var/www/app
+      MODULE_DIR: /var/www/module
+      HTTP_PORT: 8100
+      HTTPS_PORT: 4444
       TRAVIS_ERROR_LEVEL: ${TRAVIS_ERROR_LEVEL}
-      OXID_SERIES: 6.1
-      OXID_VERSION: v6.3.3
       DB_HOST: db
       DB_NAME: oxidehop_ce
       DB_USER: root
