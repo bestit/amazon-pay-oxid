@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.5.0] - 2019-10-04
+### Changed
+- Refactored Docker setup
+- Changed the success link and added real umlauts
+- Inserted real numbers for the position in the metadata
+- Added oxNew for the custom logger
+
 ## [3.4.0] - 2019-08-09
 ### Added
 - Added local development setup
