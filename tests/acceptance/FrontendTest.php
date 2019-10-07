@@ -25,6 +25,33 @@ class FrontendTest extends oxAcceptanceTestCase
     }
 
     /**
+     * Reset columns if the exits.
+     *
+     * @param int $shopId
+     */
+    public function activateModules($shopId = 1)
+    {
+        if (method_exists($this, 'executeSql')) {
+            $aTableColumns = array(
+                'BESTITAMAZONORDERREFERENCEID' => 'oxorder',
+                'BESTITAMAZONAUTHORIZATIONID' => 'oxorder',
+                'BESTITAMAZONCAPTUREID' => 'oxorder',
+                'BESTITAMAZONID' => 'oxuser',
+            );
+
+            foreach ($aTableColumns as $sColumn => $sTable) {
+                try {
+                    $this->executeSql("ALTER TABLE `{$sTable}` DROP `{$sColumn}`");
+                } catch (Throwable $oException) {
+                    // Do nothing
+                }
+            }
+        }
+
+        parent::activateModules($shopId);
+    }
+
+    /**
      * Returns configuration data for tests
      *
      * @return array
