@@ -8,9 +8,13 @@
 
 $sMetadataVersion = '1.1';
 
-require_once dirname(__FILE__).'/application/controllers/admin/bestitamazonpay4oxid_init.php';
-$sCurrentVersion = (isset($blPreventVersionCheck) && $blPreventVersionCheck === true) ?
-    null : bestitAmazonPay4Oxid_init::getCurrentVersion();
+$blStackAvailable = function_exists('oxNew');
+
+if ($blStackAvailable) {
+    include_once dirname(__FILE__) . '/application/controllers/admin/bestitamazonpay4oxid_init.php';
+    $sCurrentVersion = (isset($blPreventVersionCheck) && $blPreventVersionCheck === true) ?
+        null : bestitAmazonPay4Oxid_init::getCurrentVersion();
+}
 
 /**
  * Module information
@@ -366,10 +370,12 @@ $aModule = array(
     )
 );
 
-if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
-    $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
-}
+if ($blStackAvailable) {
+    if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
+        $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
+    }
 
-if ($sCurrentVersion !== null && version_compare($sCurrentVersion, $aModule['version'], '<')) {
-    bestitAmazonPay4Oxid_init::flagForUpdate();
+    if ($sCurrentVersion !== null && version_compare($sCurrentVersion, $aModule['version'], '<')) {
+        bestitAmazonPay4Oxid_init::flagForUpdate();
+    }
 }
