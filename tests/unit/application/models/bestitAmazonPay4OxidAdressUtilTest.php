@@ -22,6 +22,13 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     private $fixture;
 
     /**
+     * The parsed country id which is used in self::testParseAmazonAddress.
+     *
+     * @var string|null
+     */
+    private $parsedCountryId;
+
+    /**
      * @param oxConfig          $oConfig
      * @param DatabaseInterface $oDatabase
      * @param oxLang            $oLanguage
@@ -41,6 +48,398 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
+     * Creates the fixture for a test of the full address parsing.
+     *
+     * @param bool $withLine2AsNormalStreet Street ordering like it is usual in germany.
+     * @param bool $isUtf8
+     *
+     * @return void
+     * @throws ReflectionException
+     *
+     * @todo Rename this things.
+     */
+    private function _loadFixtureForFillAddressParsingTest($withLine2AsNormalStreet = false, $isUtf8 = true)
+    {
+        $config = $this->_getConfigMock();
+        $countriesWithLine2AsStreet = array('DE', 'AT', 'FR');
+
+        if ($withLine2AsNormalStreet) {
+            $countriesWithLine2AsStreet[] = 'countryCode';
+        }
+
+        $config->expects($this->any())
+            ->method('isUtf')
+            ->will($this->returnValue($isUtf8));
+
+        $config->expects($this->any())
+            ->method('getConfigParam')
+            ->with($this->equalTo('aAmazonReverseOrderCountries'))
+            ->will($this->returnCallback(
+                function ($parameter) use ($countriesWithLine2AsStreet) {
+                    if ($parameter === 'aAmazonReverseOrderCountries') {
+                        return $countriesWithLine2AsStreet;
+                    }
+                }
+            ));
+
+        $oDatabase = $this->_getDatabaseMock();
+        $oDatabase->expects($this->any())
+            ->method('quote')
+            ->with('countryCode')
+            ->will($this->returnValue("'countryCode'"));
+
+        $oDatabase->expects($this->any())
+            ->method('getOne')
+            ->with(new MatchIgnoreWhitespace(
+                "SELECT OXID
+                FROM oxv_oxcountry_de
+                WHERE OXISOALPHA2 = 'countryCode'"
+            ))
+            ->will($this->returnValue($this->parsedCountryId = uniqid()));
+
+        $oLanguage = $this->_getLanguageMock();
+        $oLanguage->expects($this->any())
+            ->method('translateString')
+            ->with('charset')
+            ->will($this->returnValue('ISO-8859-1//TRANSLIT'));
+
+        $this->fixture = $this->_getObject(
+            $config,
+            $oDatabase,
+            $oLanguage
+        );
+    }
+
+    /**
+     * Returns value to check the full address parsing.
+     *
+     * @see testParseAmazonAddress()
+     *
+     * @return array The first value is the imaginary data from amazon, the second one are the changed and added values,
+     *              the third value marks if the company is handled first (like usual in germany) and the last value
+     *              says, if utf8 is supported.
+     */
+    public function getFullAddressParseAsserts()
+    {
+        return array(
+            'without address lines' => array(
+                array(
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => '',
+                    'StreetNr' => '',
+                    'AddInfo' => ''
+                )
+            ),
+            'with only address line 1' => array(
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => '',
+                )
+            ),
+            'with address line 1 and 2, normal order' => array(
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'AddressLine2' => 'Address Line 2 (Two)',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Address Line 2 (Two)',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => '',
+                )
+            ),
+            'with address line 1 and 2, reversed order' => array(
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'AddressLine2' => 'Address Line 2 (Two)',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Address Line 1a',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '2',
+                    'AddInfo' => '(Two)',
+                ),
+                true
+            ),
+            'with address line 1, 2, 3 with street first' => array(
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'AddressLine2' => 'Address Line 2 (Two)',
+                    'AddressLine3' => 'Address Line 3 (Three) €',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Address Line 2 (Two), Address Line 3 (Three) €',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => '',
+                )
+            ),
+            'with address line 1, 2, 3 with company first' => array( // fill company first
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'AddressLine2' => 'Address Line 2 (Two)',
+                    'AddressLine3' => 'Address Line 3 (Three) €',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Address Line 1a, Address Line 3 (Three) €',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '2',
+                    'AddInfo' => '(Two)',
+                ),
+                true
+            ),
+            'with address line 1, 2, 3 with company first, but without utf8' => array(
+                array(
+                    'AddressLine1' => 'Address Line 1a',
+                    'AddressLine2' => 'Address Line 2 (Two)',
+                    'AddressLine3' => 'Address Line 3 (Three) €',
+                    'Name' => 'FName MName LName',
+                ),
+                array(
+                    'AddressLine3' => 'Address Line 3 (Three) EUR',
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Address Line 1a, Address Line 3 (Three) EUR',
+                    'Street' => 'Address Line',
+                    'StreetNr' => '2',
+                    'AddInfo' => '(Two)',
+                ),
+                true,
+                false
+            ),
+            // Amazon had a short period, in which their address form was wrong
+            // so the street number must be handled specially.
+            'map pseudo code with all filled fields, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => ' 50N',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional 50N',
+                ),
+                true
+            ),
+            'map pseudo code with company and street, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line',
+                    'AddressLine2' => ' 50N',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '50N',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with just street, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line',
+                    'AddressLine2' => ' 50N',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '50N',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with all filled fields, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Company Line 1',
+                    'AddressLine2' => 'Street Line 2a additional',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 1, Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2a',
+                    'AddInfo' => 'additional',
+                ),
+                true
+            ),
+            'map pseudo code without line 2, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                ),
+                true
+            ),
+            'map pseudo code without line 2 and 3, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with all filled fields, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => 'Company Line 2',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 2, Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with all filled fields but no info line, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => 'Company Line 2',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 2',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with line 1 but no company line, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => '',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with line 1 but nothing else, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with all filled fields but line 1, normal order' => array(
+                array(
+                    'AddressLine2' => 'Street Line 2b additional',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2b',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with just line 2, normal order' => array(
+                array(
+                    'AddressLine2' => 'Street Line 2b',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2b',
+                    'AddInfo' => '',
+                )
+            ),
+            'map pseudo code with just line 3, normal order' => array(
+                array(
+                    'AddressLine2' => 'StreetLine 3c',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'StreetLine',
+                    'StreetNr' => '3c',
+                    'AddInfo' => '',
+                )
+            )
+        );
+    }
+
+    /**
      * Returns assert to check if the single address line gets parsed correctly.
      *
      * @return array
@@ -49,51 +448,51 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     {
         return array(
             // test desc => Test value, country, result array.
-            'Test german address' => array('Teststraße 1', 'DE', array('Name' => 'Teststraße', 'Number' => '1')),
+            'Test german address' => array('Teststraße 1', 'DE', array('Street' => 'Teststraße', 'StreetNr' => '1')),
             'Test german address, no whitespace' => array(
                 'Teststreet1a',
                 'DE',
-                array('Name' => 'Teststreet', 'Number' => '1a')
+                array('Street' => 'Teststreet', 'StreetNr' => '1a')
             ),
             'Test german address with add info' => array(
                 'Teststreet 1a addinfo',
                 'DE',
-                array('Name' => 'Teststreet', 'Number' => '1a', 'AddInfo' => 'addinfo')
+                array('Street' => 'Teststreet', 'StreetNr' => '1a', 'AddInfo' => 'addinfo')
             ),
             'Test german separated address with add info' => array(
                 'Test street 1a addinfo',
                 'DE',
-                array('Name' => 'Test street', 'Number' => '1a', 'AddInfo' => 'addinfo')
+                array('Street' => 'Test street', 'StreetNr' => '1a', 'AddInfo' => 'addinfo')
             ),
             'Test german address with add info no whitespace' => array(
                 'Teststreet1 addinfo',
                 'DE',
-                array('Name' => 'Teststreet', 'Number' => '1', 'AddInfo' => 'addinfo')
+                array('Street' => 'Teststreet', 'StreetNr' => '1', 'AddInfo' => 'addinfo')
             ),
             'Test address format "street streetnumber" without streetnumber' => array(
                 'Teststreet',
                 'DE',
-                array('Name' => 'Teststreet')
+                array('Street' => 'Teststreet')
             ),
             'Test FR address without streetnumber' => array(
                 'Teststreet',
                 'FR',
-                array('Name' => 'Teststreet', 'Number' => '')
+                array('Street' => 'Teststreet', 'StreetNr' => '')
             ),
             'Test FR address' => array(
                 '1a Teststreet',
                 'FR',
-                array('Name' => 'Teststreet', 'Number' => '1a')
+                array('Street' => 'Teststreet', 'StreetNr' => '1a')
             ),
             'Test FR address no whitespace' => array(
                 '1Teststreet',
                 'FR',
-                array('Name' => 't', 'Number' => '1Teststree')
+                array('Street' => 't', 'StreetNr' => '1Teststree')
             ),
             'Test FR address no whitespace with add info' => array(
                 '1Teststreet addInfo',
                 'FR',
-                array('Number' => '1Teststreet', 'Name' => 'addInfo')
+                array('StreetNr' => '1Teststreet', 'Street' => 'addInfo')
             )
         );
     }
@@ -113,6 +512,8 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
+     * Checks if the object has the correct parent to secure an api.
+     *
      * @group unit
      *
      * @return void
@@ -135,149 +536,43 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
-     * @group  unit
+     * Checks the full parsing of an address.
+     *
+     * @dataProvider getFullAddressParseAsserts
+     * @group unit
      * @covers ::parseAmazonAddress()
-     * @covers ::_parseAddressFields()
+     *
      * @throws oxConnectionException
      * @throws ReflectionException
+     *
+     * @param array $originalAmazonData
+     * @param array $parsedAmazonData
+     * @param bool $withLine2AsNormalStreet Street ordering like it is usual in germany.
+     * @param bool $isUtf8
+     *
+     * @return void
      */
-    public function testParseAmazonAddress()
-    {
-        $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(17))
-            ->method('isUtf')
-            ->will($this->onConsecutiveCalls(true, true, true, true, false));
+    public function testParseAmazonAddress(
+        array $originalAmazonData,
+        array $parsedAmazonData,
+        $withLine2AsNormalStreet = false,
+        $isUtf8 = true
+    ) {
+        $this->_loadFixtureForFillAddressParsingTest($withLine2AsNormalStreet, $isUtf8);
 
-        $oConfig->expects($this->any())
-            ->method('getConfigParam')
-            ->with($this->equalTo('aAmazonReverseOrderCountries'))
-            ->will($this->returnCallback(
-                function($sParameter) {
-                    if ($sParameter === 'aAmazonReverseOrderCountries') {
-                        return array('DE', 'AT', 'FR');
-                    }
-                }
-            ));
+        $amazonAddress = new stdClass();
+        $amazonAddress->CountryCode = 'countryCode';
 
-        $oDatabase = $this->_getDatabaseMock();
-        $oDatabase->expects($this->exactly(5))
-            ->method('quote')
-            ->with('countryCode')
-            ->will($this->returnValue('\'countryCode\''));
+        foreach ($originalAmazonData as $field => $value) {
+            $amazonAddress->$field = $value;
+        }
 
-        $oDatabase->expects($this->exactly(5))
-            ->method('getOne')
-            ->with(new MatchIgnoreWhitespace(
-                "SELECT OXID
-                FROM oxv_oxcountry_de
-                WHERE OXISOALPHA2 = 'countryCode'"
-            ))
-            ->will($this->returnValue('countryId'));
-
-        $oLanguage = $this->_getLanguageMock();
-        $oLanguage->expects($this->exactly(12))
-            ->method('translateString')
-            ->with('charset')
-            ->will($this->returnValue('ISO-8859-1//TRANSLIT'));
-
-        $oBestitAmazonPay4OxidAddressUtil = $this->_getObject(
-            $oConfig,
-            $oDatabase,
-            $oLanguage
-        );
-
-        $oBestitAmazonPay4OxidAddressUtil->setLogger(new NullLogger());
-
-        $oAmazonAddress = new stdClass();
-        $oAmazonAddress->Name = 'FName MName LName';
-        $oAmazonAddress->CountryCode = 'countryCode';
+        $parsedAmazonData['CountryCode'] = 'countryCode';
+        $parsedAmazonData['CountryId'] = $this->parsedCountryId;
 
         self::assertEquals(
-            array(
-                'Name' => 'FName MName LName',
-                'CountryCode' => 'countryCode',
-                'LastName' => 'LName',
-                'FirstName' => 'FName MName',
-                'CountryId' => 'countryId',
-                'CompanyName' => '',
-                'Street' => '',
-                'StreetNr' => '',
-                'AddInfo' => ''
-            ),
-            $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
-        );
-
-        $oAmazonAddress->AddressLine1 = 'Street Name 2a';
-        self::assertEquals(
-            array(
-                'Name' => 'FName MName LName',
-                'CountryCode' => 'countryCode',
-                'LastName' => 'LName',
-                'FirstName' => 'FName MName',
-                'CountryId' => 'countryId',
-                'CompanyName' => '',
-                'Street' => 'Street Name',
-                'StreetNr' => '2a',
-                'AddInfo' => '',
-                'AddressLine1' => 'Street Name 2a'
-            ),
-            $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
-        );
-
-        $oAmazonAddress->AddressLine2 = 'Address Line 2 (Two)';
-        self::assertEquals(
-            array(
-                'Name' => 'FName MName LName',
-                'CountryCode' => 'countryCode',
-                'LastName' => 'LName',
-                'FirstName' => 'FName MName',
-                'CountryId' => 'countryId',
-                'CompanyName' => 'Address Line 2 (Two)',
-                'Street' => 'Street Name',
-                'StreetNr' => '2a',
-                'AddInfo' => '',
-                'AddressLine1' => 'Street Name 2a',
-                'AddressLine2' => 'Address Line 2 (Two)'
-            ),
-            $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
-        );
-
-        $oAmazonAddress->AddressLine3 = 'Address Line 3 (Three) €';
-        self::assertEquals(
-            array(
-                'Name' => 'FName MName LName',
-                'CountryCode' => 'countryCode',
-                'LastName' => 'LName',
-                'FirstName' => 'FName MName',
-                'CountryId' => 'countryId',
-                'CompanyName' => 'Address Line 2 (Two), Address Line 3 (Three) €',
-                'Street' => 'Street Name',
-                'StreetNr' => '2a',
-                'AddInfo' => '',
-                'AddressLine1' => 'Street Name 2a',
-                'AddressLine2' => 'Address Line 2 (Two)',
-                'AddressLine3' => 'Address Line 3 (Three) €'
-            ),
-            $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
-        );
-
-        $oAmazonAddress->AddressLine3 = 'Address Line 3 (Three) €';
-        self::assertEquals(
-            array(
-                'Name' => 'FName MName LName',
-                'CountryCode' => 'countryCode',
-                'LastName' => 'LName',
-                'FirstName' => 'FName MName',
-                'CountryId' => 'countryId',
-                'CompanyName' => 'Address Line 2 (Two), Address Line 3 (Three) EUR',
-                'Street' => 'Street Name',
-                'StreetNr' => '2a',
-                'AddInfo' => '',
-                'AddressLine1' => 'Street Name 2a',
-                'AddressLine2' => 'Address Line 2 (Two)',
-                'AddressLine3' => 'Address Line 3 (Three) EUR'
-            ),
-            $oBestitAmazonPay4OxidAddressUtil->parseAmazonAddress($oAmazonAddress)
+            $parsedAmazonData + $originalAmazonData,
+            $this->fixture->parseAmazonAddress($amazonAddress)
         );
     }
 
@@ -304,12 +599,35 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
 
         self::assertTrue(is_array($testResult));
 
+        $requiredFields = array('Street', 'StreetNr', 'AddInfo');
+
         foreach ($checkedValues as $field => $value) {
-            self::assertArrayHasKey($field, $testResult);
+            self::assertArrayHasKey(
+                $field,
+                $testResult,
+                sprintf('The parsed field %s is missing.', $field)
+            );
+
             self::assertSame(
                 $value,
                 $testResult[$field],
                 sprintf('The value of field %s does not match.', $field)
+            );
+
+            unset($requiredFields[array_search($field, $requiredFields)]);
+        }
+
+        foreach ($requiredFields as $requiredField) {
+            self::assertArrayHasKey(
+                $requiredField,
+                $testResult,
+                sprintf('The required field %s is missing.', $requiredField)
+            );
+
+            self::assertSame(
+                '',
+                $testResult[$requiredField],
+                sprintf('The value of field %s does not match.', $requiredField)
             );
         }
     }
