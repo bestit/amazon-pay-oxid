@@ -8,27 +8,126 @@
 class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
 {
     /**
-     * Returns parsed Street name and Street number in array
+     * Return the parsing which returns more pattern hits and contains a longer street name.
      *
-     * @param string $sString         Full address
-     * @param string $sIsoCountryCode ISO2 code of country of address
+     * @param array $followingNumberMatches
+     * @param array $leadingNumberMatches
      *
-     * @return string
+     * @return array
      */
-    protected function _parseSingleAddress($sString, $sIsoCountryCode = null)
+    protected function _handleParsingForInconclusiveMatches(array $followingNumberMatches, array $leadingNumberMatches)
     {
-        // Array of iso2 codes of countries that have address format <street_no> <street>
-        $aStreetNoStreetCountries = $this->getConfig()->getConfigParam('aAmazonStreetNoStreetCountries');
+        $leadingNumberMatchesCount = count($leadingNumberMatches);
+        $followingNumberMatchesCount = count($followingNumberMatches);
+        $relevantParsing = array();
 
-        if (in_array($sIsoCountryCode, $aStreetNoStreetCountries)) {
-            // matches streetname/streetnumber like "streetnumber streetname"
-            preg_match('/\s*(?P<Number>\d[^\s]*)*\s*(?P<Name>[^\d]*[^\d\s])\s*(?P<AddInfo>.*)/', $sString, $aResult);
+        if ($leadingNumberMatchesCount === $followingNumberMatchesCount) {
+            if ($this->_isStreetParsingLongerThanNumber($followingNumberMatches)) {
+                $relevantParsing = $followingNumberMatches;
+            }
         } else {
-            // default: matches streetname/streetnumber like "streetname streetnumber"
-            preg_match('/\s*(?P<Name>[^\d]*[^\d\s])\s*((?P<Number>\d[^\s]*)\s*(?P<AddInfo>.*))*/', $sString, $aResult);
+            $isFollowingNumberMatchMoreRelevant = $this->_isFollowingNumberMatchMoreRelevant(
+                $followingNumberMatchesCount,
+                $leadingNumberMatchesCount
+            );
+
+            $relevantParsing = $isFollowingNumberMatchMoreRelevant ? $followingNumberMatches : $leadingNumberMatches;
         }
 
-        return $aResult;
+        return $relevantParsing;
+    }
+
+    /**
+     * If both parsings match exactly than the parsing was inconclusive.
+     *
+     * @param array|bool $followingNumberMatches
+     * @param array|bool $leadingNumberMatches
+     *
+     * @return bool
+     */
+    protected function _isAdressLineParsingInconclusive($followingNumberMatches, $leadingNumberMatches)
+    {
+        return $leadingNumberMatches && $followingNumberMatches;
+    }
+
+    /**
+     * Can a following  number be found?
+     *
+     * @param int $followingNumberMatchesCount
+     * @param int $leadingNumberMatchesCount
+     *
+     * @return bool
+     */
+    protected function _isFollowingNumberMatchMoreRelevant($followingNumberMatchesCount, $leadingNumberMatchesCount)
+    {
+        return $followingNumberMatchesCount > $leadingNumberMatchesCount;
+    }
+
+    /**
+     * A longer street name than the number suggests, that the parsing was correct.
+     *
+     * @param array $followingNumberMatches
+     *
+     * @return bool
+     */
+    protected function _isStreetParsingLongerThanNumber(array $followingNumberMatches)
+    {
+        return strlen((string) @$followingNumberMatches['Name']) > strlen((string) @$followingNumberMatches['Number']);
+    }
+
+    /**
+     * Returns parsed Street name and Street number in array
+     *
+     * @param string $addressLine
+     * @param string $iso2CountryCode
+     *
+     * @return array
+     */
+    protected function _parseSingleAddress($addressLine, $iso2CountryCode)
+    {
+        $leadingNumberMatches = $this->_searchForLeadingNumberInAddressLine($addressLine);
+        $followingNumberMatches = $this->_searchForFollowingNumberInAddressLine($addressLine);
+
+        $relevantParsing = $leadingNumberMatches;
+
+        if ($this->_isAdressLineParsingInconclusive($followingNumberMatches, $leadingNumberMatches)) {
+            $this->getLogger()->debug(
+                'The address parsing was not conclusive.',
+                array(
+                    'countyCode' => $iso2CountryCode,
+                    'originalAddressLine' => $addressLine
+                )
+            );
+
+            $relevantParsing = $this->_handleParsingForInconclusiveMatches(
+                $followingNumberMatches,
+                $leadingNumberMatches
+            );
+        } else {
+            $this->getLogger()->debug(
+                'The address parsing was conclusive.',
+                array(
+                    'countyCode' => $iso2CountryCode,
+                    'originalAddressLine' => $addressLine
+                )
+            );
+
+            if ($followingNumberMatches) {
+                $relevantParsing = $followingNumberMatches;
+            }
+        }
+        // else is hidden thru the default value!
+
+        $this->getLogger()->info(
+            'Parsed the given single address line to a value array.',
+            array(
+                'countyCode' => $iso2CountryCode,
+                'originalAddressLine' => $addressLine,
+                'parsedAddressLine' => $relevantParsing
+            )
+        );
+
+        return $relevantParsing;
     }
 
     /**
@@ -50,10 +149,13 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
         $aReverseOrderCountries = $this->getConfig()->getConfigParam('aAmazonReverseOrderCountries');
 
         $aMap = array_flip($aReverseOrderCountries);
-        $aCheckOrder = isset($aMap[$oAmazonData->CountryCode]) === true ? array (2, 1) : array(1, 2);
+        $aCheckOrder = isset($aMap[$oAmazonData->CountryCode]) === true ? array(2, 1) : array(1, 2);
         $sStreet = '';
         $sCompany = '';
 
+        // TODO: Fix it with OXAP-292. Understanding this is not mentally-easy.
+        // The break is used in "reversed order" (company is filled after the street),
+        // this feels like "pfeil durch die brust ins auge."
         foreach ($aCheckOrder as $iCheck) {
             if ($aAmazonAddresses[$iCheck] !== '') {
                 if ($sStreet !== '') {
@@ -80,6 +182,38 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
             'Amazon address parsed',
             array('result' => $aResult, 'amazonAddress' => $aAmazonAddresses)
         );
+    }
+
+    /**
+     * Matches a pattern with a following possible number (as a string) against the given address line.
+     *
+     * @param string $addressLine
+     *
+     * @return bool|array Contains an array with "Number", "Name", "AddInfo" Key or false on no match.
+     */
+    protected function _searchForFollowingNumberInAddressLine($addressLine)
+    {
+        return preg_match(
+            '/\s*(?P<Name>[^\d]*[^\d\s])\s*((?P<Number>\d[^\s]*)\s*(?P<AddInfo>.*))*/',
+            $addressLine,
+            $matches
+        ) ? $matches : false;
+    }
+
+    /**
+     * Matches a pattern with a leading possible number (as a string) against the given address line.
+     *
+     * @param string $addressLine
+     *
+     * @return bool|array Contains an array with "Number", "Name", "AddInfo" Key or false on no match.
+     */
+    protected function _searchForLeadingNumberInAddressLine($addressLine)
+    {
+        return preg_match(
+            '/\s*(?P<Number>\d[^\s]*)*\s*(?P<Name>[^\d]*[^\d\s])\s*(?P<AddInfo>.*)/',
+            $addressLine,
+            $matches
+        ) ? $matches : false;
     }
 
     /**
