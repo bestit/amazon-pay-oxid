@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.6.0] - 2019-10-10
+### Fixed
+- The ajax request for confirmation is now fired, if agb click is not active or checked [#115](https://github.com/bestit/amazon-pay-oxid/pull/115)
+
+### Changed
+- You don't need to configure the special street contries (aAmazonStreetNoStreetCountries) anymore. 
+The module just checks the matches and chooses which field is used for the street. 
+Refactored a bit! [#116](https://github.com/bestit/amazon-pay-oxid/pull/116)
+
+### Added
+- Added a special number handling for the error cases, in which amazon saves just the house number in address line 2. [#117](https://github.com/bestit/amazon-pay-oxid/pull/117) 
+
 ## [3.5.0] - 2019-10-04
 ### Changed
 - Refactored Docker setup
