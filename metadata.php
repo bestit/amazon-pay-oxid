@@ -8,9 +8,13 @@
 
 $sMetadataVersion = '1.1';
 
-require_once dirname(__FILE__).'/application/controllers/admin/bestitamazonpay4oxid_init.php';
-$sCurrentVersion = (isset($blPreventVersionCheck) && $blPreventVersionCheck === true) ?
-    null : bestitAmazonPay4Oxid_init::getCurrentVersion();
+$blStackAvailable = function_exists('oxNew');
+
+if ($blStackAvailable) {
+    include_once dirname(__FILE__) . '/application/controllers/admin/bestitamazonpay4oxid_init.php';
+    $sCurrentVersion = (isset($blPreventVersionCheck) && $blPreventVersionCheck === true) ?
+        null : bestitAmazonPay4Oxid_init::getCurrentVersion();
+}
 
 /**
  * Module information
@@ -36,7 +40,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.5.0',
+    'version' => '3.6.0',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -352,13 +356,6 @@ $aModule = array(
             'value' => array('DE', 'AT', 'FR'),
             'position' => 11
         ),
-        array(
-            'group' => 'bestitAmazonPay4OxidConfiguration',
-            'name' => 'aAmazonStreetNoStreetCountries',
-            'type' => 'arr',
-            'value' => array('FR', 'GB'),
-            'position' => 12
-        ),
     ),
     'events' => array(
         'onActivate' => 'bestitAmazonPay4Oxid_init::onActivate',
@@ -366,10 +363,12 @@ $aModule = array(
     )
 );
 
-if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
-    $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
-}
+if ($blStackAvailable) {
+    if (bestitAmazonPay4Oxid_init::isOxidSix() === false) {
+        $aModule['extend']['oxorder'] = 'bestit/amazonpay4oxid/ext/bestitamazonpay4oxid_oxorder_oxid5';
+    }
 
-if ($sCurrentVersion !== null && version_compare($sCurrentVersion, $aModule['version'], '<')) {
-    bestitAmazonPay4Oxid_init::flagForUpdate();
+    if ($sCurrentVersion !== null && version_compare($sCurrentVersion, $aModule['version'], '<')) {
+        bestitAmazonPay4Oxid_init::flagForUpdate();
+    }
 }
