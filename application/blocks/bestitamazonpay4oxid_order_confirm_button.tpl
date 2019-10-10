@@ -51,40 +51,46 @@
                 var $form = $(this);
                 var $classInput = $('input[name="cl"]', $form);
                 var $functionInput = $('input[name="fnc"]', $form);
+                var $agbCheckbox = $('input[name="ord_agb"][type="checkbox"]');
 
                 if ($classInput.val() === 'order'
                     && $functionInput.val() === '[{$oView->getExecuteFnc()}]'
                 ) {
                     $form.on('submit', function(e) {
-                        e.preventDefault();
-                        modalLoading.init(true);
-                        OffAmazonPayments.initConfirmationFlow(
-                            '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]',
-                            '[{$smarty.session.amazonOrderReferenceId}]',
-                            function (confirmationFlow) {
-                                $.ajax({
-                                    url: "/index.php",
-                                    data: {
-                                        cl: "order",
-                                        fnc: "confirmAmazonOrderReference",
-                                        stoken: "[{$oViewConf->getSessionToken()}]",
-                                        formData: $('#' + $form[0].id).serialize()
-                                    },
-                                    success: function (data) {
-                                        if (data.success === true) {
-                                            confirmationFlow.success();
-                                        } else {
-                                            window.location = data.redirectUrl;
-                                        }
-                                    },
-                                    error: function (data) {
-                                        confirmationFlow.error();
-                                        window.location = '/index.php?cl=user&fnc=cleanAmazonPay';
-                                    },
-                                    timeout: 5000
-                                });
-                            }
-                        );
+                        var agbCheckboxChecked = $agbCheckbox.length >= 1 && $agbCheckbox.is(':checked');
+                        var noAgbCheckbox = $agbCheckbox.length === 0;
+
+                        if (noAgbCheckbox || agbCheckboxChecked) {
+                            e.preventDefault();
+                            modalLoading.init(true);
+                            OffAmazonPayments.initConfirmationFlow(
+                                '[{$oViewConf->getAmazonConfigValue('sAmazonSellerId')}]',
+                                '[{$smarty.session.amazonOrderReferenceId}]',
+                                function (confirmationFlow) {
+                                    $.ajax({
+                                        url: "/index.php",
+                                        data: {
+                                            cl: "order",
+                                            fnc: "confirmAmazonOrderReference",
+                                            stoken: "[{$oViewConf->getSessionToken()}]",
+                                            formData: $('#' + $form[0].id).serialize()
+                                        },
+                                        success: function (data) {
+                                            if (data.success === true) {
+                                                confirmationFlow.success();
+                                            } else {
+                                                window.location = data.redirectUrl;
+                                            }
+                                        },
+                                        error: function (data) {
+                                            confirmationFlow.error();
+                                            window.location = '/index.php?cl=user&fnc=cleanAmazonPay';
+                                        },
+                                        timeout: 5000
+                                    });
+                                }
+                            );
+                        }
                     });
                 }
             });
