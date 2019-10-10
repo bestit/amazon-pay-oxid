@@ -27,6 +27,27 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
     }
 
     /**
+     * Saves the street + house number in the street field and remove the company field, if number is saved in company.
+     *
+     * Amazon had a short period, in which their address form was wrong so the street number must be handled specially.
+     *
+     * @param array $possibleStreetLines
+     *
+     * @return array Return the changed to original street lines.
+     */
+    private function _fixBrokenHouseNumberDataIfNeeded(array $possibleStreetLines)
+    {
+        if ($this->_lineContainsJustAHouseNumber($possibleStreetLines['usual company'])) {
+            $possibleStreetLines['usual street'] = $possibleStreetLines['usual street'] . ' ' .
+                $possibleStreetLines['usual company'];
+
+            $possibleStreetLines['usual company'] = '';
+        }
+
+        return $possibleStreetLines;
+    }
+
+    /**
      * Checks the address lines and returns the matching steet and company information.
      *
      * @param stdClass $amazonData
@@ -72,6 +93,8 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
         if (isset($countryIsosAsKeys[$amazonData->CountryCode])) {
             // Usually line 2 is the street but if line 2 empty, line 1 becomes the street, so move line 2 to the top.
             $possibleStreetLines = array_reverse($possibleStreetLines);
+
+            $possibleStreetLines = $this->_fixBrokenHouseNumberDataIfNeeded($possibleStreetLines);
         }
 
         // Line 3 is the company or additional company infos, everytime! But if the other lines are empty, it can be
@@ -149,6 +172,18 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
     protected function _isStreetParsingLongerThanNumber(array $followingNumberMatches)
     {
         return strlen((string) @$followingNumberMatches['Name']) > strlen((string) @$followingNumberMatches['Number']);
+    }
+
+    /**
+     * Does it seem that the given address line just contains a house number?
+     *
+     * @param string $addressLine
+     *
+     * @return bool
+     */
+    private function _lineContainsJustAHouseNumber($addressLine)
+    {
+        return (bool) preg_match('/^\s*(?P<StreetNr>\d+[\s\w]{0,9})\s*$/', $addressLine);
     }
 
     /**

@@ -231,6 +231,210 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
                 ),
                 true,
                 false
+            ),
+            // Amazon had a short period, in which their address form was wrong
+            // so the street number must be handled specially.
+            'map pseudo code with all filled fields, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => ' 50N',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional 50N',
+                ),
+                true
+            ),
+            'map pseudo code with company and street, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line',
+                    'AddressLine2' => ' 50N',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '50N',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with just street, company on top like in germany, but broken street nr' => array(
+                array(
+                    'AddressLine1' => 'Street Line',
+                    'AddressLine2' => ' 50N',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '50N',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with all filled fields, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Company Line 1',
+                    'AddressLine2' => 'Street Line 2a additional',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 1, Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2a',
+                    'AddInfo' => 'additional',
+                ),
+                true
+            ),
+            'map pseudo code without line 2, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                ),
+                true
+            ),
+            'map pseudo code without line 2 and 3, company on top like in germany' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => '',
+                ),
+                true
+            ),
+            'map pseudo code with all filled fields, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => 'Company Line 2',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 2, Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with all filled fields but no info line, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => 'Company Line 2',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 2',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with line 1 but no company line, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'AddressLine2' => '',
+                    'AddressLine3' => 'Info Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Info Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with line 1 but nothing else, normal order' => array(
+                array(
+                    'AddressLine1' => 'Street Line 1a additional',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '1a',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with all filled fields but line 1, normal order' => array(
+                array(
+                    'AddressLine2' => 'Street Line 2b additional',
+                    'AddressLine3' => 'Company Line 3',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => 'Company Line 3',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2b',
+                    'AddInfo' => 'additional',
+                )
+            ),
+            'map pseudo code with just line 2, normal order' => array(
+                array(
+                    'AddressLine2' => 'Street Line 2b',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'Street Line',
+                    'StreetNr' => '2b',
+                    'AddInfo' => '',
+                )
+            ),
+            'map pseudo code with just line 3, normal order' => array(
+                array(
+                    'AddressLine2' => 'StreetLine 3c',
+                    'Name' => 'FName MName LName'
+                ),
+                array(
+                    'LastName' => 'LName',
+                    'FirstName' => 'FName MName',
+                    'CompanyName' => '',
+                    'Street' => 'StreetLine',
+                    'StreetNr' => '3c',
+                    'AddInfo' => '',
+                )
             )
         );
     }
