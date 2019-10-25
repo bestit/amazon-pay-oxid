@@ -26,6 +26,7 @@ class bestitAmazonPay4Oxid_oxEmail extends bestitAmazonPay4Oxid_oxEmail_parent
      */
     public function __construct()
     {
+        parent::__construct();
         $this->_oLogger = $this->_getContainer()->getLogger();
     }
 
