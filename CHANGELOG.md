@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.6.1] - 2019-10-25
+### Fixed
+- The ajax request for confirmation is now fired, if agb click is not active or checked [#115](https://github.com/bestit/amazon-pay-oxid/pull/120)
+
 ## [3.6.0] - 2019-10-10
 ### Fixed
 - The ajax request for confirmation is now fired, if agb click is not active or checked [#115](https://github.com/bestit/amazon-pay-oxid/pull/115)
