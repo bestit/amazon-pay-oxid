@@ -4,7 +4,7 @@
   "type": "oxideshop-module",
   "keywords": ["oxid", "modules", "eShop"],
   "homepage": "https://www.bestit-online.de",
-  "version": "3.6.0",
+  "version": "3.6.1",
   "license": [
     "GPL-3.0-only",
     "proprietary"
