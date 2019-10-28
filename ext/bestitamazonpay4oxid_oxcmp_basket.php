@@ -29,6 +29,7 @@ class bestitAmazonPay4Oxid_oxcmp_basket extends bestitAmazonPay4Oxid_oxcmp_baske
      */
     public function __construct()
     {
+        parent::__construct();
         $this->_oLogger = $this->_getContainer()->getLogger();
     }
 
