@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 
 ## [3.6.1] - 2019-10-25
 ### Fixed
-- The ajax request for confirmation is now fired, if agb click is not active or checked [#115](https://github.com/bestit/amazon-pay-oxid/pull/120)
+- Fixed the missing parent call in "OxidEsales\Eshop\Core\Email" [#120](https://github.com/bestit/amazon-pay-oxid/pull/120)
 
 ## [3.6.0] - 2019-10-10
 ### Fixed
