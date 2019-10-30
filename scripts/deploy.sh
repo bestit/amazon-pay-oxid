@@ -8,7 +8,7 @@ BASE_DIR="${VENDOR_DIR}/amazonpay4oxid"
 ARCHIVE_NAME="bestitamazonpay4oxid"
 
 if [[ -d ${CURRENT_DIR}/vendor ]]; then
-    rm -rf ${CURRENT_DIR}/vendor
+    sudo rm -rf ${CURRENT_DIR}/vendor
 fi
 
 sudo chmod -R 777 ${CURRENT_DIR}
