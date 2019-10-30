@@ -26,6 +26,7 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
      */
     public function __construct()
     {
+        parent::__construct();
         $this->_oLogger = $this->_getContainer()->getLogger();
     }
 

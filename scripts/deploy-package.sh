@@ -43,6 +43,12 @@ ARCHIVE_NAME="bestitamazonpay4oxid"
 MODULE_VERSION=$(cat ./metadata.php | sed -n "s/.*'version' => '\([0-9]\+\.[0-9]\+\.[0-9]\+\)',.*/\1/p")
 ARCHIVE_NAME="bestitamazonpay4oxid-oxid5-${MODULE_VERSION}"
 
+if [[ -d ${CURRENT_DIR}/vendor ]]; then
+    sudo rm -rf ${CURRENT_DIR}/vendor
+fi
+
+sudo chmod -R 777 ${CURRENT_DIR}
+
 # Install needed dependencies
 composer install --no-dev --ignore-platform-reqs
 

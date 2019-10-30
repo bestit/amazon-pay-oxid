@@ -830,9 +830,8 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
 
 
         $oBasket = $this->_getBasketMock();
-        $oBasket->expects($this->once())
-            ->method('getContents')
-            ->will($this->returnValue(array()));
+        $oBasket->method('getContents')
+            ->willReturn(array());
 
         $oBasket->expects($this->any())
             ->method('getPaymentId')
