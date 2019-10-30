@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.6.2] - 2019-10-30
+### Fixed
+- Add missing parent::__construct calls [#124](https://github.com/bestit/amazon-pay-oxid/pull/124)
+- Make testFinalizeOrder more robust [#124](https://github.com/bestit/amazon-pay-oxid/pull/124)
+
 ## [3.6.1] - 2019-10-25
 ### Fixed
 - Fixed the missing parent call in "OxidEsales\Eshop\Core\Email" [#120](https://github.com/bestit/amazon-pay-oxid/pull/120)
