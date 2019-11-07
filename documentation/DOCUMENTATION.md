@@ -1,1 +1,1 @@
-The module documentation can be found at [https://support.bestit-online.de/hc/en-us/categories/115000265369-Amazon-Pay-for-OXID](https://support.bestit-online.de/hc/en-us/categories/115000265369-Amazon-Pay-for-OXID)
+The module documentation can be found at [https://bestitcon.zendesk.com/hc/de/categories/115000265369-Amazon-Pay-for-OXID](https://bestitcon.zendesk.com/hc/de/categories/115000265369-Amazon-Pay-for-OXID)
