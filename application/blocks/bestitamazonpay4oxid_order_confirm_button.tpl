@@ -86,7 +86,7 @@
                                             confirmationFlow.error();
                                             window.location = '/index.php?cl=user&fnc=cleanAmazonPay';
                                         },
-                                        timeout: 5000
+                                        timeout: 0
                                     });
                                 }
                             );
