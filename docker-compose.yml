@@ -15,7 +15,7 @@ services:
     depends_on:
       - mysql
     environment:
-      APP_DIR: /var/www/app
+      APP_DIR: /var/www/html
       MODULE_DIR: /var/www/module
       HTTP_PORT: 8100
       HTTPS_PORT: 4444

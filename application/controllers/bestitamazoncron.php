@@ -288,49 +288,52 @@ class bestitAmazonCron extends oxUBase
      * @throws Exception
      * @throws oxSystemComponentException
      *
-     * @return void
+     * @return string
      */
     public function render()
     {
-        //Increase execution time for the script to run without timeouts
-        set_time_limit(3600);
+        // Only execute the complete cronjob if the action is not amazon call
+        if ($this->_getContainer()->getConfig()->getRequestParameter('fnc') !== 'amazonCall') {
+            //Increase execution time for the script to run without timeouts
+            set_time_limit(3600);
 
-        $this->_oLogger->info('Cronjob started');
+            $this->_oLogger->info('Cronjob started');
 
-        //If ERP mode is enabled do nothing, if IPN or CRON authorize unauthorized orders
-        if ((bool)$this->_getContainer()->getConfig()->getConfigParam('blAmazonERP') === true) {
-            $this->setViewData(array('sError' => 'ERP mode is ON (Module settings)'));
-            $this->_oLogger->info('ERP mode is ON (Module settings)');
-        } elseif ((string)$this->_getContainer()->getConfig()->getConfigParam('sAmazonAuthorize') !== 'CRON') {
-            $this->setViewData(array('sError' => 'Trigger Authorise via Cronjob mode is turned Off (Module settings)'));
-            $this->_oLogger->info('Cronjob state: Trigger Authorise via Cronjob mode is turned Off (Module settings)');
-        } else {
-            $this->_oLogger->info('Update authorized orders');
-            //Authorize unauthorized or Authorize-Pending orders
-            $this->_updateAuthorizedOrders();
+            //If ERP mode is enabled do nothing, if IPN or CRON authorize unauthorized orders
+            if ((bool)$this->_getContainer()->getConfig()->getConfigParam('blAmazonERP') === true) {
+                $this->setViewData(array('sError' => 'ERP mode is ON (Module settings)'));
+                $this->_oLogger->info('ERP mode is ON (Module settings)');
+            } elseif ((string)$this->_getContainer()->getConfig()->getConfigParam('sAmazonAuthorize') !== 'CRON') {
+                $this->setViewData(array('sError' => 'Trigger Authorise via Cronjob mode is turned Off (Module settings)'));
+                $this->_oLogger->info('Cronjob state: Trigger Authorise via Cronjob mode is turned Off (Module settings)');
+            } else {
+                $this->_oLogger->info('Update authorized orders');
+                //Authorize unauthorized or Authorize-Pending orders
+                $this->_updateAuthorizedOrders();
 
-            $this->_oLogger->info('Update declined orders');
-            //Check for declined orders
-            $this->_updateDeclinedOrders();
+                $this->_oLogger->info('Update declined orders');
+                //Check for declined orders
+                $this->_updateDeclinedOrders();
 
-            $this->_oLogger->info('Update suspended orders');
-            //Check for suspended orders
-            $this->_updateSuspendedOrders();
+                $this->_oLogger->info('Update suspended orders');
+                //Check for suspended orders
+                $this->_updateSuspendedOrders();
 
-            $this->_oLogger->info('Capture orders');
-            //Capture handling
-            $this->_captureOrders();
+                $this->_oLogger->info('Capture orders');
+                //Capture handling
+                $this->_captureOrders();
 
-            $this->_oLogger->info('Update refund stats');
-            //Check refund stats
-            $this->_updateRefundDetails();
+                $this->_oLogger->info('Update refund stats');
+                //Check refund stats
+                $this->_updateRefundDetails();
 
-            $this->_oLogger->info('Close orders');
-            //Check for order which can be closed
-            $this->_closeOrders();
+                $this->_oLogger->info('Close orders');
+                //Check for order which can be closed
+                $this->_closeOrders();
 
-            $this->_oLogger->info('Cronjob finished');
-            $this->_addToMessages('Done');
+                $this->_oLogger->info('Cronjob finished');
+                $this->_addToMessages('Done');
+            }
         }
 
         return $this->_sThisTemplate;
