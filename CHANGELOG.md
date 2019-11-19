@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
 
+## [3.6.4] - 2019-11-19
+### Fixed
+- added method exception to disable the cronjob on amazon call function [#132](https://github.com/bestit/amazon-pay-oxid/pull/132)
+
 ## [3.6.3] - 2019-11-07
 ### Changed
 - Change Documentation URL [#128](https://github.com/bestit/amazon-pay-oxid/pull/128)
@@ -130,6 +134,13 @@ Refactored a bit! [#116](https://github.com/bestit/amazon-pay-oxid/pull/116)
 - Line endings of files bestitamazonpay4oxidipnhandler.php and bestitamazonpay4oxidloginclient.php
 - Module settings will now be saved even if you deactivate and activate the module again
 
+[3.6.4]: https://github.com/bestit/amazon-pay-oxid/compare/3.6.3...3.6.4
+[3.6.3]: https://github.com/bestit/amazon-pay-oxid/compare/3.6.2...3.6.3
+[3.6.2]: https://github.com/bestit/amazon-pay-oxid/compare/3.6.1...3.6.2
+[3.6.1]: https://github.com/bestit/amazon-pay-oxid/compare/3.6.0...3.6.1
+[3.6.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.5.0...3.6.0
+[3.5.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.4.0...3.5.0
+[3.4.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.3.1...3.4.0
 [3.3.1]: https://github.com/bestit/amazon-pay-oxid/compare/3.3.0...3.3.1
 [3.3.0]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.2...3.3.0
 [3.2.2]: https://github.com/bestit/amazon-pay-oxid/compare/3.2.1...3.2.2
