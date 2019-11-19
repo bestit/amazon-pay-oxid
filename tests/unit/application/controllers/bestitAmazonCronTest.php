@@ -45,6 +45,31 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
     }
 
     /**
+     * Test that the render method is working for amazon call functions
+     *
+     * @group unit
+     * @covers ::render()
+     *
+     * @return void
+     */
+    public function testRenderForAmazonCall()
+    {
+        $oContainer = $this->_getContainerMock();
+        $oConfig = $this->_getConfigMock();
+
+        $oConfig
+            ->method('getRequestParameter')
+            ->will($this->returnValue('foobar'));
+
+        $oContainer
+            ->method('getConfig')
+            ->will($this->returnValue($oConfig));
+
+        $oBestitAmazonIpn = $this->_getObject($oContainer);
+        self::assertEquals('bestitamazonpay4oxidcron.tpl', $oBestitAmazonIpn->render());
+    }
+
+    /**
      * @group unit
      * @covers ::render()
      * @covers ::_updateAuthorizedOrders()
@@ -63,7 +88,13 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
         $oContainer = $this->_getContainerMock();
 
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(6))
+
+        $oConfig
+            ->method('getRequestParameter')
+            ->will($this->returnValue('foobar'));
+
+        $oConfig
+            ->expects($this->exactly(6))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blAmazonERP'),
@@ -82,7 +113,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
                 'SHIPPED'
             ));
 
-        $oContainer->expects($this->exactly(6))
+        $oContainer
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
 
