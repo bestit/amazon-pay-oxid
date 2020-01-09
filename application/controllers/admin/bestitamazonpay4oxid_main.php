@@ -101,7 +101,7 @@ class bestitAmazonPay4Oxid_main extends oxAdminDetails
         $dSum = $oOrder->getOrderSum();
         $this->_aViewData['ordertotalsum'] = $oLang->formatCurrency($dSum, $oCurrency);
         $this->_aViewData['ordertotalcnt'] = $oOrder->getOrderCnt();
-        $this->_aViewData['afolder'] = $oConfig->getConfigParam('aOrderfolder');
+        $this->_aViewData['afolder'] = $oConfig->getShopConfVar('aOrderfolder');
         $this->_aViewData['currency'] = $oCurrency;
 
         return 'bestitamazonpay4oxid_main.tpl';

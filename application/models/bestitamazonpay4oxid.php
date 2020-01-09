@@ -25,7 +25,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
     public function getIsSelectedCurrencyAvailable()
     {
         $oConfig = $this->getConfig();
-        $blEnableMultiCurrency = (bool)$oConfig->getConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency');
+        $blEnableMultiCurrency = (bool)$oConfig->getShopConfVar('blBestitAmazonPay4OxidEnableMultiCurrency', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
 
         $this->getLogger()->debug('Check if selected currency is available');
 
@@ -43,7 +43,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
                 'UK' => 'GBP',
                 'US' => 'USD'
             );
-            $sLocale = (string)$oConfig->getConfigParam('sAmazonLocale');
+            $sLocale = (string)$oConfig->getShopConfVar('sAmazonLocale', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
             $sCurrency = (string)$this->getSession()->getBasket()->getBasketCurrency()->name;
 
             //If Locale is DE and currency is not EURO don't allow Amazon checkout process
@@ -129,7 +129,7 @@ class bestitAmazonPay4Oxid extends bestitAmazonPay4OxidContainer
         $oConfig = $this->getConfig();
 
         //If Amazon SellerId is empty
-        if ((string)$oConfig->getConfigParam('sAmazonSellerId') === '') {
+        if ((string)$oConfig->getShopConfVar('sAmazonSellerId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === '') {
             $this->getLogger()->debug('Amazon seller id is empty');
             return $this->_blActive = false;
         }

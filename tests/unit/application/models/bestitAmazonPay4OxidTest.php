@@ -58,7 +58,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(16))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sAmazonLocale'),
@@ -151,7 +151,7 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         $this->setConfigParam('blSkipViewUsage', true);
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(9))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),

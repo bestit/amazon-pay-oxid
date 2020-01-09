@@ -146,7 +146,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue(456));
 
         $oConfig->expects($this->exactly(14))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('sAmazonMode'),
                 array('blAmazonERP'),
@@ -732,7 +732,7 @@ class bestitAmazonPay4OxidOxOrderTest extends bestitAmazon4OxidUnitTestCase
         $oConfig = $this->_getConfigMock();
 
         $oConfig->expects($this->exactly(5))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonERP'),
                 array('sAmazonERPModeStatus'),

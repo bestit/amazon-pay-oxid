@@ -87,7 +87,7 @@ class bestitAmazonPay4OxidAddressUtil extends bestitAmazonPay4OxidContainer
             'usual company' => is_string($amazonData->AddressLine2) ? trim($amazonData->AddressLine2) : '',
         );
 
-        $countriesWithCompanyOnTop = $this->getConfig()->getConfigParam('aAmazonReverseOrderCountries');
+        $countriesWithCompanyOnTop = $this->getConfig()->getShopConfVar('aAmazonReverseOrderCountries', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
         $countryIsosAsKeys = array_flip($countriesWithCompanyOnTop);
 
         if (isset($countryIsosAsKeys[$amazonData->CountryCode])) {

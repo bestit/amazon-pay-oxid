@@ -147,7 +147,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->any())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('blAmazonLogging')
             ->will($this->returnValue(true));
 

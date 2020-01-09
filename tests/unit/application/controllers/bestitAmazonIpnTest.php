@@ -62,7 +62,7 @@ class bestitAmazonIpnTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(9))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonERP'),
                 array('blAmazonERP'),

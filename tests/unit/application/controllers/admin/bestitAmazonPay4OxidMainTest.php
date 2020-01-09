@@ -67,7 +67,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue($oCurrency));
 
         $oConfig->expects($this->exactly(7))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aOrderfolder')
             ->will($this->returnValue('orderFolder'));
 

@@ -95,7 +95,7 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig
             ->expects($this->exactly(6))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonERP'),
                 array('blAmazonERP'),
