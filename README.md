@@ -38,6 +38,7 @@ $ docker-compose exec web /bin/bash -c "chmod +x ./scripts/build.sh && ./scripts
 This command will build an local oxid with the given version (use for example `5.3`, for version lower than 6.0 or `dev-b-6.0-ce`, for version from 6.0 on) instance with installed demodata and the symlinked module. 
 You are now ready to develop or tests your changes. The shop will be accessible via the url http://localhost:8100 and
 the admin will be reachable via http://localhost:8100 or with https under https://localhost:4444 and the credentials admin:admin.
+You can access the mysql instance via localhost:32786.
 
 #### Running the tests
 Just run the following command:

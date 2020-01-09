@@ -115,16 +115,16 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
             $aConfig = array_merge(
                 $aConfig,
                 array(
-                    'merchant_id' => $this->getConfig()->getConfigParam('sAmazonSellerId'),
-                    'access_key' => $this->getConfig()->getConfigParam('sAmazonAWSAccessKeyId'),
-                    'secret_key' => $this->getConfig()->getConfigParam('sAmazonSignature'),
-                    'client_id' => $this->getConfig()->getConfigParam('sAmazonLoginClientId'),
-                    'region' => $this->getConfig()->getConfigParam('sAmazonLocale')
+                    'merchant_id' => $this->getConfig()->getShopConfVar('sAmazonSellerId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME),
+                    'access_key' => $this->getConfig()->getShopConfVar('sAmazonAWSAccessKeyId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME),
+                    'secret_key' => $this->getConfig()->getShopConfVar('sAmazonSignature', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME),
+                    'client_id' => $this->getConfig()->getShopConfVar('sAmazonLoginClientId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME),
+                    'region' => $this->getConfig()->getShopConfVar('sAmazonLocale', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME)
                 )
             );
 
             $this->_oAmazonClient = new Client($aConfig);
-            $this->_oAmazonClient->setSandbox((bool)$this->getConfig()->getConfigParam('blAmazonSandboxActive'));
+            $this->_oAmazonClient->setSandbox((bool)$this->getConfig()->getShopConfVar('blAmazonSandboxActive', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME));
             $this->_oAmazonClient->setLogger($this->getLogger());
         }
 
@@ -154,14 +154,14 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
         $this->getLogger()->debug('Try to add sandbox simulation params to request params', array('method' => $sMethod));
 
         //If Sandbox mode is inactive or Sandbox Simulation is not selected don't add any Simulation Params
-        if ((bool) $this->getConfig()->getConfigParam('blAmazonSandboxActive') !== true
-            || (bool) $this->getConfig()->getConfigParam('sSandboxSimulation') === false
+        if ((bool) $this->getConfig()->getShopConfVar('blAmazonSandboxActive', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) !== true
+            || (bool) $this->getConfig()->getShopConfVar('sSandboxSimulation', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === false
         ) {
             $this->getLogger()->debug('Simulation or sandbox not active');
             return;
         }
 
-        $sSandboxSimulation = (string) $this->getConfig()->getConfigParam('sSandboxSimulation');
+        $sSandboxSimulation = (string) $this->getConfig()->getShopConfVar('sSandboxSimulation', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
 
         $aMap = array(
             'setOrderReferenceDetails' => array(
@@ -230,11 +230,11 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
     {
         $sSandboxPrefix = '';
 
-        if ($blCommon === false && (bool)$this->getConfig()->getConfigParam('blAmazonSandboxActive') === true) {
+        if ($blCommon === false && (bool)$this->getConfig()->getShopConfVar('blAmazonSandboxActive', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true) {
             $sSandboxPrefix = 'Sandbox';
         }
 
-        $sAmazonLocale = $this->getConfig()->getConfigParam('sAmazonLocale');
+        $sAmazonLocale = $this->getConfig()->getShopConfVar('sAmazonLocale', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
         $sPropertyName = '_'.$sPropertyName.$sAmazonLocale.$sSandboxPrefix;
 
         if (property_exists($this, $sPropertyName)) {
@@ -611,7 +611,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
      */
     public function authorize($oOrder = null, $aRequestParameters = array(), $blForceSync = false)
     {
-        $sMode = $this->getConfig()->getConfigParam('sAmazonMode');
+        $sMode = $this->getConfig()->getShopConfVar('sAmazonMode', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
         $aRequestParameters['transaction_timeout'] =
             ($sMode === bestitAmazonPay4OxidClient::BASIC_FLOW || $blForceSync) ? 0 : 1440;
 
@@ -680,7 +680,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 
         // Handle Declined response
         if ($oAuthorizationStatus->State === 'Declined'
-            && $this->getConfig()->getConfigParam('sAmazonMode') === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW
+            && $this->getConfig()->getShopConfVar('sAmazonMode', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW
         ) {
             $this->getLogger()->debug(
                 'Handle decline after response for optimized flow',
@@ -706,7 +706,7 @@ class bestitAmazonPay4OxidClient extends bestitAmazonPay4OxidContainer
 
         //Authorize handling was selected Direct Capture after Authorize and Authorization status is Open
         if ($oAuthorizationStatus->State === 'Open'
-            && $this->getConfig()->getConfigParam('sAmazonCapture') === 'DIRECT'
+            && $this->getConfig()->getShopConfVar('sAmazonCapture', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME)  === 'DIRECT'
         ) {
             $this->capture($oOrder);
         }

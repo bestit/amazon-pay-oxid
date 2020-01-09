@@ -181,33 +181,30 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
 
-        $oConfig->expects($this->exactly(3))
+        $oConfig->expects($this->exactly(11))
             ->method('getShopConfVar')
-            ->with('sUpdateFrom', null, bestitAmazonPay4Oxid_init::TMP_DB_ID)
-            ->will($this->onConsecutiveCalls(
-                null,
-                '2.2.1',
-                '2.3.0'
-            ));
-
-        $oConfig->expects($this->exactly(8))
-            ->method('getConfigParam')
             ->withConsecutive(
+                array('sUpdateFrom', null, bestitAmazonPay4Oxid_init::TMP_DB_ID),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
+                array('sUpdateFrom', null, bestitAmazonPay4Oxid_init::TMP_DB_ID),
                 array('sAmazonMode'),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir'),
+                array('sUpdateFrom', null, bestitAmazonPay4Oxid_init::TMP_DB_ID),
                 array('sAmazonMode'),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
                 array('sCompileDir')
             )
             ->will($this->onConsecutiveCalls(
+                null,
                 false,
                 $this->oRoot->url(),
+                '2.2.1',
                 'Sync',
                 false,
                 $this->oRoot->url(),
+                '2.3.0',
                 'Async',
                 true,
                 $this->oRoot->url()
@@ -448,7 +445,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(5))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aModuleVersions')
             ->will($this->onConsecutiveCalls(
                 null,
@@ -488,7 +485,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
             ->with('str', 'sUpdateFrom', 12, null, bestitAmazonPay4Oxid_init::TMP_DB_ID);
 
         $oConfig->expects($this->once())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aModuleVersions')
             ->will($this->returnValue(array('some' => 0, 'jagAmazonPayment4Oxid' => 12)));
 

@@ -91,7 +91,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
      */
     public function getAmazonConfigValue($sConfigVariable)
     {
-        return $this->_getContainer()->getConfig()->getConfigParam($sConfigVariable);
+        return $this->_getContainer()->getConfig()->getShopConfVar($sConfigVariable, null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
     }
 
     /**
@@ -148,7 +148,7 @@ class bestitAmazonPay4Oxid_oxViewConfig extends bestitAmazonPay4Oxid_oxViewConfi
     public function getSelfLink()
     {
         try {
-            if ((bool)$this->_getContainer()->getConfig()->getConfigParam('sSSLShopURL') === true
+            if ((bool)$this->_getContainer()->getConfig()->getShopConfVar('sSSLShopURL') === true
                 && !$this->isAdmin()
                 && $this->getAmazonLoginIsActive()
             ) {

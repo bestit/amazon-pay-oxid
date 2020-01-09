@@ -27,6 +27,8 @@ services:
   mysql:
     image: mysql:5.6
     container_name: mysql
+    ports:
+      - "32786:3306"
     environment:
       MYSQL_DATABASE: oxidehop_ce
       MYSQL_ROOT_PASSWORD: dbpass

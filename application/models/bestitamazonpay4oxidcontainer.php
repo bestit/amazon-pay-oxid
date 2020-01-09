@@ -174,9 +174,9 @@ class bestitAmazonPay4OxidContainer implements LoggerAwareInterface
     {
         // Cache the first logger init call, this allows us to use the same logger for the whole request context
         if ($this->_oLogger === null) {
-            $sLogFile = $this->getConfig()->getConfigParam('sShopDir') . self::LOG_DIR;
-            $logLevel = $this->getConfig()->getConfigParam('blAmazonLoggingLevel');
-            $logActive = $this->getConfig()->getConfigParam('blAmazonLogging');
+            $sLogFile = $this->getConfig()->getShopConfVar('sShopDir') . self::LOG_DIR;
+            $logLevel = $this->getConfig()->getShopConfVar('blAmazonLoggingLevel', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
+            $logActive = $this->getConfig()->getShopConfVar('blAmazonLogging', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
             $this->_oLogger = oxNew('bestitAmazonPay4OxidLogger', $sLogFile, $logLevel, $logActive, $name);
         }
 

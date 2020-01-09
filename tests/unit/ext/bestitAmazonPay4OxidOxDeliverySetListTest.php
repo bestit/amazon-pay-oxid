@@ -79,7 +79,7 @@ class bestitAmazonPay4OxidOxDeliverySetListTest extends bestitAmazon4OxidUnitTes
             ));
 
         $oConfig->expects($this->once())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->will($this->returnValue(1));
 
         $oContainer->expects($this->exactly(4))

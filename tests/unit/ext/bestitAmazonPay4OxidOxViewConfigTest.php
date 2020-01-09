@@ -177,7 +177,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->once())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('configVariable')
             ->will($this->returnValue('configVariableReturn'));
 
@@ -301,7 +301,7 @@ class bestitAmazonPay4OxidOxViewConfigTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(2))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('sSSLShopURL')
             ->will($this->onConsecutiveCalls(false, true));
 
