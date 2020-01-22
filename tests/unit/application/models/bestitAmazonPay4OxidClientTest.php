@@ -119,7 +119,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(6))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('sAmazonSellerId'),
                 array('sAmazonAWSAccessKeyId'),
@@ -155,7 +155,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(9))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonSandboxActive'),
                 array('sAmazonLocale'),
@@ -885,7 +885,7 @@ class bestitAmazonPay4OxidClientTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->any())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonSandboxActive'),
                 array('blAmazonSandboxActive'),

@@ -78,7 +78,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(12))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->withConsecutive(
                 array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
@@ -516,7 +516,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(2))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aAmazonLanguages')
             ->will($this->returnValue(array(
                 'de' => 'de_DE'
@@ -553,7 +553,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     {
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(4))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aAmazonLanguages')
             ->will($this->returnValue(array(
                 'de' => 'de_DE',
@@ -625,7 +625,7 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
         $oConfig->expects($this->exactly(2))
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with('aAmazonLanguages')
             ->will($this->returnValue(array(
                 'de' => 'de_DE',

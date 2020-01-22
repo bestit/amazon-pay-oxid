@@ -44,9 +44,9 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
         $sellerId = null;
 
         if ($this->_isActive === null) {
-            $loginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
-            $clientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
-            $sellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
+            $loginActive = ((bool)$this->getConfig()->getShopConfVar('blAmazonLoginActive', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true);
+            $clientId = ((string)$this->getConfig()->getShopConfVar('sAmazonLoginClientId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) !== '');
+            $sellerId = ((string)$this->getConfig()->getShopConfVar('sAmazonSellerId', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) !== '');
             //Checkbox for active Login checked
             $this->_isActive = ($loginActive && $clientId && $sellerId);
         }
@@ -262,7 +262,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     public function getAmazonLanguage()
     {
         //Get all languages from module settings
-        $aLanguages = $this->getConfig()->getConfigParam('aAmazonLanguages');
+        $aLanguages = $this->getConfig()->getShopConfVar('aAmazonLanguages', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
         $sLanguageAbbr = $this->getLanguage()->getLanguageAbbr();
 
         //Return Amazon Lang string if it exists in array else return null
@@ -279,7 +279,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     public function getLangIdByAmazonLanguage($sAmazonLanguageString)
     {
         //Get all languages from module settings
-        $aLanguages = $this->getConfig()->getConfigParam('aAmazonLanguages');
+        $aLanguages = $this->getConfig()->getShopConfVar('aAmazonLanguages', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME);
         $sAbbreviation = array_search($sAmazonLanguageString, $aLanguages);
         $aAllLangIds = $this->getLanguage()->getAllShopLanguageIds();
         return array_search($sAbbreviation, $aAllLangIds);

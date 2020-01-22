@@ -72,7 +72,7 @@ class bestitAmazonPay4OxidAddressUtilTest extends bestitAmazon4OxidUnitTestCase
             ->will($this->returnValue($isUtf8));
 
         $config->expects($this->any())
-            ->method('getConfigParam')
+            ->method('getShopConfVar')
             ->with($this->equalTo('aAmazonReverseOrderCountries'))
             ->will($this->returnCallback(
                 function ($parameter) use ($countriesWithLine2AsStreet) {

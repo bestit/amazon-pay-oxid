@@ -70,12 +70,12 @@ class bestitAmazonIpn extends oxUBase
     public function render()
     {
         //If ERP mode is enabled do nothing, if IPN or CRON authorize unauthorized orders
-        if ($this->_getContainer()->getConfig()->getConfigParam('blAmazonERP') === true) {
+        if ($this->_getContainer()->getConfig()->getShopConfVar('blAmazonERP', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true) {
             return $this->_processError('IPN response handling disabled - ERP mode is ON (Module settings)');
         }
 
         //Check if IPN response handling is turned ON
-        if ($this->_getContainer()->getConfig()->getConfigParam('sAmazonAuthorize') !== 'IPN') {
+        if ($this->_getContainer()->getConfig()->getShopConfVar('sAmazonAuthorize', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) !== 'IPN') {
             return $this->_processError('IPN response handling disabled (Module settings)');
         }
 

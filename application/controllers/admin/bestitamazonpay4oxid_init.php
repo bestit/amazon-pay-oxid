@@ -30,6 +30,13 @@ class bestitAmazonPay4Oxid_init
     const OLD_MODULE_ID = 'jagamazonpayment4oxid';
 
     /**
+     * The internal module name
+     *
+     * @var string
+     */
+    const INTERNAL_MODULE_NAME = 'module:bestitamazonpay4oxid';
+
+    /**
      * @var null|oxConfig
      */
     protected static $_oConfig = null;
@@ -281,7 +288,7 @@ class bestitAmazonPay4Oxid_init
 
             if (version_compare($sUpdateFrom, '2.6.0', '<')) {
                 $blRemoveTempVersionNumber = true;
-                $sNewMode = ((string)self::_getConfig()->getConfigParam('sAmazonMode') === 'Sync') ?
+                $sNewMode = ((string)self::_getConfig()->getShopConfVar('sAmazonMode', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === 'Sync') ?
                     bestitAmazonPay4OxidClient::BASIC_FLOW : bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
 
                 self::_getConfig()->setConfigParam('sAmazonMode', $sNewMode);
@@ -310,7 +317,7 @@ class bestitAmazonPay4Oxid_init
         }
 
         // copy multi currency option value from possible hidden feature to module config
-        if ((bool)$oConfig->getConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency') === true) {
+        if ((bool)$oConfig->getShopConfVar('blBestitAmazonPay4OxidEnableMultiCurrency', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true) {
             $oConfig->setConfigParam('blBestitAmazonPay4OxidEnableMultiCurrency', true);
             $oConfig->saveShopConfVar(
                 'bool',
@@ -345,7 +352,7 @@ class bestitAmazonPay4Oxid_init
      */
     public static function getCurrentVersion()
     {
-        $aVersions = (array)self::_getConfig()->getConfigParam('aModuleVersions');
+        $aVersions = (array)self::_getConfig()->getShopConfVar('aModuleVersions');
 
         $aPossibleModuleNames = array(
             'bestitAmazonPay4Oxid',
@@ -399,7 +406,7 @@ class bestitAmazonPay4Oxid_init
      */
     public static function clearTmp()
     {
-        $sTmpDir = self::_getConfig()->getConfigParam('sCompileDir');
+        $sTmpDir = self::_getConfig()->getShopConfVar('sCompileDir');
         $sTmpDir = rtrim($sTmpDir, '/').'/';
         $sSmartyDir = $sTmpDir.'smarty/';
 

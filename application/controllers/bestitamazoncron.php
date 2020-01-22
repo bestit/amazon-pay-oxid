@@ -201,7 +201,7 @@ class bestitAmazonCron extends oxUBase
         $sSQLAddShippedCase = '';
 
         //Capture orders if in module settings was set to capture just shipped orders
-        if ((string)$this->_getContainer()->getConfig()->getConfigParam('sAmazonCapture') === 'SHIPPED') {
+        if ((string)$this->_getContainer()->getConfig()->getShopConfVar('sAmazonCapture', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === 'SHIPPED') {
             $sSQLAddShippedCase = ' AND OXSENDDATE > 0';
         }
 
@@ -300,10 +300,10 @@ class bestitAmazonCron extends oxUBase
             $this->_oLogger->info('Cronjob started');
 
             //If ERP mode is enabled do nothing, if IPN or CRON authorize unauthorized orders
-            if ((bool)$this->_getContainer()->getConfig()->getConfigParam('blAmazonERP') === true) {
+            if ((bool)$this->_getContainer()->getConfig()->getShopConfVar('blAmazonERP', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true) {
                 $this->setViewData(array('sError' => 'ERP mode is ON (Module settings)'));
                 $this->_oLogger->info('ERP mode is ON (Module settings)');
-            } elseif ((string)$this->_getContainer()->getConfig()->getConfigParam('sAmazonAuthorize') !== 'CRON') {
+            } elseif ((string)$this->_getContainer()->getConfig()->getShopConfVar('sAmazonAuthorize', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) !== 'CRON') {
                 $this->setViewData(array('sError' => 'Trigger Authorise via Cronjob mode is turned Off (Module settings)'));
                 $this->_oLogger->info('Cronjob state: Trigger Authorise via Cronjob mode is turned Off (Module settings)');
             } else {

@@ -347,12 +347,12 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
                 return false;
             }
 
-            $blOptimizedFlow = (string)$oConfig->getConfigParam('sAmazonMode')
+            $blOptimizedFlow = (string)$oConfig->getShopConfVar('sAmazonMode', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME)
                 === bestitAmazonPay4OxidClient::OPTIMIZED_FLOW;
 
             $this->_getLogger()->debug(
                 'Decide if sync authorize should be called',
-                array('erpMode' => $erpMode = (bool)$oConfig->getConfigParam('blAmazonERP'))
+                array('erpMode' => $erpMode = (bool)$oConfig->getShopConfVar('blAmazonERP', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME))
             );
 
             //Call Amazon authorize (Dedicated for Sync mode), don't call if ERP mode is enabled
@@ -400,10 +400,10 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
         );
 
         //If ERP mode is enabled do nothing just set oxorder->oxtransstatus to specified value
-        if ((bool)$oConfig->getConfigParam('blAmazonERP') === true) {
+        if ((bool)$oConfig->getShopConfVar('blAmazonERP', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === true) {
             $this->_getLogger()->debug(
                 'ERP mode detected, set order state',
-                array('state' => $erpStatus = $oConfig->getConfigParam('sAmazonERPModeStatus'))
+                array('state' => $erpStatus = $oConfig->getShopConfVar('sAmazonERPModeStatus', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME))
             );
             $this->_setFieldData('oxtransstatus', $erpStatus);
             $this->save();
@@ -433,7 +433,7 @@ class bestitAmazonPay4Oxid_oxOrder_oxid5 extends bestitAmazonPay4Oxid_oxOrder_ox
             }
 
             //If Capture handling was set to "Direct Capture after Authorize" and Authorization status is Open
-            if ((string)$oConfig->getConfigParam('sAmazonCapture') === 'DIRECT'
+            if ((string)$oConfig->getShopConfVar('sAmazonCapture', null, bestitAmazonPay4Oxid_init::INTERNAL_MODULE_NAME) === 'DIRECT'
                 && (string)$oSession->getVariable('sAmazonSyncResponseState') === 'Open'
             ) {
                 $this->_getLogger()->debug(
