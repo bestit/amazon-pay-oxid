@@ -308,18 +308,7 @@ $aModule = array(
             'type' => 'select',
             'value' => '',
             'position' => 6,
-            'constraints' => '
-                |SetOrderReferenceDetailsPaymentMethodNotAllowed
-                |CloseOrderReferenceAmazonClosed
-                |AuthorizeInvalidPaymentMethod
-                |AuthorizeAmazonRejected
-                |AuthorizeTransactionTimedOut
-                |AuthorizeExpiredUnused
-                |AuthorizeAmazonClosed
-                |CapturePending
-                |CaptureAmazonRejected
-                |CaptureAmazonClosed
-                |RefundAmazonRejected'
+            'constraints' => '|SetOrderReferenceDetailsPaymentMethodNotAllowed|CloseOrderReferenceAmazonClosed|AuthorizeInvalidPaymentMethod|AuthorizeAmazonRejected|AuthorizeTransactionTimedOut|AuthorizeExpiredUnused|AuthorizeAmazonClosed|CapturePending|CaptureAmazonRejected|CaptureAmazonClosed|RefundAmazonRejected'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',
