@@ -411,8 +411,9 @@ class bestitAmazonCron extends oxUBase
     public function amazonCall()
     {
         $sOperation = $this->_getOperationName();
+        $allowedOperations = array('processorderreference', 'getorderreferencedetails', 'setorderreferencedetails', 'confirmorderreference', 'cancelorderreference', 'closeorderreference', 'closeauthorization', 'authorize', 'processauthorization', 'getauthorizationdetails', 'getauthorizationdetails', 'setcapturestate', 'capture', 'getcapturedetails', 'savecapture', 'refund', 'updaterefund', 'getrefunddetails', 'setorderattributes', 'processamazonlogin');
 
-        if ($sOperation !== false) {
+        if ($sOperation !== false && in_array(strtolower($sOperation), $allowedOperations)) {
             $oResult = $this->_getContainer()->getClient()->{$sOperation}(
                 $order = $this->_getOrder(),
                 $params = $this->_getParams()
