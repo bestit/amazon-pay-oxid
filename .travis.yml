@@ -24,7 +24,7 @@ script:
   - docker-compose exec web /bin/bash -c "./scripts/build.sh 5.3"
   - docker-compose exec web /bin/bash -c "./scripts/build.sh dev-b-6.0-ce"
   - docker-compose exec web /bin/bash -c "./scripts/build.sh dev-b-6.1-ce"
-  - docker-compose exec web /bin/bash -c "./scripts/build.sh dev-b-6.2-beta-ce"
+  - docker-compose exec web /bin/bash -c "./scripts/build.sh dev-b-6.2-ce"
 before_deploy:
   - ssh-keyscan $DEPLOYMENT_SERVER >> $HOME/.ssh/known_hosts
   - (umask  077 ; echo $DEPLOYMENT_SSH_KEY | base64 --decode > /tmp/deploy_rsa)
