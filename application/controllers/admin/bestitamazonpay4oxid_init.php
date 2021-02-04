@@ -321,6 +321,21 @@ class bestitAmazonPay4Oxid_init
             );
         }
 
+        //generate secret key used for the cron calls
+        $sAmazonCronSecretKey = $oConfig->getConfigParam('sAmazonCronSecretKey');
+        if (empty($sAmazonCronSecretKey)) {
+            $sAmazonCronSecretKey = self::_generatePassword();
+
+            $oConfig->setConfigParam('sAmazonCronSecretKey', $sAmazonCronSecretKey);
+            $oConfig->saveShopConfVar(
+                'str',
+                'sAmazonCronSecretKey',
+                $sAmazonCronSecretKey,
+                $oConfig->getShopId(),
+                'module:bestitamazonpay4oxid'
+            );
+        }
+
         self::clearTmp();
     }
 
@@ -337,6 +352,45 @@ class bestitAmazonPay4Oxid_init
         //Make payment inactive
         self::_getDatabase()->execute($sSql);
     }
+
+    /**
+     * @see https://gist.github.com/tylerhall/521810
+     * Generates a strong password of N length containing at least one lower case letter,
+     * one uppercase letter and one digit. The remaining characters
+     * in the password are chosen at random from those four sets.
+     *
+     * The available characters in each set are user friendly - there are no ambiguous
+     * characters such as i, l, 1, o, 0, etc. This makes it much easier for users to manually
+     * type or speak their passwords.
+     *
+     * @param int $length
+     *
+     * @return string
+     */
+    protected static function _generatePassword($length = 15)
+    {
+        $sets = array();
+        $sets[] = 'abcdefghjkmnpqrstuvwxyz';
+        $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
+        $sets[] = '23456789';
+
+        $pool = '';
+        $password = '';
+
+        foreach ($sets as $set) {
+            $password .= $set[array_rand(str_split($set))];
+            $pool .= $set;
+        }
+
+        $pool = str_split($pool);
+        for ($i = 0; $i < $length - count($sets); ++$i) {
+            $password .= $pool[array_rand($pool)];
+        }
+        $password = str_shuffle($password);
+
+        return $password;
+    }
+
 
     /**
      * Returns the current installed version.

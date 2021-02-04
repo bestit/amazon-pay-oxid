@@ -292,8 +292,9 @@ class bestitAmazonCron extends oxUBase
      */
     public function render()
     {
-        // Only execute the complete cronjob if the action is not amazon call
-        if ($this->_getContainer()->getConfig()->getRequestParameter('fnc') !== 'amazonCall') {
+        // Only execute the complete cronjob if the action is not amazon call and the secret key is correct
+        if ($this->_getContainer()->getConfig()->getRequestParameter('fnc') !== 'amazonCall'
+            && $this->_verifySecretKey() === true) {
             //Increase execution time for the script to run without timeouts
             set_time_limit(3600);
 
@@ -358,6 +359,46 @@ class bestitAmazonCron extends oxUBase
     }
 
     /**
+     * Method returns Secret Key from request
+     *
+     * @return mixed
+     * @throws oxSystemComponentException
+     */
+    protected function _getSecretKey()
+    {
+        $secretKey = $this->_getContainer()->getConfig()->getRequestParameter('key');
+
+        if ($secretKey !== null) {
+            return $secretKey;
+        }
+
+        $this->setViewData(array('sError' => "No Secret Key given"));
+        return false;
+    }
+
+    /**
+     * Method that verifys the Secret Key from request
+     *
+     * @return bool
+     * @throws oxSystemComponentException
+     */
+    protected function _verifySecretKey()
+    {
+        $sCronSecretkeyParameter = $this->_getSecretKey();
+        $sCronSecretkey = $this->_getContainer()->getConfig()->getConfigParam('sAmazonCronSecretKey');
+
+        if ($sCronSecretkeyParameter === false ||  $sCronSecretkey !== $sCronSecretkeyParameter) {
+            $this->setViewData(array(
+                'sError' => 'Wrong Secret Key given.'
+            ));
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Method returns Order object
      *
      * @return null|oxOrder
@@ -412,6 +453,10 @@ class bestitAmazonCron extends oxUBase
     {
         $sOperation = $this->_getOperationName();
         $allowedOperations = array('processorderreference', 'getorderreferencedetails', 'setorderreferencedetails', 'confirmorderreference', 'cancelorderreference', 'closeorderreference', 'closeauthorization', 'authorize', 'processauthorization', 'getauthorizationdetails', 'getauthorizationdetails', 'setcapturestate', 'capture', 'getcapturedetails', 'savecapture', 'refund', 'updaterefund', 'getrefunddetails', 'setorderattributes', 'processamazonlogin');
+
+        if ($this->_verifySecretKey() !== true) {
+            return;
+        }
 
         if ($sOperation !== false && in_array(strtolower($sOperation), $allowedOperations)) {
             $oResult = $this->_getContainer()->getClient()->{$sOperation}(

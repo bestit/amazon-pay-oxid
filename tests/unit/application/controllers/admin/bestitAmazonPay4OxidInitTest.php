@@ -190,26 +190,32 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
                 '2.3.0'
             ));
 
-        $oConfig->expects($this->exactly(8))
+        $oConfig->expects($this->exactly(11))
             ->method('getConfigParam')
             ->withConsecutive(
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonCronSecretKey'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonCronSecretKey'),
                 array('sCompileDir'),
                 array('sAmazonMode'),
                 array('blBestitAmazonPay4OxidEnableMultiCurrency'),
+                array('sAmazonCronSecretKey'),
                 array('sCompileDir')
             )
             ->will($this->onConsecutiveCalls(
                 false,
+                1234,
                 $this->oRoot->url(),
                 'Sync',
                 false,
+                1234,
                 $this->oRoot->url(),
                 'Async',
                 true,
+                1234,
                 $this->oRoot->url()
             ));
 

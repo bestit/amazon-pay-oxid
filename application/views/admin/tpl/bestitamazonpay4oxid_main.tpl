@@ -225,17 +225,17 @@
                     <tr><td colspan="3"><b>[{oxmultilang ident="BESTIT_AMAZON_SELECT_ACTION"}]:</b></td></tr>
                     <tr>
                         <td valign="top">
-                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetOrderReferenceDetails&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetOrderReferenceDetails</a></div>
-                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">Authorize</a></div>
-                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetAuthorizationDetails&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetAuthorizationDetails</a></div>[{/if}]
-                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Capture&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">Capture</a></div>[{/if}]
-                            [{if $edit->oxorder__bestitamazoncaptureid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetCaptureDetails&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetCaptureDetails</a></div>[{/if}]
+                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetOrderReferenceDetails&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetOrderReferenceDetails</a></div>
+                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Authorize&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">Authorize</a></div>
+                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetAuthorizationDetails&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetAuthorizationDetails</a></div>[{/if}]
+                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=Capture&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">Capture</a></div>[{/if}]
+                            [{if $edit->oxorder__bestitamazoncaptureid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=GetCaptureDetails&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">GetCaptureDetails</a></div>[{/if}]
                         </td>
                         <td width="5%">&nbsp;</td>
                         <td valign="top">
-                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CloseAuthorization&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CloseAuthorization</a></div>[{/if}]
-                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CancelOrderReference&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CancelOrderReference</a></div>
-                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CloseOrderReference&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CloseOrderReference</a></div>
+                            [{if $edit->oxorder__bestitamazonauthorizationid->value}]<div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CloseAuthorization&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CloseAuthorization</a></div>[{/if}]
+                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CancelOrderReference&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CancelOrderReference</a></div>
+                            <div><a href="[{$oConfig->getShopURL()}]index.php?cl=bestitamazoncron&fnc=amazonCall&operation=CloseOrderReference&key=[{$oViewConf->getAmazonConfigValue('sAmazonCronSecretKey')}]&oxid=[{$oxid}]&shp=[{$oConfig->getShopId()}]" target="_blank">CloseOrderReference</a></div>
                         </td>
                     </tr>
                 </table>
