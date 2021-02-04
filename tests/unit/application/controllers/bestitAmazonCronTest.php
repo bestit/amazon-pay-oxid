@@ -89,25 +89,46 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
 
         $oConfig = $this->_getConfigMock();
 
-        $oConfig
+        $oConfig->expects($this->exactly(6))
             ->method('getRequestParameter')
-            ->will($this->returnValue('foobar'));
+            ->withConsecutive(
+                array('fnc'),
+                array('key'),
+                array('fnc'),
+                array('key'),
+                array('fnc'),
+                array('key')
+            )
+            ->will($this->onConsecutiveCalls(
+                null,
+                '1234',
+                null,
+                '1234',
+                null,
+                '1234'
+            ));
 
         $oConfig
-            ->expects($this->exactly(6))
+            ->expects($this->exactly(9))
             ->method('getConfigParam')
             ->withConsecutive(
+                array('sAmazonCronSecretKey'),
                 array('blAmazonERP'),
+                array('sAmazonCronSecretKey'),
                 array('blAmazonERP'),
                 array('sAmazonAuthorize'),
+                array('sAmazonCronSecretKey'),
                 array('blAmazonERP'),
                 array('sAmazonAuthorize'),
                 array('sAmazonCapture')
             )
             ->will($this->onConsecutiveCalls(
+                '1234',
                 true,
+                '1234',
                 false,
                 'some',
+                '1234',
                 false,
                 'CRON',
                 'SHIPPED'
@@ -346,34 +367,57 @@ class bestitAmazonCronTest extends bestitAmazon4OxidUnitTestCase
         $oContainer = $this->_getContainerMock();
 
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(10))
+        $oConfig->expects($this->exactly(14))
             ->method('getRequestParameter')
             ->withConsecutive(
                 array('operation'),
+                array('key'),
                 array('operation'),
+                array('key'),
                 array('oxid'),
                 array('aParams'),
                 array('operation'),
+                array('key'),
                 array('oxid'),
                 array('aParams'),
                 array('operation'),
+                array('key'),
                 array('oxid'),
                 array('aParams')
             )
             ->will($this->onConsecutiveCalls(
                 'some',
+                '1234',
                 'Capture',
+                '1234',
                 null,
                 null,
                 'Capture',
+                '1234',
                 'firstOrderId',
                 array('key&lt;' => 'value&lt;'),
                 'Capture',
+                '1234',
                 'secondOrderId',
                 array('key&lt;' => 'value&lt;')
             ));
 
-        $oContainer->expects($this->exactly(10))
+        $oConfig->expects($this->exactly(4))
+            ->method('getConfigParam')
+            ->withConsecutive(
+                array('sAmazonCronSecretKey'),
+                array('sAmazonCronSecretKey'),
+                array('sAmazonCronSecretKey'),
+                array('sAmazonCronSecretKey')
+            )
+            ->will($this->onConsecutiveCalls(
+                '1234',
+                '1234',
+                '1234',
+                '1234'
+            ));
+
+        $oContainer->expects($this->exactly(18))
             ->method('getConfig')
             ->will($this->returnValue($oConfig));
 
