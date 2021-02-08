@@ -1,4 +1,5 @@
 <?php
+require_once dirname(__FILE__).'/../vendor/paragonie/random_compat/lib/random.php';
 
 /**
  * Extension for OXID module_config controller
@@ -77,40 +78,14 @@ class bestitAmazonPay4Oxid_module_config extends bestitAmazonPay4Oxid_module_con
     }
 
     /**
-     * @see https://gist.github.com/tylerhall/521810
-     * Generates a strong password of N length containing at least one lower case letter,
-     * one uppercase letter and one digit. The remaining characters
-     * in the password are chosen at random from those four sets.
-     *
-     * The available characters in each set are user friendly - there are no ambiguous
-     * characters such as i, l, 1, o, 0, etc. This makes it much easier for users to manually
-     * type or speak their passwords.
-     *
-     * @param int $length
+     * Generates a strong password using random_bytes
      *
      * @return string
      */
-    protected static function _generatePassword($length = 15)
+    protected static function _generatePassword()
     {
-        $sets = array();
-        $sets[] = 'abcdefghjkmnpqrstuvwxyz';
-        $sets[] = 'ABCDEFGHJKMNPQRSTUVWXYZ';
-        $sets[] = '23456789';
+        $bytes = random_bytes(32);
 
-        $pool = '';
-        $password = '';
-
-        foreach ($sets as $set) {
-            $password .= $set[array_rand(str_split($set))];
-            $pool .= $set;
-        }
-
-        $pool = str_split($pool);
-        for ($i = 0; $i < $length - count($sets); ++$i) {
-            $password .= $pool[array_rand($pool)];
-        }
-        $password = str_shuffle($password);
-
-        return $password;
+        return bin2hex($bytes);
     }
 }
