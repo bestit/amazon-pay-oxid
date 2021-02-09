@@ -20,8 +20,11 @@
  * @version   GIT: $Id$
  * @link      http://www.bestit-online.de
  */
-require_once dirname(__FILE__).'/../../../vendor/paragonie/random_compat/lib/random.php';
+$sVendorAutoloader = realpath(dirname(__FILE__).'/../../../').'/vendor/autoload.php';
 
+if (file_exists($sVendorAutoloader) === true) {
+    include_once realpath(dirname(__FILE__).'/../../../').'/vendor/autoload.php';
+}
 /**
  * Class bestitAmazonPay4Oxid_init
  */
