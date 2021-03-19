@@ -27,7 +27,7 @@ class MatchIgnoreWhitespace extends PHPUnitContraintParent
         $this->exporter = new Exporter();
     }
 
-    protected function matches($actual)
+    protected function matches($actual): bool
     {
         return $this->normalize($this->expected) == $this->normalize($actual);
     }
