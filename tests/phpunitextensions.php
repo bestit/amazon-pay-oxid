@@ -46,7 +46,7 @@ class MatchIgnoreWhitespace extends PHPUnitContraintParent
         return preg_replace('#\&. #','', implode(' ', preg_split('/\s+/', trim($string))));
     }
 
-    public function toString()
+    public function toString(): string
     {
         return sprintf(
             'equals ignoring whitespace %s',
