@@ -20,7 +20,7 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     /**
      * Setup virtual file system.
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->oRoot = vfsStream::setup();
     }
