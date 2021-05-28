@@ -226,7 +226,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', null);
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -236,7 +236,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', -1);
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -246,7 +246,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', 1);
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -256,7 +256,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', 2);
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -271,7 +271,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals($oDeliverySet, $aViewData['deliveryType']);
 
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -287,7 +287,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals('11 EUR', $aViewData['tsprotectcosts']);
 
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -303,7 +303,7 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
         self::assertEquals('11 EUR', $aViewData['tsprotectcosts']);
 
         self::assertEquals('bestitamazonpay4oxid_main.tpl' , $oBestitAmazonPay4OxidMain->render());
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('1 EUR', $aViewData['ordersum']);
         self::assertEquals(50, $aViewData['ordercnt']);
         self::assertEquals('10 EUR', $aViewData['ordertotalsum']);
@@ -397,20 +397,20 @@ class bestitAmazonPay4OxidMainTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidMain = $this->_getObject($oContainer);
 
         $oBestitAmazonPay4OxidMain->refundAmazonOrder();
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('BESTITAMAZONPAY_PLEASE_CHECK_REFUND_CHECKBOX|Translated', $aViewData['bestitrefunderror']);
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', -1);
         $oBestitAmazonPay4OxidMain->refundAmazonOrder();
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('BESTITAMAZONPAY_PLEASE_CHECK_REFUND_CHECKBOX|Translated', $aViewData['bestitrefunderror']);
 
         self::setValue($oBestitAmazonPay4OxidMain, '_sEditObjectId', 1);
         $oBestitAmazonPay4OxidMain->refundAmazonOrder();
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('BESTITAMAZONPAY_PLEASE_CHECK_REFUND_CHECKBOX|Translated', $aViewData['bestitrefunderror']);
         $oBestitAmazonPay4OxidMain->refundAmazonOrder();
-        $aViewData = self::readAttribute($oBestitAmazonPay4OxidMain, '_aViewData');
+        $aViewData = $oBestitAmazonPay4OxidMain->getViewData();
         self::assertEquals('BESTITAMAZONPAY_INVALID_REFUND_AMOUNT|Translated', $aViewData['bestitrefunderror']);
         $oBestitAmazonPay4OxidMain->refundAmazonOrder();
     }

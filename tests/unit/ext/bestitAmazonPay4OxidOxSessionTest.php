@@ -17,9 +17,17 @@ class bestitAmazonPay4OxidOxSessionTest extends bestitAmazon4OxidUnitTestCase
      */
     public function testGetRequireSessionWithParams()
     {
-        $oBestitAmazonPay4OxidOxSession = new bestitAmazonPay4Oxid_oxSession();
+        $oBestitAmazonPay4OxidOxSession = new bestitAmazonPay4Oxid_oxSession_Test();
         self::callMethod($oBestitAmazonPay4OxidOxSession, '_getRequireSessionWithParams');
-        $aParams = self::readAttribute($oBestitAmazonPay4OxidOxSession, '_aRequireSessionWithParams');
+        $aParams = $oBestitAmazonPay4OxidOxSession::getRequireParams();
         self::assertTrue($aParams['fnc']['amazonLogin']);
+    }
+}
+
+class bestitAmazonPay4Oxid_oxSession_Test extends bestitAmazonPay4Oxid_oxSession
+{
+    public function getRequireParams(): array
+    {
+        return $this->_aRequireSessionWithParams;
     }
 }
