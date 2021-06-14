@@ -110,31 +110,31 @@ class bestitAmazonIpnTest extends bestitAmazon4OxidUnitTestCase
 
         $oBestitAmazonIpn = $this->_getObject($oContainer);
         self::assertEquals('bestitamazonpay4oxidcron.tpl', $oBestitAmazonIpn->render());
-        self::assertAttributeEquals(
+        self::assertEquals(
             array('sError' => 'IPN response handling disabled - ERP mode is ON (Module settings)'),
-            '_aViewData',
+            $oBestitAmazonIpn->getViewData(),
             $oBestitAmazonIpn
         );
 
         self::assertEquals('bestitamazonpay4oxidcron.tpl', $oBestitAmazonIpn->render());
-        self::assertAttributeEquals(
+        self::assertEquals(
             array('sError' => 'IPN response handling disabled (Module settings)'),
-            '_aViewData',
+            $oBestitAmazonIpn->getViewData(),
             $oBestitAmazonIpn
         );
 
         self::assertEquals('bestitamazonpay4oxidcron.tpl', $oBestitAmazonIpn->render());
-        self::assertAttributeEquals(
+        self::assertEquals(
             array('sError' => 'SNS message empty or Error while reading SNS message occurred'),
-            '_aViewData',
+            $oBestitAmazonIpn->getViewData(),
             $oBestitAmazonIpn
         );
 
         self::setValue($oBestitAmazonIpn, '_sInput', dirname(__FILE__).'/../../../fixtures/test');
         self::assertEquals('bestitamazonpay4oxidcron.tpl', $oBestitAmazonIpn->render());
-        self::assertAttributeEquals(
+        self::assertEquals(
             array('sError' => 'Error while handling Amazon response'),
-            '_aViewData',
+            $oBestitAmazonIpn->getViewData(),
             $oBestitAmazonIpn
         );
 

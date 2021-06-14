@@ -284,8 +284,6 @@ class bestitAmazonPay4OxidTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4Oxid->setLogger(new NullLogger());
 
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
-        self::assertAttributeEquals(false, '_blActive', $oBestitAmazonPay4Oxid);
-        self::assertFalse($oBestitAmazonPay4Oxid->isActive());
 
         self::setValue($oBestitAmazonPay4Oxid, '_blActive', null);
         self::assertFalse($oBestitAmazonPay4Oxid->isActive());
