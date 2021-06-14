@@ -19,7 +19,7 @@ class bestitAmazonPay4OxidOxSessionTest extends bestitAmazon4OxidUnitTestCase
     {
         $oBestitAmazonPay4OxidOxSession = new bestitAmazonPay4Oxid_oxSession_Test();
         self::callMethod($oBestitAmazonPay4OxidOxSession, '_getRequireSessionWithParams');
-        $aParams = $oBestitAmazonPay4OxidOxSession::getRequireParams();
+        $aParams = $oBestitAmazonPay4OxidOxSession->getRequireParams();
         self::assertTrue($aParams['fnc']['amazonLogin']);
     }
 }
