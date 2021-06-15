@@ -77,7 +77,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidInit = new bestitAmazonPay4Oxid_init();
         self::setValue($oBestitAmazonPay4OxidInit, '_oConfig', null);
         self::assertInstanceOf('oxConfig', self::callMethod($oBestitAmazonPay4OxidInit, '_getConfig'));
-        self::assertAttributeNotEmpty('_oConfig', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -90,7 +89,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
         $oBestitAmazonPay4OxidInit = new bestitAmazonPay4Oxid_init();
         self::setValue($oBestitAmazonPay4OxidInit, '_oDatabase', null);
         self::assertInstanceOf('DatabaseInterface', self::callMethod($oBestitAmazonPay4OxidInit, '_getDatabase'));
-        self::assertAttributeNotEmpty('_oDatabase', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -102,7 +100,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     {
         $oBestitAmazonPay4OxidInit = new bestitAmazonPay4Oxid_init();
         self::assertInstanceOf('oxUtilsView', self::callMethod($oBestitAmazonPay4OxidInit, '_getUtilsView'));
-        self::assertAttributeNotEmpty('_oUtilsView', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -114,7 +111,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     {
         $oBestitAmazonPay4OxidInit = new bestitAmazonPay4Oxid_init();
         self::assertInstanceOf('oxModule', self::callMethod($oBestitAmazonPay4OxidInit, '_getModule'));
-        self::assertAttributeNotEmpty('_oModule', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -129,7 +125,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
             'oxModuleCache',
             self::callMethod($oBestitAmazonPay4OxidInit, '_getModuleCache', array($this->_getOxidModuleMock()))
         );
-        self::assertAttributeNotEmpty('_oModuleCache', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -144,7 +139,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
             'oxModuleInstaller',
             self::callMethod($oBestitAmazonPay4OxidInit, '_getModuleInstaller', array($this->_getOxidModuleCacheMock()))
         );
-        self::assertAttributeNotEmpty('_oModuleInstaller', $oBestitAmazonPay4OxidInit);
     }
 
     /**
@@ -156,7 +150,6 @@ class bestitAmazonPay4OxidInitTest extends bestitAmazon4OxidUnitTestCase
     {
         $oBestitAmazonPay4OxidInit = new bestitAmazonPay4Oxid_init();
         self::assertInstanceOf('oxDbMetaDataHandler', self::callMethod($oBestitAmazonPay4OxidInit, '_getDbMetaDataHandler'));
-        self::assertAttributeNotEmpty('_oDbMetaDataHandler', $oBestitAmazonPay4OxidInit);
     }
 
     /**

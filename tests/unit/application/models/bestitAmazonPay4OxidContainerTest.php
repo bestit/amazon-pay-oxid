@@ -55,7 +55,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidAddressUtil', $oContainer->getAddressUtil());
-        self::assertAttributeNotEmpty('_oAddressUtilObject', $oContainer);
     }
 
     /**
@@ -66,7 +65,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidClient', $oContainer->getClient());
-        self::assertAttributeNotEmpty('_oClientObject', $oContainer);
     }
 
     /**
@@ -77,7 +75,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxConfig', $oContainer->getConfig());
-        self::assertAttributeNotEmpty('_oConfigObject', $oContainer);
     }
 
     /**
@@ -89,7 +86,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('DatabaseInterface', $oContainer->getDatabase());
-        self::assertAttributeNotEmpty('_oDatabaseObject', $oContainer);
     }
 
     /**
@@ -100,7 +96,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidIpnHandler', $oContainer->getIpnHandler());
-        self::assertAttributeNotEmpty('_oIpnHandlerObject', $oContainer);
     }
 
     /**
@@ -111,7 +106,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxLang', $oContainer->getLanguage());
-        self::assertAttributeNotEmpty('_oLanguageObject', $oContainer);
     }
 
     /**
@@ -122,7 +116,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidLoginClient', $oContainer->getLoginClient());
-        self::assertAttributeNotEmpty('_oLoginClientObject', $oContainer);
     }
 
     /**
@@ -133,7 +126,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4Oxid', $oContainer->getModule());
-        self::assertAttributeNotEmpty('_oModuleObject', $oContainer);
     }
 
     /**
@@ -144,7 +136,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidObjectFactory', $oContainer->getObjectFactory());
-        self::assertAttributeNotEmpty('_oObjectFactory', $oContainer);
     }
 
     /**
@@ -155,7 +146,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxSession', $oContainer->getSession());
-        self::assertAttributeNotEmpty('_oSessionObject', $oContainer);
     }
 
     /**
@@ -166,7 +156,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxUtilsDate', $oContainer->getUtilsDate());
-        self::assertAttributeNotEmpty('_oUtilsDateObject', $oContainer);
     }
 
     /**
@@ -177,7 +166,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxUtilsServer', $oContainer->getUtilsServer());
-        self::assertAttributeNotEmpty('_oUtilsServerObject', $oContainer);
     }
 
     /**
@@ -188,7 +176,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxUtils', $oContainer->getUtils());
-        self::assertAttributeNotEmpty('_oUtilsObject', $oContainer);
     }
 
     /**
@@ -199,7 +186,6 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('oxUtilsView', $oContainer->getUtilsView());
-        self::assertAttributeNotEmpty('_oUtilsViewObject', $oContainer);
     }
 
     /**
@@ -210,6 +196,5 @@ class bestitAmazonPay4OxidContainerTest extends bestitAmazon4OxidUnitTestCase
     {
         $oContainer = new bestitAmazonPay4OxidContainer();
         self::assertInstanceOf('bestitAmazonPay4OxidBasketUtil', $oContainer->getBasketUtil());
-        self::assertAttributeNotEmpty('_oBasketUtil', $oContainer);
     }
 }
