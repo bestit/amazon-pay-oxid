@@ -235,11 +235,11 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
 
         $oLogger = $this->_getLoggerMock();
         $oIpnHandler->setLogger($oLogger);
-        $oLogger->expects($this->exactly(12))
+        $oLogger->expects($this->exactly(11))
             ->method('log')
             ->withConsecutive(
-               // array(Logger::ERROR, 'Invalid ipn message', array()),
-                array(Logger::ERROR, 'Unable to parse ipn message', array()),
+                array(Logger::ERROR, 'Invalid ipn message', array()), //error case not tested here
+               # array(Logger::ERROR, 'Unable to parse ipn message', array()), 
                 array(Logger::ERROR, 'Invalid ipn message', array()),
                 array(
                     Logger::ERROR,
