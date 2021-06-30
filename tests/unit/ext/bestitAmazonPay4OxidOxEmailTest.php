@@ -82,9 +82,9 @@ class bestitAmazonPay4OxidOxEmailTest extends bestitAmazon4OxidUnitTestCase
                 array('oxbillemail')
             )
             ->will($this->onConsecutiveCalls(
-                array('fName'),
-                array('lName'),
-                array('mail')
+                'fName',
+                'lName',
+                'mail'
             ));
 
         $oConfig = $this->_getConfigMock();

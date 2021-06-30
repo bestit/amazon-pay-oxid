@@ -202,7 +202,7 @@ class bestitAmazonPay4OxidIpnHandlerTest extends bestitAmazon4OxidUnitTestCase
             ->method('toJson')
             ->will($this->onConsecutiveCalls(
                 false,
-                new stdClass(),
+                json_encode([]),
                 json_encode($aSomeResponse),
                 json_encode($aOrderReferenceNotification),
                 json_encode($aOrderReferenceNotification),
