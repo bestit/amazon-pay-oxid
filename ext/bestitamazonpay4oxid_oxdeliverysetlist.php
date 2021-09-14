@@ -118,8 +118,7 @@ class bestitAmazonPay4Oxid_oxDeliverySetList extends bestitAmazonPay4Oxid_oxDeli
         if ($sAmazonOrderReferenceId === null
             && ($this->_getContainer()->getModule()->getIsSelectedCurrencyAvailable() === false
                 || $oBasket->getPrice()->getBruttoPrice() === 0
-                || ((bool)$oConfig->getConfigParam('blAmazonLoginActive') === true
-                    && $this->_getContainer()->getLoginClient()->showAmazonPayButton() === false)
+                || $this->_getContainer()->getLoginClient()->showAmazonPayButton() === false
             )
         ) {
             $logger->debug(
