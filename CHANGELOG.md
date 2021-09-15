@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.h
 ## [3.6.9] - 2021-09-14
 ### Changed
 - Amazon login activated permanently, removed from module settings
+- Link existing newsletter subscription to new created accounts, when guest/newsletter accounts get deleted
 
 ## [3.6.8] - 2020-02-09
 ### Fixed
