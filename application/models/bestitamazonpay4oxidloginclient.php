@@ -176,6 +176,47 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
     }
 
     /**
+     * Check if user with Email from Amazon exists
+     *
+     * @param  string $sId The id of the user
+     *
+     * @return array
+     * @throws oxConnectionException
+     */
+    public function oxidNewsletterSubscriptionExists($sId)
+    {
+        $sSql = "SELECT *
+            FROM oxnewssubscribed
+            WHERE OXUSERID = {$this->getDatabase()->quote($sId)}";
+
+        return $this->getDatabase()->getRow($sSql);
+    }
+
+    /**
+     * Delete OXID user by ID
+     *
+     * @param  string $sOldId The id of the old user
+     * @param  string $sNewId The id of the new user
+     *
+     * @return object
+     * @throws oxConnectionException
+     */
+    public function linkNewsletterToNewUser($sOldId, $sNewId)
+    {
+        $this->getLogger()->debug(
+            'Link newsletter subscription from old oxuser to new oxuser',
+            array('oldOxId' => $sOldId,
+                  'newOxId' => $sNewId)
+        );
+
+        $sSql = "UPDATE oxnewssubscribed
+            SET OXUSERID = {$this->getDatabase()->quote($sNewId)}
+            WHERE OXUSERID = {$this->getDatabase()->quote($sOldId)}";
+
+        return $this->getDatabase()->execute($sSql);
+    }
+
+    /**
      * Create new oxid user with details from Amazon
      *
      * @param stdClass $oUserData The oxid user data
