@@ -44,7 +44,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
         $sellerId = null;
 
         if ($this->_isActive === null) {
-            $loginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
+            $loginActive = true;
             $clientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
             $sellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
             //Checkbox for active Login checked

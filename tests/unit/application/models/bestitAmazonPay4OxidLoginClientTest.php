@@ -77,33 +77,21 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
     public function testIsActive()
     {
         $oConfig = $this->_getConfigMock();
-        $oConfig->expects($this->exactly(12))
+        $oConfig->expects($this->exactly(6))
             ->method('getConfigParam')
             ->withConsecutive(
-                array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
                 array('sAmazonSellerId'),
-                array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
                 array('sAmazonSellerId'),
-                array('blAmazonLoginActive'),
-                array('sAmazonLoginClientId'),
-                array('sAmazonSellerId'),
-                array('blAmazonLoginActive'),
                 array('sAmazonLoginClientId'),
                 array('sAmazonSellerId')
             )
             ->will($this->onConsecutiveCalls(
-                false,
-                'clientId',
-                'sellerId',
-                true,
                 '',
                 'sellerId',
-                true,
                 'clientId',
                 '',
-                true,
                 'clientId',
                 'sellerId'
             ));
@@ -120,8 +108,6 @@ class bestitAmazonPay4OxidLoginClientTest extends bestitAmazon4OxidUnitTestCase
             $this->_getAddressUtilMock(),
             $this->_getObjectFactoryMock()
         );
-
-        self::assertFalse($oLoginClient->isActive());
 
         self::setValue($oLoginClient, '_isActive', null);
         self::assertFalse($oLoginClient->isActive());
