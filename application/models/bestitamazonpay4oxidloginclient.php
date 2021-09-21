@@ -180,16 +180,16 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
      *
      * @param  string $sId The id of the user
      *
-     * @return array
+     * @return boolean
      * @throws oxConnectionException
      */
     public function oxidNewsletterSubscriptionExists($sId)
     {
-        $sSql = "SELECT *
+        $sSql = "SELECT OXUSERID
             FROM oxnewssubscribed
             WHERE OXUSERID = {$this->getDatabase()->quote($sId)}";
 
-        return $this->getDatabase()->getRow($sSql);
+        return $this->getDatabase()->getOne($sSql);
     }
 
     /**
