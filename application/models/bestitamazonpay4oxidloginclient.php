@@ -44,7 +44,7 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
         $sellerId = null;
 
         if ($this->_isActive === null) {
-            $loginActive = ((bool)$this->getConfig()->getConfigParam('blAmazonLoginActive') === true);
+            $loginActive = true;
             $clientId = ((string)$this->getConfig()->getConfigParam('sAmazonLoginClientId') !== '');
             $sellerId = ((string)$this->getConfig()->getConfigParam('sAmazonSellerId') !== '');
             //Checkbox for active Login checked
@@ -173,6 +173,47 @@ class bestitAmazonPay4OxidLoginClient extends bestitAmazonPay4OxidContainer
               AND OXSHOPID = {$this->getDatabase()->quote($this->getConfig()->getShopId())}";
 
         return $this->getDatabase()->getRow($sSql);
+    }
+
+    /**
+     * Check if user with Email from Amazon exists
+     *
+     * @param  string $sId The id of the user
+     *
+     * @return boolean
+     * @throws oxConnectionException
+     */
+    public function oxidNewsletterSubscriptionExists($sId)
+    {
+        $sSql = "SELECT OXUSERID
+            FROM oxnewssubscribed
+            WHERE OXUSERID = {$this->getDatabase()->quote($sId)}";
+
+        return $this->getDatabase()->getOne($sSql);
+    }
+
+    /**
+     * Delete OXID user by ID
+     *
+     * @param  string $sOldId The id of the old user
+     * @param  string $sNewId The id of the new user
+     *
+     * @return object
+     * @throws oxConnectionException
+     */
+    public function linkNewsletterToNewUser($sOldId, $sNewId)
+    {
+        $this->getLogger()->debug(
+            'Link newsletter subscription from old oxuser to new oxuser',
+            array('oldOxId' => $sOldId,
+                  'newOxId' => $sNewId)
+        );
+
+        $sSql = "UPDATE oxnewssubscribed
+            SET OXUSERID = {$this->getDatabase()->quote($sNewId)}
+            WHERE OXUSERID = {$this->getDatabase()->quote($sOldId)}";
+
+        return $this->getDatabase()->execute($sSql);
     }
 
     /**

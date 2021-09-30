@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec2.0.0.html).
+## [3.6.9] - 2021-09-14
+### Changed
+- Amazon login activated permanently, removed from module settings
+- Link existing newsletter subscription to new created accounts, when guest/newsletter accounts get deleted
+
 ## [3.6.8] - 2020-02-09
 ### Fixed
 - Fixed an include

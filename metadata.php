@@ -40,7 +40,7 @@ $aModule = array(
 		<b style="color: red">Wenn Sie das Modul von einer vorhergehenden Version updaten muss das Module deaktivert und erneut aktiviert werden</b>'
     ),
     'thumbnail' => 'bestitamazonpay4oxid_logo.png',
-    'version' => '3.6.8',
+    'version' => '3.6.9',
     'author' => 'best it GmbH & Co. KG',
     'url' => 'http://www.bestit-online.de',
     'email' => 'support@bestit-online.de',
@@ -235,13 +235,6 @@ $aModule = array(
         ),
         array(
             'group' => 'bestitAmazonPay4OxidLoginSettings',
-            'name' => 'blAmazonLoginActive',
-            'type' => 'bool',
-            'value' => 'true',
-            'position' => 1
-        ),
-        array(
-            'group' => 'bestitAmazonPay4OxidLoginSettings',
             'name' => 'sAmazonLoginClientId',
             'type' => 'str',
             'value' => '',
@@ -322,18 +315,7 @@ $aModule = array(
             'type' => 'select',
             'value' => '',
             'position' => 6,
-            'constraints' => '
-                |SetOrderReferenceDetailsPaymentMethodNotAllowed
-                |CloseOrderReferenceAmazonClosed
-                |AuthorizeInvalidPaymentMethod
-                |AuthorizeAmazonRejected
-                |AuthorizeTransactionTimedOut
-                |AuthorizeExpiredUnused
-                |AuthorizeAmazonClosed
-                |CapturePending
-                |CaptureAmazonRejected
-                |CaptureAmazonClosed
-                |RefundAmazonRejected'
+            'constraints' => '|SetOrderReferenceDetailsPaymentMethodNotAllowed|CloseOrderReferenceAmazonClosed|AuthorizeInvalidPaymentMethod|AuthorizeAmazonRejected|AuthorizeTransactionTimedOut|AuthorizeExpiredUnused|AuthorizeAmazonClosed|CapturePending|CaptureAmazonRejected|CaptureAmazonClosed|RefundAmazonRejected'
         ),
         array(
             'group' => 'bestitAmazonPay4OxidConfiguration',

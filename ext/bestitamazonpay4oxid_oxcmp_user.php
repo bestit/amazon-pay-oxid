@@ -184,6 +184,12 @@ class bestitAmazonPay4Oxid_oxcmp_user extends bestitAmazonPay4Oxid_oxcmp_user_pa
                 array('oxId' => $sUserId)
             );
 
+            // Check if a newsletter subscription existed on the old account
+            $aNewsletterId = $oLoginClient->oxidNewsletterSubscriptionExists($aUserData['OXID']);
+            if ($aNewsletterId) {
+                $oLoginClient->linkNewsletterToNewUser($aUserData['OXID'], $sUserId);
+            }
+
             $oSession->setVariable('usr', $sUserId);
             $oUtils->redirect($sRedirectUrl, false);
             return;

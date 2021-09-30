@@ -24,7 +24,6 @@ $aLang = array(
     'SHOP_MODULE_blAmazonLoggingLevel_error'               => 'Error',
 
     'SHOP_MODULE_GROUP_bestitAmazonPay4OxidLoginSettings'        => 'Amazon Login Settings',
-    'SHOP_MODULE_blAmazonLoginActive'                             => 'Amazon Login active',
     'SHOP_MODULE_sAmazonLoginClientId'                            => 'Client ID',
     'SHOP_MODULE_sAmazonLoginButtonStyle'                         => 'Login Button style',
     'SHOP_MODULE_sAmazonPayButtonStyle'                           => 'Pay Button style',
